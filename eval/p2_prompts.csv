@@ -1,0 +1,21 @@
+prompt_id,group,prompt,source_idx
+P01,in_domain,an origami dog with a pink and blue body,45
+P02,in_domain,a cartoon bird with a hat on its head,69
+P03,in_domain,a drawing of a pink pokemon ball floating in the air,149
+P04,in_domain,a drawing of an animal with a long tail,235
+P05,in_domain,a blue bird sitting on top of a cloud,293
+P06,in_domain,a drawing of a cat wearing a helmet,338
+P07,in_domain,a drawing of a yellow and black bee,399
+P08,in_domain,a drawing of a pokemon with a blue hat,487
+P09,in_domain,a cartoon character is holding a banana,580
+P10,in_domain,a cartoon character with a fork and spoon in his hand,674
+P11,out_of_domain,a photograph of a city street at night with neon signs and wet pavement,
+P12,out_of_domain,a bowl of ramen with a boiled egg on a wooden table,
+P13,out_of_domain,a snowy mountain range at sunrise above a frozen lake,
+P14,out_of_domain,a vintage red bicycle leaning against a brick wall,
+P15,out_of_domain,an old lighthouse on a rocky coast during a storm,
+P16,compositional,a green turtle sitting on top of a yellow car,
+P17,compositional,a small orange fox standing next to a large purple mushroom,
+P18,compositional,a white cat with butterfly wings holding a red umbrella,
+P19,compositional,three pink fish swimming above a blue treasure chest,
+P20,compositional,a yellow dragon on the left and a black robot on the right,

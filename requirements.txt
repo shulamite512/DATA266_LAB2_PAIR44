@@ -1,0 +1,46 @@
+# DATA 266 Lab 2 — Parts 1, 2 and 3
+# Initial compatibility constraints, NOT final verified pins (DECISIONS.md D-040, D-062, D-085). Exact versions will be
+# taken from the successful GPU environment and verified before the first experiment commit.
+#
+# Local Mac:  python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# Kaggle/GPU: uncomment the GPU-run block, then
+#             pip install -r requirements.txt "torch==$(python -c 'import torch; print(torch.__version__)')"
+#             (keeps the preinstalled CUDA build of torch)
+
+# --- Shared ---
+numpy>=1.24
+pandas>=1.5                  # P1 validate_submission.py, result tables
+pillow>=9.0                  # crops, image decoding, VLM/diffusion image I/O
+packaging>=23.0              # version comparison in smoke tests
+torch>=2.2                   # required by the verbatim run-information cell. Default CPU build locally;
+                             # already satisfied on Kaggle/GPU machines, so it is never reinstalled there.
+
+# --- Part 1: documents, retrieval plumbing, output validation ---
+pymupdf==1.28.2              # get_text("dict"), get_drawings(), get_image_info(), find_tables().to_markdown()
+                             # Pinned: 2.0 Table.extract() garbles DOC1 cells ('3.2' -> '32\n.') (D-089)
+rank-bm25==0.2.2             # BM25Okapi; 0.2.2 is the latest release
+chromadb>=0.5.0              # EphemeralClient, external embeddings, metadata where-filters
+pydantic>=2.0                # v2 field_validator API
+
+# --- Part 2: data, SD 1.5 + LoRA (used by the local smoke test without any model weights) ---
+datasets>=2.19               # Image(decode=False) to count corrupted files; parquet column projection
+transformers>=4.57.0,<5      # CLIP tokenizer/text encoder (P2), Qwen3-VL support (P1 CANDIDATE); <5: v4 APIs.
+                             # Note: this caps huggingface-hub below 1.0 (resolved locally to 0.36.2)
+diffusers>=0.32              # UNet2DConditionModel, DDPMScheduler, StableDiffusionPipeline, LoRA save/load
+peft>=0.13                   # LoraConfig(init_lora_weights="gaussian") via unet.add_adapter
+accelerate>=0.26.0           # init_empty_weights (exact LoRA sizes locally), device_map loading
+
+# --- Part 3: agents (plain Python + pydantic; models reuse transformers/diffusers above) ---
+gradio>=5,<6                 # gr.Blocks demo app. gradio 6 requires huggingface-hub>=1, incompatible with transformers<5.
+                             # Resolves pandas to 2.3.x, pillow to 11.x, pydantic to 2.12.x (all within the bounds above)
+kubernetes>=28.1.0,<37       # transitive (chromadb). 37.x requires pydantic>=2.13.5, which conflicts with gradio 5
+
+# --- Local notebook execution only (Kaggle/Jupyter provide these) ---
+ipykernel>=6.0
+nbclient>=0.8
+
+# --- GPU-machine run: NOT installed for the local smoke tests; uncomment for the GPU run ---
+# sentence-transformers>=3.0 # P1: bge-large-en-v1.5 encoding
+# torchmetrics>=1.0          # P2: KID (KernelInceptionDistance)
+# torch-fidelity>=0.3        # P2: Inception weights/features required by torchmetrics KID
+# lpips>=0.1.4               # P2: LPIPS diversity (AlexNet backbone)
