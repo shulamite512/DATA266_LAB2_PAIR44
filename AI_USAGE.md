@@ -33,6 +33,16 @@ This file lists every AI coding assistant used in this project and what it was u
     - verified every answer, status and citation against the PDFs with an automated script and by reading the rendered charts;
     - ran an automated leakage scan against `Questions.csv` that printed only similarity scores and counts, and rewrote the 8 golden questions it flagged. `Questions.csv` itself was not read.
   - **Evaluation not done yet:** no golden-set question has been answered by the system, no Part 2 image has been generated, and nothing has been tuned or committed.
+  - 2026-10-21: implemented the complete Part 1 pipeline in `notebooks/p1_rag.ipynb` from the team-approved architecture (DECISIONS.md D-094 to D-099):
+    - ingestion: objects, notices, page-bounded chunks, table value lines, VLM figure descriptions, ChromaDB and BM25;
+    - the supersession/conflict registry;
+    - baseline and final retrieval (router, RRF, reranker, registry expansion);
+    - prompt, evidence packaging, JSON validation and repair;
+    - conversation handling;
+    - the gated submission path, the evaluation harness, and pre-experiment self-checks.
+  - 2026-10-21: debugged it on the GPU machine using only synthetic and source-derived probes, and ran Restart & Run All (43/43 self-checks).
+    - `eval/p1_golden_set.csv` and `Questions.csv` were not opened; a file-access audit in the notebook records this.
+    - No golden-set evaluation and no tuning has been done; P1-EXP-001 has not started.
 
 All design decisions were reviewed and approved by the team before implementation. They are logged in `DECISIONS.md`.
 

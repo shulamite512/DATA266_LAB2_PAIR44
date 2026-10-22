@@ -825,3 +825,74 @@
 - **No evaluation result has been used to tune anything.** No TUNE value has changed since D-066, apart from the GPU compatibility and harness fixes recorded in D-089 and D-090, which are not tuning.
 - Both files are **not yet committed**. D-045 requires them to be in the first Git commit, before P1-EXP-001 or P2-EXP-001 starts.
 - P1-EXP-001, the P1 baseline/final runs and P2 training have **not** started.
+
+---
+
+> **Part 1 implementation before frozen evaluation (2026-10-21).** Entries D-094 to D-099 record the implementation of the complete Part 1 pipeline in `notebooks/p1_rag.ipynb` (the D-013 to D-035 architecture). They are implementation choices and pre-experiment checks, **not P1-EXP-001**. During this work `eval/p1_golden_set.csv` and `Questions.csv` were never opened: the notebook reads them only behind `RUN_EVAL` / `RUN_SUBMISSION` (both `False`), and a file-access audit hook confirms it (D-099). The harness uses only the golden-set column names and category counts already recorded in D-092. No TUNE value was changed.
+
+### D-094 — Ingestion, indexing and the supersession registry: implementation choices (2026-10-21)
+- **Objects.** Every captioned label becomes one object (`DOC#:<label>`), located with the D-017/D-042 helpers. Text blocks lying ≥ `OBJECT_BLOCK_OVERLAP = 0.6` inside an object's region belong to that object (caption, title, axis labels, rows, source lines), not to the text chunks. DOC1 margin captions take their title from the block stacked under the label. Figure crops are rendered at `RENDER_DPI`; low-trust figures are never rendered for the VLM.
+- **Notices.** Text blocks matching `NOTICE_PATTERN` (`revision notice | correction to | erratum` at the block start) are atomic `notice` objects (D-019). Result: the DOC2 p3 revision notice and the DOC3 p6 erratum.
+- **Text chunks (D-019).** Running headers/footers are dropped: the same text, digits ignored, in the top/bottom `MARGIN_BAND_FRAC = 0.08` of ≥ `RUNNING_TEXT_MIN_PAGES = 3` pages. A block ≥ `HEADING_MIN_FONT_PT = 12.5` pt with ≤ 14 words is a section heading; chunks never cross a page or a heading. Paragraph-aware packing to ~220 words (max 350), with a 40-word overlap only when the result stays ≤ 350. DOC1 line-break hyphens are removed. Prefix `[doc | p# | section]`.
+- **Table representation (resolves D-043 OPEN).** One line per normalised value, `row | column: value [kind]`, from the cleaned `table_long_rows` records, plus caption, units and source/footnote lines. PyMuPDF markdown is not used. If a table yields no records, a cleaned pipe grid is the fallback (not needed for any KB table). This is the simplest deterministic format that keeps the forecast/outturn kind of every value explicit.
+- **Index texts (D-026).** Dense text: prefix, caption, notes, up to `REFERENCING_SENTENCES_MAX = 3` sentences from evidence-eligible text that name the label, text printed inside the figure, and the VLM description. BM25 and reranker text add every table value. Figures get a structured JSON chart description from the answer VLM (`MAX_NEW_TOKENS_DESCRIBE`); low-trust figures are never described.
+- **Label mentions** in free text (`Fig. A3`, `figures A-6 and A-7`, `Tables 1-2, 1-3 and 1-4`, `Figure B-5 (corrected)`) are parsed by one function and resolved **only** against the caption inventory (D-043 router safety).
+- **Registry (implements D-029, built at ingestion, structure only):**
+  1. `X (corrected)` supersedes `X`.
+  2. A notice links to every inventory object it names; a "revised from A … to B" notice marks the linked table record whose year, old value, measure and subject all appear in the notice.
+  3. Series key `(subject, measure, year)`: subject = row entity, else a known entity named in the caption/header (`SUBJECT_ALIASES = {"u.s.": "united states"}`); measure = variable without units and the word "rate".
+  4. Relations between objects: `outturn_supersedes_forecast`; `sources_disagree` (non-forecast values from different documents, different values, no revision).
+  - Result from the KB: 1 revision (DOC1 Table 1-2 output growth 2010, 3.0 → 2.4 by the DOC2 notice), 24 outturn-supersedes-forecast relations, 1 cross-document disagreement (DOC1 Table 1-2 vs DOC3 Table B-2, U.S. unemployment 2010), and the B-5 erratum link.
+- **Index.** 195 objects (157 text chunks, 26 figures + Figure C-1, 9 tables, 2 notices); 192 evidence-eligible. Chroma collection `p1_kb` (cosine, our embeddings; Chroma requires names of ≥ 3 characters). Low-trust objects stay indexed with `evidence_ok = False`. Index fingerprint taken after ingestion and asserted unchanged at the end.
+- **Notebook utilities.** Stage timers, GPU memory reports and a `sys.addaudithook` file-access audit recording any open of `Questions.csv` or `p1_golden_set.csv`.
+- **Flags:** `RUN_SELF_CHECKS = True`, `RUN_SUBMISSION = False`, `RUN_EVAL = False`, `EVAL_MODES = ("baseline", "final")`; `RUN_SMOKE_TEST` restored to its D-036 default `False`. Helpers shared with the smoke appendix (`bm25_tokenize`, `chroma_records`, `parse_json_object`, `fit_pixels`, `load_vlm`, `numbers_in`, `within_tol`) moved into the pipeline sections, so nothing is defined twice; the appendix releases the pipeline models before loading its own (D-037).
+
+### D-095 — Retrieval and model residency: implementation choices (2026-10-21)
+- **Baseline (D-015):** dense top-20 with the `evidence_ok` filter; context = first `RERANK_KEEP = 8` (same context budget as final). No router, BM25, RRF, reranker, registry expansion or registry notes. Table value lines keep their `[kind]` tags in both modes (they are the table representation, not retrieval logic).
+- **Final:** router pins named labels (+ their superseding objects); unknown labels and named low-trust labels are reported, never pinned. Dense top-20 + BM25 top-20, plus a document-restricted dense list when the query names a document (patterns built from the manifest: `doc N`, title lead such as "Supplement A", publisher), fused by RRF k = 60; the fused top 24 (+ same-page text of pinned objects) are reranked by `bge-reranker-v2-m3` (max length 512); context = pinned + top 8; then registry expansion adds at most `EXPANSION_MAX = 3` (TUNE) superseding objects, linked notices and cross-document counterparts (restricted to the query's years when it names any).
+- **Figure exclusion (refines D-027):** other figures are removed only when a **figure** is named. Naming only a table keeps figures, because a question may combine a named table with a figure (sample submission format).
+- **Recall@5 list:** pinned + reranked (final) or dense ranking (baseline); registry additions are not ranked.
+- **Residency (refines D-025/D-037):** models are loaded sequentially (VLM → embedder → reranker), each measured, and then stay co-resident on `cuda:0` for query time, because together they fit the 16 GB rubric budget: RESULT peak allocated 11,919 MB ≤ `VRAM_BUDGET_MB = 14,336` (D-099). `EMBED_DEVICE` / `RERANK_DEVICE` may be set to `"cpu"` if a smaller GPU needs it. The fallback VLM is loaded only if the primary fails to load.
+
+### D-096 — Grounded generation and validation: implementation choices (2026-10-21)
+- **Prompt.** A system prompt that inserts the manifest's precedence rules verbatim (read from `kb_manifest.json`, not typed), defines the five statuses, the supersession/near-identical-figure/citation rules, the 120-word limit and the JSON schema. Wording is general; no KB fact or question appears in it.
+- **Evidence blocks:** `<<E# | cite as: … | doc p# | type label | trust | document data vintage>>` … `<<END E#>>`; final mode appends the registry notes for the block's values. At most `MAX_FIGURE_IMAGES = 2` figure images (TUNE, D-026), listed by label. Conversation history, user-supplied values and system notes are separate, labelled sections.
+- **Deterministic post-processing (implements D-029, D-032):**
+  - citations normalised and kept only if shown on an evidence-eligible block (low-trust never);
+  - figure references kept only if in the context, and synced with label citations both ways;
+  - a superseded object is never cited without its superseding object when that was shown;
+  - forced statuses from conversation rules;
+  - `session_override` without a user value → `answered`;
+  - `not_found` clears the lists, and a bare status word as the answer becomes a standard sentence;
+  - answered / conflict / false_premise need ≥ 1 valid citation; ≤ 120 words; pydantic schema.
+- **Content rules (added after synthetic self-checks, D-099):** a `conflict` answer must state ≥ 2 distinct non-year values; the turn that introduces a user value must state that value **and** a value found in the cited evidence. These are assignment rules ("return both values"; "report what the documents say"), not question-specific. They trigger the repair retry; if only they remain after it, the answer is accepted and the issue recorded.
+- **Failure path:** one repair retry with the rejection reasons; then, if only the length is wrong, deterministic truncation; otherwise the deterministic `not_found` fallback.
+
+### D-097 — Conversation handling: implementation choices (2026-10-21)
+- One `ConversationState` per `conversation_id`, created on the first turn and discarded (turns, values, refusals cleared) after the conversation's last turn.
+- Follow-ups (any turn after the first) are rewritten into a standalone retrieval query by the VLM (`MAX_NEW_TOKENS_REWRITE = 64`) from that conversation's last `HISTORY_TURNS = 3` turns only; the generator sees the original question, the standalone form and the same history.
+- **User-supplied value:** detected when the turn contains a decimal or percentage (labels and years excluded) **and** an assumption cue (`OVERRIDE_CUE_PATTERN`) or a KB-edit request. The VLM extracts entity/variable/year/value/unit (`MAX_NEW_TOKENS_OVERRIDE = 96`); the regex value is the fallback. The value lives only in the conversation state and gives `session_override`.
+- **Permanent KB edits:** detected by `KB_EDIT_PATTERN`, recorded as refused, answered with the read-only explanation; status `REFUSED_KB_EDIT_STATUS = "session_override"` (still OPEN, D-030/D-035).
+- The submission path (`RUN_SUBMISSION`) reads the hidden-set question text from a `question` column, else the first non-ID column: the column name of `Questions.csv` is **not verified** (the file is not opened), so it stays OPEN until the first submission run.
+
+### D-098 — Evaluation metric definitions, fixed before any golden-set run (2026-10-21)
+- **Correct:** predicted status = `expected_status` **and**: numeric → a number in the answer within ±1% of `expected_value` or of an `also_acceptable_values` entry; text → every comma-separated `answer_keywords` entry appears (case-insensitive, `a|b` = either); status_only → status only.
+- **Recall@5:** per question, the share of `gold_evidence` units (`DOC#:<label>` or `DOC#:p#`) covered by the top-5 ranked objects (an object covers its label citation and its page); mean over questions with gold evidence. Hit@5 is reported too.
+- **Citation correct:** no `forbidden_citations`; expected `NONE` → no citations; otherwise ≥ 1 citation and all ⊆ `expected_citations` ∪ `also_acceptable_citations`. Citation accuracy = mean.
+- **Seconds:** wall time of the whole turn (rewrite + retrieval + generation); the median is reported.
+- **Diagnostics only:** figure-reference F1, `distractor_mentioned`. **Groundedness:** MANUAL, pending team rating; never computed.
+- `RUN_EVAL` requires a `P1-EXP-###` experiment ID and asserts the D-092 schema (25 rows, category counts) before running both modes on the same ingestion.
+
+### D-099 — RESULT: pre-experiment self-checks and Restart & Run All (2026-10-21) — not an experiment
+- **Probes used:** smoke-test fixtures (D-036), inventory labels and caption titles, the low-trust objects' own text, and fictional "Testland" evidence. Ground truth is read from the parsed tables. No golden-set row and no `Questions.csv` row.
+- **Development iterations on these probes (not tuning):**
+  1. Subjects followed by punctuation were not matched, so DOC1 Tables 1-2…1-4 had no subject → word-boundary match (relations went from 6 to 24 + 1 disagreement).
+  2. Chroma collection name too short → `p1_kb`.
+  3. Synthetic conflict answer gave one value, and the synthetic session-override turn omitted the document value → the D-096 content rules; the first version counted the "1" of "pp per 1% growth" as a document value, so the document value must now come from the cited evidence.
+  4. A self-check expectation error (G6) corrected.
+- **RESULT (nbconvert Restart & Run All in the GPU container, outputs saved in the notebook):** exit 0, 0 error outputs, total runtime 269.6 s (figure descriptions 203.4 s for 26 figures).
+  - **43/43 GATE checks PASS:** ingestion inventory, low-trust never in any context (both modes) and its citations dropped, router pins all 35 evidence labels first with no other figure, alias and unknown labels, every table in the final top-5 from its caption title (baseline 9/9 too), revision/outturn/disagreement registry and expansion, repair/fallback/length/status/content rules, the five fictional cases (revision, conflict, not_found, false_premise, embedded instruction), two synthetic conversations (override isolated, document value reported, KB edit refused, follow-up rewritten from its own history, index unchanged, state discarded), and the harness in both modes on a 5-item synthetic fixture.
+  - Peak allocated VRAM 11,919 MB (max device used 14,382 MB, including ~1,680 MB held by other processes before the run).
+  - Index fingerprint unchanged; `files_opened = []`, `questions_csv_opened = False`, `golden_set_opened = False`.
+  - The synthetic-fixture numbers (baseline 5/5, final 5/5) are plumbing checks, **not** P1 results.
+- **Remaining OPEN before or at P1-EXP-001:** D-030/D-035 refused-edit status; `Questions.csv` text-column name (D-097); exact `requirements.txt` pins from this environment (D-040: transformers 4.57.6, sentence-transformers 5.7.0, chromadb 1.5.9, accelerate 1.15.0, pymupdf 1.28.2, rank-bm25 0.2.2, pydantic 2.12.3, torch 2.7.1+cu128); the Kaggle commit hash (D-007); Kaggle internet access (D-035).
