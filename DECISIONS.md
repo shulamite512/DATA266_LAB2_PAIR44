@@ -896,3 +896,68 @@
   - Index fingerprint unchanged; `files_opened = []`, `questions_csv_opened = False`, `golden_set_opened = False`.
   - The synthetic-fixture numbers (baseline 5/5, final 5/5) are plumbing checks, **not** P1 results.
 - **Remaining OPEN before or at P1-EXP-001:** D-030/D-035 refused-edit status; `Questions.csv` text-column name (D-097); exact `requirements.txt` pins from this environment (D-040: transformers 4.57.6, sentence-transformers 5.7.0, chromadb 1.5.9, accelerate 1.15.0, pymupdf 1.28.2, rank-bm25 0.2.2, pydantic 2.12.3, torch 2.7.1+cu128); the Kaggle commit hash (D-007); Kaggle internet access (D-035).
+
+### D-100 — Environment/path compatibility fix: data and repository folders detected, not cwd-relative (2026-10-21)
+- **Classification:** environment/path compatibility fix. **Not tuning.** No model, retrieval, prompt, TUNE or evaluation-definition change.
+- **Symptom:** the first attempt at P1-EXP-001 (`EXPERIMENT_ID = "P1-EXP-001"`, `RUN_EVAL = True`, run from the Jupyter server in the GPU container) stopped in section 1.2 with `FileNotFoundError: /DATA266_Lab2_Part1/kb_manifest.json`. The kernel's working directory was not `notebooks/`, so the cwd-relative `Path("../../DATA266_Lab2_Part1")` resolved to `/DATA266_Lab2_Part1`; the real folder is `/app/DATA266_Lab2_Part1`. `GOLDEN_SET_PATH = Path("../eval/…")` had the same dependency and would have failed next.
+- **P1-EXP-001 had not started:** the run stopped during ingestion, before any retrieval, generation or golden-set evaluation. The golden set was not opened and no metric exists.
+- **Fix (configuration cell only; the Kaggle branch is unchanged):**
+  - `DATA_DIR` = the first candidate containing both `kb_manifest.json` and `Document.pdf`. Candidates, in order: an optional `P1_DATA_DIR` environment variable, `<cwd or any parent>/DATA266_Lab2_Part1`, then `/app/DATA266_Lab2_Part1`.
+  - `REPO_DIR` = the first of the cwd, its parents or `/app/implementation` that contains `notebooks/p1_rag.ipynb` and `DECISIONS.md`. `WORK_DIR = REPO_DIR/notebooks`; `GOLDEN_SET_PATH = REPO_DIR/eval/p1_golden_set.csv`.
+  - A startup assertion prints the cwd, the selected `DATA_DIR`, whether the manifest exists, the professor PDF count and the golden-set path.
+- **Check:** the patched configuration cell was run from `/`, `/app`, `/app/implementation` and `/app/implementation/notebooks`. Every run selected `/app/DATA266_Lab2_Part1` (manifest present, 3 PDFs) and `/app/implementation/eval/p1_golden_set.csv`. The existence checks do not open the golden set.
+
+### P1-EXP-001 — First full baseline vs final evaluation on the frozen golden set (2026-10-21)
+- **Objective:** measure the professor-required dense-only baseline against the complete final architecture (D-094 to D-099) on the 25 frozen golden questions (D-092), before any tuning.
+- **Architecture / configuration:** `notebooks/p1_rag.ipynb`, both modes on the same ingestion (`EVAL_MODES = ("baseline", "final")`).
+  - Baseline: dense `bge-large-en-v1.5` top-20, trust filter, context 8.
+  - Final: router + dense + BM25 + RRF (k = 60) + `bge-reranker-v2-m3` (24 → 8) + registry expansion (≤ 3).
+  - Both modes: `Qwen3-VL-4B-Instruct` fp16 greedy; D-096 validator with one repair retry.
+- **Exact important parameters:** every value in the D-094 to D-098 configuration cell, unchanged. `EXPERIMENT_ID = "P1-EXP-001"`, `RUN_EVAL = True`, `RUN_SELF_CHECKS = True`, `RUN_SUBMISSION = False`.
+- **Change from previous experiment:** none (first experiment). The only change since the implementation checkpoint is the D-100 path fix.
+- **Git commit:** code = `c097b26` + the uncommitted D-100 configuration-cell fix. Cell 1 printed `c097b26`. The run is recorded in the commit that follows this entry.
+- **Environment / GPU:** Docker `pytorch:latest`, Python 3.11.13, torch 2.7.1+cu128, transformers 4.57.6, RTX 5090 (32 GB; peak allocated 12,582 MB, within the 16 GB budget). nbconvert Restart & Run All, kernel cwd `notebooks/`.
+- **Random seed:** 266.
+- **Smoke-test result:** 43/43 self-check gates PASS in the same run.
+- **Full-run result (RESULT, machine-printed):** total runtime 377.9 s (figure descriptions 202.2 s; evaluation 54.8 s baseline + 54.4 s final). Index unchanged. Files opened: the golden set only (behind `RUN_EVAL`); `Questions.csv` not opened.
+- **Required evaluation metrics (RESULT):**
+
+  | Metric | Baseline | Final |
+  |---|---|---|
+  | Correct answers | 14/25 | 13/25 |
+  | Recall@5 (24 questions with gold evidence) | 0.764 | 0.882 |
+  | Hit@5 | 0.958 | 0.958 |
+  | Citation accuracy | 0.64 | 0.84 |
+  | Median seconds / question | 1.77 | 2.03 |
+  | Figure-reference F1 (diagnostic) | 0.627 | 0.793 |
+  | Groundedness | MANUAL (pending team rating) | MANUAL (pending team rating) |
+
+  Correct by category, baseline / final: facts_tables 5/3 of 5; figures 3/2 of 6; two_sources 1/2 of 3; multi_turn_override 2/2 of 5; conflicts_revisions 2/2 of 3; unanswerable_false_premise_injection 1/2 of 3.
+- **Kaggle result:** none (no submission run).
+- **Observed failures (final mode; root cause from the saved per-question outputs joined with the golden set):**
+
+  | ID | Category | Expected evidence in top-5 | Final prediction | Root cause |
+  |---|---|---|---|---|
+  | G02 | facts_tables | yes | correct value, status `not_found` (baseline correct) | status logic: status contradicts the answer |
+  | G03 | facts_tables | yes | correct value, status `not_found` (baseline correct) | status logic: same pattern |
+  | G08 | figures | yes | wrong country/values from Figures A-6/A-7 (baseline also wrong) | figure value extraction |
+  | G09 | figures | yes | headline-CPI value given for core CPI (baseline same) | figure value extraction (series) |
+  | G10 | figures | Table B-1 yes, Figure B-2 dropped by the reranker | value of the other sample row (baseline correct) | reranking + table row selection |
+  | G11 | figures | yes | "about 5" where the text prints "about 4.7" | generation: rounding |
+  | G12 | two_sources | text yes, Table A-3 not in top-5 | qualitative answer, no value | generation (no value stated) + retrieval |
+  | G16 | multi_turn_override | yes | difference computed against the wrong year | generation: wrong operand |
+  | G17 | multi_turn_override | yes | arithmetic error | generation: arithmetic |
+  | G18 | multi_turn_override (turn 2) | yes | document value used instead of the user's | session-override logic on a later turn |
+  | G22 | conflicts_revisions | yes | "documents agree"; the disagreeing value is in DOC3 text | conflict logic: text-level disagreement not detected |
+  | G24 | unanswerable_false_premise_injection | Table 1-4 not in top-5 | explained a contradicted premise | false-premise logic + retrieval |
+
+  No evaluation-harness bug was found. Final was worse than baseline on G02, G03 and G10, and better on G14 and G25.
+- **Conclusion:** final retrieval and citation are clearly better (Recall@5 +0.118, citation accuracy +0.20), but answer correctness is not. Most final misses happen **after** correct retrieval: answer–status inconsistency, unverified numbers (rounding, arithmetic, wrong operand), a user value not reused on a later turn, and undetected text-level conflict or false premise. Chart-value reading (G08, G09) is a separate model limitation.
+- **Verdict:** MODIFY (D-101, D-102).
+- **Next planned experiment:** P1-EXP-002 with the D-102 fixes, same parameters otherwise.
+
+### D-101 — Golden-set use after P1-EXP-001: failure analysis allowed (partially supersedes D-034) (2026-10-21)
+- **Previous decision (D-034):** the golden set is evaluation only and never used for tuning; TUNE parameters are adjusted only with `Questions.csv` and the public leaderboard.
+- **New decision (team request after P1-EXP-001):** the P1-EXP-001 golden-set outputs may be used for **failure analysis**. Fixes are allowed only if they are general: justified by several failures or by an explicit assignment rule. They must not involve question IDs, question text, stored answers, per-question rules or changes to the golden set / evaluation criteria. TUNE parameters are still not tuned on the golden set.
+- **Consequence, stated explicitly:** from P1-EXP-002 on, the golden set is also a development set, so its scores are optimistic estimates of hidden-set performance. P1-EXP-001 stays the only run on a never-inspected golden set.
+- The golden-set rows were read for this analysis after P1-EXP-001 (expected values and evidence, joined with the saved predictions). `Questions.csv` was not opened.
