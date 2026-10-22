@@ -45,6 +45,7 @@ This file lists every AI coding assistant used in this project and what it was u
     - No golden-set evaluation and no tuning has been done; P1-EXP-001 has not started.
   - 2026-10-21: fixed the data-path detection after the first P1-EXP-001 attempt (D-100) and ran P1-EXP-001 at the team's request.
   - 2026-10-21: analysed the P1-EXP-001 failures against the golden set (D-101, a team-approved change to the golden-set policy). Implemented the D-102 generation and conversation fixes and validated them with isolated unit tests on fictional evidence. The notebook was not run, and P1-EXP-002 is prepared for the team to start manually.
+  - 2026-10-22: removed the Part 1 smoke-test appendix and its smoke-only configuration from `p1_rag.ipynb` after GPU compatibility testing was complete (D-103). Production code was not changed. Checks were static only (JSON validity, compilation, name resolution, leakage scan with counts only). The notebook was not run.
 
 All design decisions were reviewed and approved by the team before implementation. They are logged in `DECISIONS.md`.
 

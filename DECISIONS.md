@@ -982,3 +982,26 @@
   - A leakage scan found no 8-word span of any golden question in the notebook code or this file. One self-check probe written during this work was too close to a golden question and was rewritten with fictional wording and values before the commit.
 - The notebook's self-checks now include gate `G6b.evidence_value_rules` and model gates `G7.exact_printed_number`, `G7.text_level_disagreement` and `G7.later_turn_uses_user_value`. They run in the next manual Restart & Run All.
 - **Prepared, not run:** `EXPERIMENT_ID = "P1-EXP-002"`, `RUN_EVAL = True`; notebook outputs cleared (the P1-EXP-001 outputs are preserved in commit `0adebfa`).
+
+### D-103 — Part 1 smoke-test appendix removed from the production notebook (2026-10-22)
+- **Classification:** notebook cleanup. **Not tuning.** No ingestion, retrieval, prompt, model, TUNE, conversation, submission or evaluation-definition change.
+- **Why:** GPU compatibility testing is complete (D-036, D-037, D-041, D-089, D-090), and the pipeline has since run end to end on the GPU machine (D-099, P1-EXP-001). The dedicated smoke harness is no longer needed in the graded notebook.
+- **Removed from `notebooks/p1_rag.ipynb`:**
+  - the "Appendix — Pre-Experiment Infrastructure Smoke Test" (1 markdown and 6 code cells: stages S0–S10 and their helpers, `SKIPPED_LOCAL` reporting, GPU load/release probes, synthetic smoke fixtures, the local hashing substitute embedder, the file-watch hygiene check, and the stage/result summaries);
+  - the configuration entries used only by that appendix: `RUN_SMOKE_TEST`, `SMOKE_*` and `VLM_MIN_TRANSFORMERS`;
+  - `release_models()`, which only the appendix called;
+  - self-check G9, which ran the evaluation harness on a 5-item synthetic fixture. Real golden-set runs have replaced this plumbing check. Its "no conversation left open" assertion is kept as `G8.no_conversation_left_open`.
+- **Kept:**
+  - every production cell;
+  - the gated `RUN_SELF_CHECKS` gates G1–G8 (sections 6b and 6c). They check assignment behaviour on fictional or source-derived probes only;
+  - smoke-test wording in comments and gate names was reworded (`G4.smoke_probe_okun_table` → `G4.probe_okun_table`).
+- **Added:** the run summary now also reports the measured evaluation summaries (when `RUN_EVAL`) and the submission row count (when `RUN_SUBMISSION`). These are reporting only.
+- **Static checks (the notebook was not run):**
+  - valid JSON (`nbformat.validate`);
+  - all code cells compile;
+  - no `RUN_SMOKE_TEST`, `SMOKE_`, `SKIPPED_LOCAL` or `P1-S0`…`P1-S10` reference left;
+  - every name used is defined in some cell;
+  - the submission, evaluation and reproducibility code is present;
+  - an 8-word-span scan, which printed counts only, found no `Questions.csv` or golden-set question text or IDs in the notebook.
+- **Outputs and cell count:** 36 → 29 cells. Outputs of the four edited code cells (configuration, 6b, 6c, run summary) were cleared. The other cells keep the outputs of the last pre-cleanup run, an uncommitted submission run: 47/47 self-checks PASS, `submission.csv` valid (40 rows), total runtime 512.8 s, peak allocated 12,213 MB.
+- **Future validation:** normal Restart & Run All runs of the production notebook (self-checks, submission and golden-set evaluation behind their flags).
