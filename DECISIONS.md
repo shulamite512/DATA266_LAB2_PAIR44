@@ -1132,3 +1132,47 @@
   - Kaggle feedback is external feedback only: no question-specific tuning, no answer keys and no ID-specific behaviour.
   - `submission.csv` is git-ignored and stays untracked; it was not edited by hand.
 - **Verdict:** KEEP as the **current best checkpoint**. **Next planned experiment:** P1-EXP-004 (D-105).
+- **Checkpoint commit:** `eb87662` (the executed run-2 notebook and this entry).
+
+### D-105 — One-run experiment workflow, consolidated status logic, registry-based conflict/supersession, fewer retries (prepares P1-EXP-004) (2026-10-23)
+- **Classification:** workflow, consolidation and general answer post-processing. **Not retrieval tuning.**
+  - No change to `DENSE_TOP_K`, `BM25_TOP_K`, `RRF_K`, `RERANK_CANDIDATES`, `RERANK_KEEP`, `EXPANSION_MAX`, `MAX_FIGURE_IMAGES`, `MAX_NEW_TOKENS_*`, model IDs, decoding, ingestion or retrieval.
+  - No question ID, conversation ID, question text, Kaggle answer or golden-set answer is used. The P1-EXP-003 per-question outputs were not preserved, so these changes follow from the assignment rules (manifest precedence) and the broad failure categories, not from individual questions.
+- **1. One manual run per experiment (workflow).**
+  - Defaults are now `RUN_SELF_CHECKS = RUN_SUBMISSION = RUN_EVAL = True`.
+  - One Restart & Run All loads the models once, then produces: the self-checks; `submission.csv`, validated; baseline and final golden-set metrics with per-category results and retry/fallback counts; and the run summary (runtime, GPU memory, flags, commit).
+  - Each flag can still be switched off for debugging.
+  - On Kaggle `RUN_EVAL` is switched off automatically, because the golden set is not part of the competition data.
+  - A re-run without a kernel restart reuses already-loaded models (`reuse_loaded`, recorded as `models_reused_from_previous_run`) instead of loading second copies. This was the cause of the 18,736 MB peak in P1-EXP-003 run 2. A Restart & Run All always loads fresh.
+  - The run summary now records the git commit, because cell 1 prints an empty commit when the kernel runs outside the repository (D-007).
+- **2. Consolidation (no behaviour removed).**
+  - Every deterministic status decision is now in `resolve_status`, in one fixed order:
+    1. conversation rule, and session_override only with a user value;
+    2. registry facts;
+    3. not_found → answered, or → false_premise after the retry.
+  - `finalize` is one fixed pipeline: parse → normalise → status → limit citations and figure references to the evidence used → page citations → validity and content checks.
+  - The two overlapping not_found checks (D-102 listed values, D-104 printed values) are merged into the single `resolve_status` rule.
+  - The session-override document-value check reuses `object_values`.
+  - A static scan found no dead top-level definitions after D-103.
+- **3. Registry-based conflict and supersession (Priority A/E; manifest precedence rules).**
+  - `registry_checks` uses the ingestion registry (D-029, D-094) for objects in the context and a year the question or answer names.
+  - **Disagreement:** a stated value that belongs to a cross-document disagreement with no revision note makes an `answered` answer a `conflict`. Both values, their documents and trust levels, and the preferred higher-trust value are stated deterministically when the answer lacks them, and both sources are cited.
+  - **Superseded values:** a forecast whose outturn is in context, or a pre-revision value whose notice is in context, given without its current value is a content issue on the first pass (the single retry, with the current value and cite in the message). After the retry, the current value and its source are appended.
+  - Not applied when the question asks for the earlier value (generic wording: forecast, projected, original, initial, before the revision, vintage).
+  - Text-level disagreements outside the structured registry are still covered by the D-102 `evidence_values` rule.
+- **4. Fewer avoidable retries (Priority D/E).**
+  - A `not_found` that states values printed in the evidence, and does not say something is missing, is decided as `answered` on the first pass. Before, it cost a repair retry.
+  - A decimal value printed in a cited block counts as grounded even if the model did not list it in `evidence_values`. Integers still must be listed, so rounding ("about 5" for 4.7) is still caught.
+- **5. Self-check fixes.**
+  - `G2.validator_drops_low_trust_citations` no longer expects an exact citation list; that expectation became stale with D-104's page citations. It still checks that no low-trust citation survives.
+  - Two gate expectations follow item 4 (not_found with a printed value → answered without retry).
+  - New gate **G6d** covers the registry rules on fictional records: disagreement → conflict with both values and sources; no conflict without the year; stale forecast retried and then completed; an asked forecast not flagged; current value plus replaced value accepted.
+- **Considered and deferred:**
+  - deterministic table-value extraction from free-text questions (Priority B). Table values already reach the model as `row | column: value [kind]` lines with registry notes, and the observed fact/table misses were status contradictions (item 4);
+  - further figure-routing changes (Priority C). The router already pins named labels and excludes other figures, and D-104 limits references to the named object.
+- **Validation (no notebook run; no GPU: every test process ran with `CUDA_VISIBLE_DEVICES=''`; no model loaded; no golden-set or `Questions.csv` access):**
+  - **Isolated CPU unit script on fictional evidence, with stubbed retrieval and VLM: 36/36 PASS.**
+    - Notebook gates G6, G6b, G6c, G6d and the label-sync gate.
+    - 27 extra tests: router, near-identical figures, pruning, exact values, status decisions, no-fallback recoveries, conflict/revision, a three-turn session override with isolation and an unchanged object store, the re-run model guard, and the Kaggle evaluation switch.
+  - **Static checks:** valid JSON; all code cells compile; every name is defined; no Questions.csv phrase or ID, no golden-set question or answer, and no `[QC]###` string in the notebook. 10 of 29 cells changed.
+- **Prepared for P1-EXP-004 (not run):** `EXPERIMENT_ID = "P1-EXP-004"`, `RUN_SELF_CHECKS = True`, `RUN_EVAL = True`, `RUN_SUBMISSION = True`, `MODE = "final"`, `EVAL_MODES = ("baseline", "final")`. Outputs cleared; the P1-EXP-003 outputs are in commit `eb87662`. Local golden-set results remain development-set estimates (D-101).

@@ -4,7 +4,7 @@ Repository for DATA 266 (Fall 2026) Lab 2. GitHub name: `data266-lab2-team[##]`.
 
 | Part | Topic | Notebook | Status |
 |------|-------|----------|--------|
-| 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | Skeleton only |
+| 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | Complete pipeline; experiments P1-EXP-001 to P1-EXP-003 logged (P1-EXP-003 current best); P1-EXP-004 prepared |
 | 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | Architecture and local smoke-test harness complete; GPU validation and training pending |
 | 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | Architecture and local smoke-test harness complete; GPU validation and full pipeline pending |
 
@@ -20,7 +20,16 @@ Course data is **not** stored in this repository.
 ## How to run
 
 ### Part 1
-_Pending: implementation not started._ The notebook will be run top to bottom with **Restart & Run All** on a Kaggle GPU. It reads `QUESTIONS_PATH` (default `Questions.csv`) and writes `submission.csv`.
+Run `notebooks/p1_rag.ipynb` top to bottom with **Restart & Run All**. Every parameter and flag is set in the configuration cell (cell 2).
+
+- **Experiment run (local GPU), one run only:** set `EXPERIMENT_ID = "P1-EXP-###"` and keep `RUN_SELF_CHECKS`, `RUN_SUBMISSION` and `RUN_EVAL` all `True`. The models load once, and the run produces:
+  - the self-checks;
+  - `notebooks/submission.csv`, validated with `validate_submission.py`;
+  - the baseline and final golden-set metrics, with per-category results and retry/fallback counts;
+  - the run summary: runtime, peak GPU memory against the 16 GB budget, flags and commit.
+- **Restart the kernel before each run.** A re-run in the same kernel reuses the loaded models, but only a fresh run gives clean memory figures.
+- **Kaggle submission:** attach the competition data and run all cells. `RUN_EVAL` is switched off automatically on Kaggle (the golden set is not part of the competition data). The notebook reads `QUESTIONS_PATH` (default `Questions.csv`; the graders can point it at the hidden set) and writes `submission.csv`.
+- `submission.csv` is generated output: it is git-ignored and never edited by hand. Record each run in `DECISIONS.md` and save the executed notebook before shutting down the kernel.
 
 ### Part 2
 _Architecture and local smoke-test harness complete; GPU validation and training pending._
