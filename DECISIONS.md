@@ -1097,3 +1097,38 @@
   - no Questions.csv 8-word phrase or ID, no golden-set question or expected answer, and no `[QC]###` string in the notebook;
   - only 5 of 29 cells changed (configuration flags, generation, submission and evaluation reporting, self-check G6c).
 - **Prepared for P1-EXP-003 (not run):** `EXPERIMENT_ID = "P1-EXP-003"`, `RUN_SELF_CHECKS = True`, `RUN_EVAL = True`, `RUN_SUBMISSION = False`. Notebook outputs cleared; the EXP-002 submission-run outputs are preserved in commit `fa2bfe4`. Golden-set scores from P1-EXP-003 on are development-set estimates (D-101).
+
+### P1-EXP-003 — D-104 fixes: golden-set evaluation and Kaggle submission — CURRENT BEST (2026-10-23)
+- **Objective:** measure the D-104 post-processing and prompt fixes, then submit to Kaggle.
+- **Architecture / configuration:** the P1-EXP-002 architecture plus D-104. No retrieval, model or TUNE change.
+- **Git commit:** code `8d811e4`. **Environment / GPU:** the same Docker GPU container (RTX 5090). **Random seed:** 266.
+- **How it was run (two manual runs in the same VS Code kernel):**
+  1. golden-set evaluation (`RUN_EVAL = True`, `RUN_SUBMISSION = False`);
+  2. Kaggle submission (`RUN_EVAL = False`, `RUN_SUBMISSION = True`), re-run **without a kernel restart**.
+  - The notebook saved in this checkpoint holds the outputs of **run 2 only**. Run 1's per-question outputs were overwritten in the editor before the notebook was saved and are **not preserved**; its numbers below were reported by Parth from the executed notebook.
+- **Golden-set result (run 1, reported):**
+
+  | Metric | Baseline | Final |
+  |---|---|---|
+  | Correct answers | 13/25 | **14/25** |
+  | Recall@5 | 0.764 | 0.882 |
+  | Hit@5 | 0.958 | 0.958 |
+  | Citation accuracy | 0.52 | 0.76 |
+  | Figure-reference F1 (diagnostic) | 0.573 | 0.68 |
+  | Median seconds / question | 4.44 | 6.63 |
+  | Retried / fallbacks | 7 / 1 | 3 / 0 |
+
+  - **Final by category:** conflicts_revisions 1/3, facts_tables 2/5, figures 3/6, multi_turn_override 4/5, two_sources 2/3, unanswerable_false_premise_injection 2/3.
+  - **Runtime (run 1):** total 687.7 s; golden evaluation 355.2 s (baseline 158.0 s, final 197.2 s); peak allocated **12,667 MB** — 16 GB budget check PASS.
+- **Kaggle result (run 2):** public score **0.832** (previous best 0.636, P1-EXP-002); public rank #1 at submission time.
+  - The leaderboard shows about 48% of the hidden set publicly, the rest is private, so this is **not** the final competition result.
+  - Saved run-2 output: 40 rows, `validate_submission.py` valid; statuses answered 29, not_found 6, session_override 3, false_premise 1, conflict 1; median 4.35 s; retried 10, fallbacks 1; submission stage 199.1 s; total runtime 499.7 s.
+- **Observed in the saved run-2 outputs:**
+  - **Memory budget breached by the workflow, not by the pipeline:** run 2 started with 10,213 MB still allocated from run 1, so every model was loaded twice. Peak allocated 18,736 MB, `peak_within_16gb_budget: false`, device memory full. Run 1, from a fresh kernel, peaked at 12,667 MB. Fixed in D-105 (one run per experiment; loaded models are reused if the notebook is re-run without a restart).
+  - **Self-checks 46 PASS / 1 FAIL:** `G2.validator_drops_low_trust_citations` failed because D-104's label + page rule now appends the page citation (`DOC3:p2`), while the gate expected an exact list. The low-trust citations were dropped correctly. This is a stale gate expectation, fixed in D-105.
+  - Cell 1 printed an empty commit because the VS Code kernel's working directory was `/app`, outside the repository (D-007); the code commit is `8d811e4`.
+- **Evaluation-integrity status:**
+  - P1-EXP-001 remains the **only clean held-out** golden-set measurement. P1-EXP-002 and P1-EXP-003 used golden-set failure analysis as development feedback (D-101), so their local numbers are development-set estimates and must not be presented as untouched held-out performance.
+  - Kaggle feedback is external feedback only: no question-specific tuning, no answer keys and no ID-specific behaviour.
+  - `submission.csv` is git-ignored and stays untracked; it was not edited by hand.
+- **Verdict:** KEEP as the **current best checkpoint**. **Next planned experiment:** P1-EXP-004 (D-105).
