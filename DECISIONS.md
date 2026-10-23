@@ -1005,3 +1005,95 @@
   - an 8-word-span scan, which printed counts only, found no `Questions.csv` or golden-set question text or IDs in the notebook.
 - **Outputs and cell count:** 36 → 29 cells. Outputs of the four edited code cells (configuration, 6b, 6c, run summary) were cleared. The other cells keep the outputs of the last pre-cleanup run, an uncommitted submission run: 47/47 self-checks PASS, `submission.csv` valid (40 rows), total runtime 512.8 s, peak allocated 12,213 MB.
 - **Future validation:** normal Restart & Run All runs of the production notebook (self-checks, submission and golden-set evaluation behind their flags).
+
+### P1-EXP-002 — Evaluation after the D-102 fixes, and the first Kaggle submission (2026-10-22)
+- **Objective:** measure the D-102 generation fixes on the golden set (a development set since D-101), and make the first Kaggle submission.
+- **Architecture / configuration:** the P1-EXP-001 architecture plus D-102 (structured `evidence_values` / `premise_check` output, evidence-value content checks, later-turn user values, `MAX_NEW_TOKENS_ANSWER` 320 → 448). No retrieval, model or other TUNE change.
+- **Git commit:** code `86140cb`. The submission run used the same code, before the notebook-only cleanup `fa2bfe4` (D-103).
+- **Environment / GPU:** the same Docker GPU container as P1-EXP-001 (RTX 5090; peak allocated 12,213 MB in the submission run). **Random seed:** 266.
+- **Golden-set result (final mode; reported by the team from the executed notebook; the per-question outputs were not preserved in the repository):**
+
+  | Metric | P1-EXP-001 final | P1-EXP-002 final |
+  |---|---|---|
+  | Correct answers | 13/25 | 14/25 |
+  | Recall@5 | 0.882 | 0.882 |
+  | Citation accuracy | 0.84 | 0.60 |
+  | Figure-reference F1 (diagnostic) | 0.793 | 0.560 |
+  | Median seconds / question | 2.03 | 3.89 |
+
+- **Kaggle result:** public score **0.636**; public rank 2 at submission time; top visible score 0.667. `submission.csv` has 40 rows and passed `validate_submission.py`. Status counts: answered 23, not_found 12, session_override 3, conflict 2. Median 4.5 s per question; submission stage 185.4 s.
+- **The public leaderboard is feedback only.** It is not used to tune TUNE values against the hidden questions, and no question-specific rule is written from it (D-006, D-101).
+- **Observed failures:** from the EXP-001 per-question outputs and the shape of our own EXP-002 `submission.csv`. Only list sizes, statuses and answer lengths were analysed; `Questions.csv` was not opened.
+  - 7 of 40 submission rows are the deterministic `not_found` fallback sentence, so the answer was discarded after the repair retry.
+  - 3 of the 12 `not_found` rows state document values or refute the question's premise.
+  - Only 5 of 40 rows cite a figure/table together with its page.
+  - Citation accuracy and figure-reference F1 fell against EXP-001, which points to extra citations and labels.
+- **Current limitations:**
+  - chart-value reading (bar values, series confusion);
+  - arithmetic on the wrong operand;
+  - a figure or table missing from the final top 5 for some questions;
+  - the golden set is now a development set, so its scores are optimistic;
+  - the EXP-002 per-question outputs and fallback reasons were not saved.
+- **Verdict:** MODIFY (D-104). **Next planned experiment:** P1-EXP-003.
+
+### D-104 — Fixes for P1-EXP-003: citations and figure references limited to the evidence used, label + page citations, status after evidence, fewer fallbacks (2026-10-22)
+- **Classification:** answer post-processing and prompt wording. **Not retrieval tuning.** Each fix addresses a general pattern seen in several outputs (P1-EXP-002) or an explicit assignment convention. None uses a question ID, question text or expected answer.
+- **Root causes addressed:**
+  - **R1:** the not_found fallback discarded answers after structural failures.
+  - **R2:** the status contradicted the answer.
+  - **R3:** figures and tables were cited without their page.
+  - **R4:** extra citations and figure references.
+- **Fixes (generation cell `finalize` and the system prompt):**
+  1. **Named figure/table is authoritative (Priority A).**
+     - When the question names a label that is in the context, other labels are dropped from the citations and figure references unless the answer names them.
+     - The named object is cited and listed. If it is superseded, its correction is cited and listed instead.
+     - The router (D-027) already pinned the named object.
+  2. **Citations limited to the evidence used (Priority B/C).**
+     - A cited block supports the answer when it prints a value the answer states, holds a value the model listed from it in `evidence_values`, or is a label the answer names. Numbers from the question or the user do not count.
+     - When at least one cited block supports the answer, blocks that support nothing are dropped, and figure references follow their citations.
+     - Answers without numbers keep their citations.
+  3. **Label + page citations.** A cited figure or table also cites the page it is printed on. This is the convention of the professor's `sample_submission.csv` (for example `DOC1:Table 1-1,DOC1:p1`; D-004).
+  4. **Status after evidence (Priority E).**
+     - **Strict pass:** a `not_found` that states values printed in the evidence, without a negation such as "not" or "only", is a content issue and triggers the repair retry.
+     - **After the retry:** such an answer becomes `answered`, and a `not_found` with `premise_check = contradicted` becomes `false_premise`. In both cases citations are derived from the supporting blocks.
+     - Forced statuses from conversation rules are never changed.
+  5. **Fewer fallbacks (R1).**
+     - If no valid citation remains, the blocks that print the answer's values are cited.
+     - A missing `citations` / `figure_references` key becomes an empty list.
+     - `E3` is mapped to block 3's cite code, and `DOC2 Table A-2` is normalised to `DOC2:Table A-2`.
+     - The JSON-failure message now asks for one complete object with short `evidence_values`.
+     - Unparseable or cut-off output still ends in the documented fallback.
+  6. **Prompt wording (general rules):**
+     - list only the numbers the answer uses;
+     - `not_found` only when the evidence says nothing about what is asked;
+     - a contradicted assumption is `false_premise`, not `not_found`;
+     - cite only blocks that contain what the answer uses;
+     - answer from a named figure or table and do not add other labels.
+     - **Hygiene correction:** the D-102 prompt example of an exact printed value (`about 4.7 times`) was the expected value of a golden-set item. It is replaced by a fictional value (`about 3.8 times`).
+  7. **Diagnostics (reporting only):** the evaluation summary and the submission run now print `retried` and `fallbacks` counts, so these causes are measured. The D-098 metric definitions are unchanged.
+- **Not changed:**
+  - `DENSE_TOP_K`, `BM25_TOP_K`, `RRF_K`, `RERANK_CANDIDATES`, `RERANK_KEEP`, `EXPANSION_MAX`, `MAX_FIGURE_IMAGES`, `MAX_NEW_TOKENS_*`;
+  - model IDs, greedy decoding, ingestion, retrieval and the conversation logic;
+  - the golden set and the evaluation definitions.
+  - Recall@5 was 0.882 in both earlier runs, so retrieval is not the primary failure.
+- **Not addressed (documented):**
+  - deterministic extraction of a requested value from structured rows (Priority D). It needs free-text matching of entity, variable and year to table rows, which is not a small, general change. Exact printed values stay enforced by the D-102 rules;
+  - chart-value reading;
+  - retrieval misses.
+- **Validation (no notebook run, no golden-set or `Questions.csv` access; isolated unit script on CPU with fictional "Testland" evidence, stubbed retrieval and a stubbed VLM):** **32/32 PASS.**
+  - **Notebook gates, run unchanged (8):** G6 (repair, fallback, length, status, conflict/override content rules, label sync), G6b (10 evidence-value rules) and the new **G6c** (9 checks: named label authoritative with page added, unsupported citation dropped, missing citation derived, not_found-with-value → answered, not_found with negation kept, contradicted premise → false_premise, strict not_found retried, `E#` mapping, colon normalisation).
+  - **Extra unit tests (24), by priority:**
+    - exact routing: router pins only the named figure, attaches the correction, reports unknown labels;
+    - near-identical figures not mixed; a named superseded figure cites its correction;
+    - an unrelated citation removed while a text answer keeps its citations;
+    - exact value kept and rounded value rejected;
+    - not_found-with-value answered; a genuine not_found kept;
+    - an invalid citation and missing lists recovered without the fallback; truncated JSON still falls back;
+    - a conflict keeps both sources and needs both values; a revision cites the revised value;
+    - a three-turn session override: the user value persists on a later turn, the document value is still reported, both override turns are accepted on the first attempt, the other conversation is isolated, the user value never enters the object store, and conversations are discarded at the end;
+    - no golden-set value is left in the system prompt.
+- **Static checks:**
+  - valid JSON; all code cells compile; every name is defined;
+  - no Questions.csv 8-word phrase or ID, no golden-set question or expected answer, and no `[QC]###` string in the notebook;
+  - only 5 of 29 cells changed (configuration flags, generation, submission and evaluation reporting, self-check G6c).
+- **Prepared for P1-EXP-003 (not run):** `EXPERIMENT_ID = "P1-EXP-003"`, `RUN_SELF_CHECKS = True`, `RUN_EVAL = True`, `RUN_SUBMISSION = False`. Notebook outputs cleared; the EXP-002 submission-run outputs are preserved in commit `fa2bfe4`. Golden-set scores from P1-EXP-003 on are development-set estimates (D-101).
