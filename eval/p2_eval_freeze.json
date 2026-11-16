@@ -1,0 +1,18 @@
+{
+ "p2_prompts_sha256": "75555da3faae774a19f10726cf75a2dbafea6a2d295e3c02be5a08d555f45b7b",
+ "p2_split_manifest_sha256": "9040871dd680aace991ba384300ad0a7d8e7a0bc0376aec71a3bd9c5cf8ea169",
+ "created_at": "2026-11-16T22:43:49+00:00",
+ "dataset_id": "reach-vb/pokemon-blip-captions",
+ "dataset_revision": "3790f29981f74ca26bf11662048342e19c5b615e",
+ "in_domain_method": "numpy default_rng(266).choice over cleaned TEST rows with a unique caption (dataset order); prompt = the cleaned test caption at source_idx",
+ "out_of_domain_and_compositional": "written by the team before any generation (configuration cell)",
+ "model_results_used": false,
+ "notebook_sha256": "71c4dbe52a657009b7ece91f2e6082a861baba5c10624d2d1bd1cbed9f8d7888",
+ "git": {
+  "git_available": true,
+  "is_repo_with_commit": true,
+  "commit": "e8fd3fb552bc6d6864f6ac50b3fb3f3a95d26ee2",
+  "dirty": false,
+  "dirty_files": []
+ }
+}
