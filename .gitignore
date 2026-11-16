@@ -1,0 +1,48 @@
+# --- OS / editor ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- Python / Jupyter ---
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# --- Secrets (never commit) ---
+.env
+.env.*
+*.key
+*token*
+kaggle.json
+
+# --- Course data and documents (never commit; they live outside this repo) ---
+*.pdf
+*.csv
+*.json
+!eval/*.csv
+!eval/*.json
+# Part 3 per-request JSON traces are submitted (D-079, D-100)
+!traces/**/*.json
+
+# --- Generated artifacts (re-created by notebooks; never commit) ---
+submission.csv
+chroma*/
+*.sqlite3
+*.faiss
+*.npy
+*.parquet
+figure_crops/
+page_renders/
+
+# --- Model weights / caches (weights go to Hugging Face, not GitHub) ---
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+hf_cache/
+.cache/
+checkpoints/

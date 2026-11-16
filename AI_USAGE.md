@@ -1,0 +1,39 @@
+# AI Usage Declaration
+
+This file lists every AI coding assistant used in this project and what it was used for.
+
+## Claude Code (Anthropic)
+
+- **Interface:** Claude Code VS Code extension
+- **Model:** Claude Opus 5.5 (`claude-opus-5-5`)
+- **Used by:** `[MEMBER NAME — TO BE FILLED]`
+- **Used for (cumulative; append as usage grows):**
+  - 2026-10-17: inspected the lab requirements and provided files, and summarised the Part 1 requirements.
+  - 2026-10-17: created the repository skeleton (`README.md`, `DECISIONS.md`, `CONTRIBUTIONS.md`, `AI_USAGE.md`, `.gitignore`, and the `notebooks/p1_rag.ipynb` skeleton) under the team's direction.
+  - 2026-10-17: Part 1 architecture design and review: proposed options, which the team corrected and approved (DECISIONS.md D-013 to D-035).
+  - 2026-10-17: implemented and refined the gated pre-experiment smoke-test harness in `p1_rag.ipynb`, plus the helper functions it validates (caption/figure/table extraction, table normalization, `ConversationState`, index fingerprint).
+  - 2026-10-17: ran it locally on a Mac (CPU only) and debugged the PDF, figure and table extraction checks against the provided documents.
+  - 2026-10-17: validated the answer schema, citation/label grammar (against `validate_submission.py`), conversation isolation and index immutability through the local smoke test.
+  - 2026-10-17: maintained `DECISIONS.md` from the measured local smoke-test results (D-041 to D-044).
+  - **Not done yet:** GPU-dependent smoke stages (embedder, reranker, VLM, GPU memory) are untested; no full RAG pipeline exists; no P1-EXP-001 run has occurred.
+  - 2026-10-17: Part 2 architecture design: proposed options, which the team corrected and approved; verified the dataset cards, leading to the Pokémon dataset decision (DECISIONS.md D-045 to D-064).
+  - 2026-10-17: implemented the gated smoke-test harness in `notebooks/p2_finetune.ipynb` (local P2-L\* stages and the prepared GPU P2-S\* stages), plus the helper functions it validates.
+  - 2026-10-17: ran local tests of dataset cleaning and deduplication, the split, 512×512 preprocessing, tokenization, and LoRA plumbing on a tiny randomly initialised UNet (no pretrained diffusion weights).
+  - 2026-10-17: debugged the Hugging Face dataset-column handling issue (a parquet physical-column index mismatch in the caption-size check).
+  - 2026-10-17: maintained `DECISIONS.md` for Part 2 from the measured local results.
+  - **Part 2 not done yet:** no real diffusion training has occurred; no GPU Part 2 stage (P2-S0 to P2-S7) has run; P2-EXP-001 has not occurred.
+  - 2026-10-17: Part 3 architecture design: proposed options, which the team corrected and approved (DECISIONS.md D-068 to D-088).
+  - 2026-10-17: implemented `notebooks/p3_agents.ipynb`: typed state and state machine, the five agents, orchestrator, JSON traces, Gradio app, evaluation helpers, the local P3-L\* smoke stages, and the prepared GPU P3-S\* stages.
+  - 2026-10-17: ran the local smoke test with mock backends (no VLM or diffusion weights) and debugged what it found: the vision Q&A contract was not enforced; an injected payload survived trigger-word stripping; tests mutated a global config value; a test-data error. Also resolved the gradio / huggingface-hub / kubernetes / pydantic dependency conflict.
+  - **Part 3 not done yet:** no real agent model (VLM, SD 1.5, instruct-pix2pix, CLIP) has been run; no GPU Part 3 stage (P3-S0 to P3-S10) has run; P3-EXP-001 has not occurred.
+  - 2026-11-16 (RTX 5090 Windows machine): inspected the machine read-only (GPU, Docker, disks) and set up the dedicated Docker environment (`docker/`: Dockerfile, compose file, dependency dry-run resolution, lock file; DECISIONS.md D-089).
+  - 2026-11-16: completed `notebooks/p2_finetune.ipynb`: run modes, data preparation with frozen split, frozen-prompt creation/verification, LoRA training with checkpoint/resume and provenance, resumable 120-image generation, KID/CLIP/LPIPS/memorization with a separately labelled sensitivity analysis, pre-registered final-adapter selection, human-evaluation materials and rating validation, report tables/figures, Hugging Face staging with an upload gate, safety record (D-090 to D-096).
+  - 2026-11-16: completed `notebooks/p3_agents.ipynb`: real backends (VLM fallback, revision pinning), per-request LoRA activation with verification (fixing LoRA leakage into non-domain requests), instruct-pix2pix CPU residency (fixing GPU co-residency), integration run, frozen `eval/p3_scenarios.csv` and `eval/p3_redteam.csv`, resumable fingerprinted evaluation runner, scoring/rescoring from real judgements, Gradio panels, system-card draft (D-097 to D-102).
+  - 2026-11-16: removed the smoke-test appendices from the final notebooks (originals preserved in `original_snapshot_2026-11-16/`), updated README, DECISIONS and this file.
+  - **Validation performed by the assistant was static only** (AST parse, nbformat schema, pyflakes rules, cell-order dependency check, library-signature inspection). **The assistant did not execute any notebook cell, training, generation, model inference or evaluation**; all experiments are run by the team.
+
+All design decisions were reviewed and approved by the team before implementation. They are logged in `DECISIONS.md`.
+
+## Other AI tools
+
+`[None so far — add any other assistant here with what it was used for]`
