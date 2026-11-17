@@ -1,0 +1,112 @@
+{
+ "request_id": "ea3590a20a0b421fab76ee9db4e9dcab",
+ "created_at": "2026-11-17T22:14:55.618+00:00",
+ "route": [
+  "planner",
+  "vision",
+  "prompt",
+  "generation",
+  "critique"
+ ],
+ "intent": "enhance",
+ "status": "FAILED_MODEL",
+ "revision_count": 0,
+ "enable_critique": false,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "The vision model returned no valid JSON.",
+ "final_image": null,
+ "errors": [
+  {
+   "agent": "vision",
+   "kind": "model_output",
+   "message": "The vision model returned no valid JSON."
+  }
+ ],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T22:14:55.618+00:00",
+   "elapsed_s": 0.0151,
+   "status": "ok",
+   "input_summary": {
+    "request": "Turn this photo into a watercolor painting.",
+    "image_type": "bytes"
+   },
+   "output_summary": {
+    "image": {
+     "sha256": "698ccfbfd168a8bbd8e7b60125255d84eac4ac5c920beeb542e2d3f52aa048b1",
+     "width": 1024,
+     "height": 756,
+     "mode": "RGB",
+     "source": "user"
+    }
+   },
+   "note": ""
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-17T22:14:55.633+00:00",
+   "elapsed_s": 1.5819,
+   "status": "ok",
+   "input_summary": {
+    "request": "Turn this photo into a watercolor painting."
+   },
+   "output_summary": {
+    "intent": "enhance",
+    "route": [
+     "planner",
+     "vision",
+     "prompt",
+     "generation",
+     "critique"
+    ],
+    "safety": {
+     "unsafe": false,
+     "categories": [
+      "art",
+      "painting"
+     ],
+     "reason": "art, painting"
+    },
+    "ambiguous": false,
+    "clarification": null,
+    "deceptive_intent": false,
+    "rationale": "User requests artistic enhancement of a photo using watercolor style."
+   },
+   "note": ""
+  },
+  {
+   "step": 3,
+   "agent": "vision",
+   "started_at": "2026-11-17T22:14:57.215+00:00",
+   "elapsed_s": 9.6995,
+   "status": "error",
+   "input_summary": {
+    "image": {
+     "image_sha256": "698ccfbfd168a8bbd8e7b60125255d84eac4ac5c920beeb542e2d3f52aa048b1",
+     "size": [
+      1024,
+      756
+     ]
+    },
+    "intent": "enhance"
+   },
+   "output_summary": {},
+   "note": "The vision model returned no valid JSON."
+  }
+ ]
+}

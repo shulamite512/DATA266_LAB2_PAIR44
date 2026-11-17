@@ -1,0 +1,46 @@
+{
+ "request_id": "de57039a8162496283299dc3ad3a6ffc",
+ "created_at": "2026-11-17T22:16:16.069+00:00",
+ "route": [],
+ "intent": null,
+ "status": "FAILED_INPUT",
+ "revision_count": 0,
+ "enable_critique": false,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "The uploaded file is empty.",
+ "final_image": null,
+ "errors": [
+  {
+   "agent": "input_guard",
+   "kind": "input",
+   "message": "The uploaded file is empty."
+  }
+ ],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T22:16:16.069+00:00",
+   "elapsed_s": 0.0,
+   "status": "error",
+   "input_summary": {
+    "request": "Turn this into a watercolor painting.",
+    "image_type": "bytes"
+   },
+   "output_summary": {},
+   "note": "The uploaded file is empty."
+  }
+ ]
+}
