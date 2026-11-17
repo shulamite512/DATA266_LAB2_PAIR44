@@ -6,7 +6,7 @@ Repository for DATA 266 (Fall 2026) Lab 2. GitHub name: `data266-lab2-team[##]`.
 |------|-------|----------|--------|
 | 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | Skeleton only |
 | 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | Full pipeline implemented (training, 120 images, metrics, human-eval materials, HF staging). **Not yet executed**: no adapter, image or metric exists yet |
-| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) archived; revised v2 evaluation (P3-EXP-002) prepared, **not yet run**; human judgements pending |
+| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) and P3-EXP-002 (v2, 40/40 executed, six `FAILED_MODEL` vision records) archived; P3-EXP-003 (v2 re-run after the D-113 Vision-agent repair) prepared, **not yet run**; human judgements pending |
 
 Engineering decisions and experiments are logged chronologically in [`DECISIONS.md`](DECISIONS.md) (Parts 2/3 implementation: D-089 onwards).
 
@@ -63,20 +63,20 @@ Dataset `reach-vb/pokemon-blip-captions` (CC BY-NC-SA 4.0, copyrighted character
 
 ### Part 3
 
-Keep `EXPERIMENT_ID = "P3-EXP-002"`, set `MODE`, then **Run All**: `SETUP_ONLY` (default; no weights; stages + verifies inputs, writes the v2 freeze) → `INTEGRATION_RUN` (three real end-to-end requests with the Part 2 LoRA; LoRA ON/OFF verified) → `FULL_EVALUATION` (15 scenarios × critique on/off + 10 red-team cases; resumable; report) → `RESCORE_ONLY` (real human judgements, no model re-run) → `DEMO` (local Gradio, any valid image).
+Keep `EXPERIMENT_ID = "P3-EXP-003"`, set `MODE`, then **Run All**: `SETUP_ONLY` (default; no weights; stages + verifies inputs against the v2 freeze, writes the P3-EXP-003 freeze) → `INTEGRATION_RUN` (three real end-to-end requests with the Part 2 LoRA; LoRA ON/OFF verified) → `FULL_EVALUATION` (15 scenarios × critique on/off + 10 red-team cases; resumable; report) → `RESCORE_ONLY` (real human judgements, no model re-run) → `DEMO` (local Gradio, any valid image).
 
 - Five agents (Planner, Vision, Prompt, Generation, Critique) share one pydantic `AgentState`; ≤ 2 revisions; one JSON trace per request (copied to `traces/<EXPERIMENT_ID>/`).
 - Models: `Qwen/Qwen3-VL-4B-Instruct` (fallback `Qwen/Qwen2.5-VL-3B-Instruct`, recorded if used), SD 1.5 + the **Part 2 adapter read from `SELECTED_FINAL_ADAPTER.json`** (hash-verified; domain style is blocked, never served by base SD, when it is missing), `timbrooks/instruct-pix2pix` (documented fallback), CLIP ViT-L/14 — all pinned to the revisions used in P3-EXP-001.
 - Text inside images is untrusted data and is never followed; generation/edit requests on images with instruction-like text (in any transcribed line, the joined transcription or the VLM description) are refused.
-- **Evaluation versions:** `P3-EXP-001` = preliminary run with the v1 files (`eval/p3_scenarios.csv`, `eval/p3_redteam.csv`, `eval/p3_eval_freeze.json`); 18/40 records `NOT_RUN` (missing team photos). Archived and read-only. `P3-EXP-002` = post-preliminary amendment v2 (`eval/p3_scenarios_v2.csv`, `eval/p3_redteam_v2.csv`, `eval/p3_input_manifest_v2.csv`, `eval/p3_eval_freeze_v2.json`; DECISIONS.md D-105 – D-112). **No personal photographs are needed.**
+- **Evaluation versions:** `P3-EXP-001` = preliminary run with the v1 files (`eval/p3_scenarios.csv`, `eval/p3_redteam.csv`, `eval/p3_eval_freeze.json`); 18/40 records `NOT_RUN` (missing team photos). Archived and read-only. `P3-EXP-002` = post-preliminary amendment v2 (`eval/p3_scenarios_v2.csv`, `eval/p3_redteam_v2.csv`, `eval/p3_input_manifest_v2.csv`, `eval/p3_eval_freeze_v2.json`; DECISIONS.md D-105 – D-112): 40/40 executed, six `FAILED_MODEL` vision records (S02–S04, both conditions); archived and read-only. `P3-EXP-003` = the same v2 files and inputs after one disclosed configuration repair motivated by those failures (D-113: vision `max_new_tokens` 450 → 1024 plus generation diagnostics; freeze `eval/p3_eval_freeze_v2_P3-EXP-003.json`), so it is **not** an untouched hold-out. **No personal photographs are needed.**
 - **Inputs (v2):** 3 held-out Part 2 TEST images (`p2_test:2/32/34`), 5 Wikimedia Commons photographs (CC BY / CC BY-SA / public domain, attribution in the manifest), 3 code-drawn injection posters, 4 deliberately broken files. Staged into `$LAB2_WORK_DIR/p3/inputs/v2/` and verified by SHA-256 before every use; nothing is ever substituted.
 
-#### Part 3 — revised evaluation, step by step
+#### Part 3 — evaluation P3-EXP-003, step by step
 
-1. **Input verification + freeze:** `MODE = "SETUP_ONLY"` → Run All. It downloads the five Commons originals (SHA-1 verified), extracts the three Part 2 test images from the dataset cache, renders the fixtures, checks every file, writes `eval/p3_eval_freeze_v2.json` and stages `$LAB2_WORK_DIR/p3/hf_staging/p3_inputs_v2/`. If Wikimedia answers HTTP 429, open the failing file's page (URL in the error), use *Download → Original file*, save it under `inputs/v2/originals/<name shown in the error>` and Run All again. Look at the staged images in `inputs/v2/` and confirm their suitability (manifest column `suitability_review`).
+1. **Input verification + freeze:** `MODE = "SETUP_ONLY"` → Run All. It re-verifies the staged inputs in `$LAB2_WORK_DIR/p3/inputs/v2/` against `eval/p3_eval_freeze_v2.json` (bytes must be identical), checks that the v2 CSVs are unchanged, runs the self-checks (including the D-113 truncation check) and writes `eval/p3_eval_freeze_v2_P3-EXP-003.json`. If an input must be re-downloaded and Wikimedia answers HTTP 429, open the failing file's page (URL in the error), use *Download → Original file*, save it under `inputs/v2/originals/<name shown in the error>` and Run All again.
 2. **Freeze in Git** (commands below).
-3. **Full evaluation:** `MODE = "FULL_EVALUATION"` → Run All (stops if the freeze is not committed or the code changed after it; resumable).
-4. **Human rescoring:** follow `$LAB2_WORK_DIR/p3/experiments/P3-EXP-002/human_packet/JUDGING_INSTRUCTIONS.txt`, save the filled files as `eval/p3_human_P3-EXP-002_*.csv`, then `MODE = "RESCORE_ONLY"` → Run All.
+3. **Full evaluation:** `MODE = "FULL_EVALUATION"` → Run All (stops if either freeze or a v2 file is not committed unchanged, or if the code changed after the freeze; resumable). All 40 requests run again into `$LAB2_WORK_DIR/p3/experiments/P3-EXP-003/`; traces go to `traces/P3-EXP-003/`.
+4. **Human rescoring:** follow `$LAB2_WORK_DIR/p3/experiments/P3-EXP-003/human_packet/JUDGING_INSTRUCTIONS.txt`, save the filled files as `eval/p3_human_P3-EXP-003_*.csv`, then `MODE = "RESCORE_ONLY"` → Run All.
 5. **Demo:** `MODE = "DEMO"` → Run All → `http://127.0.0.1:7860`.
 
 ### Freeze the pre-experiment state (run these yourself)
@@ -116,11 +116,27 @@ git log --oneline -4
 
 `notebooks/p2_finetune.ipynb` is also modified (Part 2 run outputs); commit it separately if the team wants those outputs in the repository.
 
+**P3-EXP-003 freeze (D-113):** the v2 freeze commands above are historical (P3-EXP-002, commit `ddbd4f4`); do not re-run them.
+
+```bash
+cd /app/implementation
+git status --short          # expect: .gitignore, AI_USAGE.md, DECISIONS.md, README.md, notebooks/p3_agents.ipynb,
+                            #         notebooks/p2_finetune.ipynb, traces/P3-EXP-002/ (no traces/*.jpg: now ignored)
+git add traces/P3-EXP-002   # P3-EXP-002 evidence, unchanged
+git commit -m "Preserve P3-EXP-002 traces (v2 evaluation, 40/40 executed)"
+git add .gitignore notebooks/p3_agents.ipynb README.md DECISIONS.md AI_USAGE.md
+git commit -m "P3-EXP-003: vision max_new_tokens 450->1024 + generation diagnostics (D-113); code freeze"
+# now run MODE="SETUP_ONLY" with EXPERIMENT_ID="P3-EXP-003" (creates eval/p3_eval_freeze_v2_P3-EXP-003.json), then:
+git add eval/p3_eval_freeze_v2_P3-EXP-003.json
+git commit -m "Freeze P3-EXP-003 evaluation configuration (v2 files and inputs unchanged)"
+git log --oneline -4
+```
+
 ### Manual inputs (never generated by code)
 
 - **No photographs are needed for Part 3** (v2 uses dataset-sourced, licensed inputs; D-105, D-109). The former `team_photo_*` / `team_person_01` inputs are retired.
 - **Part 2 human ratings** → `eval/p2_human_ratings.csv` (≥ 3 raters; template and rater packet in the work directory).
-- **Part 3 judgements (P3-EXP-002)** → `eval/p3_human_P3-EXP-002_{scenario,critic,redteam}_{member_a,member_b}.csv` and `eval/p3_human_P3-EXP-002_resolutions.csv` (templates and a blinded packet in the experiment directory).
+- **Part 3 judgements (P3-EXP-003)** → `eval/p3_human_P3-EXP-003_{scenario,critic,redteam}_{member_a,member_b}.csv` and `eval/p3_human_P3-EXP-003_resolutions.csv` (templates and a blinded packet in the experiment directory). The P3-EXP-002 packet stays in its own directory, unchanged.
 
 ## 16 GB GPU compatibility
 
