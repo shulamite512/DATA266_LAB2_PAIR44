@@ -5,8 +5,8 @@ Repository for DATA 266 (Fall 2026) Lab 2. GitHub name: `data266-lab2-team[##]`.
 | Part | Topic | Notebook | Status |
 |------|-------|----------|--------|
 | 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | Skeleton only |
-| 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | Full pipeline implemented (training, 120 images, metrics, human-eval materials, HF staging). **Not yet executed**: no adapter, image or metric exists yet |
-| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) and P3-EXP-002 (v2, 40/40 executed, six `FAILED_MODEL` vision records) archived; P3-EXP-003 (v2 re-run after the D-113 Vision-agent repair) prepared, **not yet run**; human judgements pending |
+| 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | **P2-EXP-001 executed** (`FULL_RUN`, 2026-11-16): LoRA A (r4) and B (r64) trained 1,500 steps each; 120/120 images (base/A/B × 20 prompts × 2 seeds); KID, CLIP, LPIPS, memorization and safety computed; final adapter **A** (lower in-domain KID 0.0619 vs 0.0825). **Pending:** human ratings (≥ 3 raters, `eval/p2_human_ratings.csv`) and the authorized Hugging Face upload |
+| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) and P3-EXP-002 (v2, 40/40 executed, six `FAILED_MODEL` vision records) archived; **P3-EXP-003 executed** (40/40; the D-113 token-limit repair did not fix S02–S04: confirmed repetition loop, proposed fix D-114 not implemented); human judgements pending |
 
 Engineering decisions and experiments are logged chronologically in [`DECISIONS.md`](DECISIONS.md) (Parts 2/3 implementation: D-089 onwards).
 
@@ -97,7 +97,7 @@ git add eval/ && git commit -m "Freeze Part 2 prompts/split and Part 3 evaluatio
 git log --oneline -3
 ```
 
-Clear notebook outputs before committing code changes (outputs change the notebook hash recorded in run manifests). Push only after team approval.
+Clear notebook outputs before committing code changes (outputs change the notebook hash recorded in run manifests). Push only after team approval. Exception: `notebooks/p3_agents.ipynb` is committed with the outputs of the P3-EXP-003 `FULL_EVALUATION` run (`MODE = "FULL_EVALUATION"`; code fingerprint identical to the freeze, because the fingerprint ignores outputs and the `MODE` line). The `SETUP_ONLY`, `INTEGRATION_RUN` and DEMO-verification runs are archived in `$LAB2_WORK_DIR/p3/archive/P3-EXP-003/`.
 
 **Part 3 v2 freeze (before P3-EXP-002):**
 
@@ -137,6 +137,33 @@ git log --oneline -4
 - **No photographs are needed for Part 3** (v2 uses dataset-sourced, licensed inputs; D-105, D-109). The former `team_photo_*` / `team_person_01` inputs are retired.
 - **Part 2 human ratings** → `eval/p2_human_ratings.csv` (≥ 3 raters; template and rater packet in the work directory).
 - **Part 3 judgements (P3-EXP-003)** → `eval/p3_human_P3-EXP-003_{scenario,critic,redteam}_{member_a,member_b}.csv` and `eval/p3_human_P3-EXP-003_resolutions.csv` (templates and a blinded packet in the experiment directory). The P3-EXP-002 packet stays in its own directory, unchanged.
+
+## Results recorded so far (report evidence)
+
+Machine-generated values copied from the saved records. Sources: `$LAB2_WORK_DIR/p2/results/P2-EXP-001/report_summary.json`, `$LAB2_WORK_DIR/p3/experiments/P3-EXP-00{2,3}/evaluation_summary.json`. No human judgement exists yet.
+
+**Part 2 (P2-EXP-001, 20 prompts × 2 seeds per model; KID subset size 20, high variance, see the std):**
+
+| model | KID ± std | CLIP all / in-domain / out-of-domain / compositional | LPIPS seed diversity | NSFW-flagged images | peak train GPU MB | GPU-h |
+|---|---|---|---|---|---|---|
+| base SD 1.5 | 0.0823 ± 0.0111 | 28.87 / 27.25 / 29.69 / 31.28 | 0.834 | 1 | — | — |
+| LoRA A (r4) — **selected** | 0.0619 ± 0.0092 | 27.92 / 26.75 / 30.03 / 28.13 | 0.744 | 3 | 6,307 | 0.067 |
+| LoRA B (r64) | 0.0825 ± 0.0089 | 26.04 / 24.71 / 30.18 / 24.54 | 0.711 | 8 | 6,542 | 0.069 |
+
+Memorization (CLIP image cosine of top-1 training neighbour, 10 in-domain generations): base mean 0.644, A 0.723 (max 0.826), B 0.753 (max 0.867). The real test-vs-train reference is 0.892 (max 0.953), so no generation exceeds the natural similarity level. Human win rates: `HUMAN_EVALUATION_PENDING`.
+
+**Part 3 (automated diagnostics, not task success; P3-EXP-003 is a disclosed post-evaluation correction, not a hold-out):**
+
+| metric | P3-EXP-002 (vision limit 450) | P3-EXP-003 (vision limit 1024) |
+|---|---|---|
+| executed / NOT_RUN / runner failures | 40 / 0 / 0 | 40 / 0 / 0 |
+| `FAILED_MODEL` records | 6 (S02–S04 × 2) | 6 (S02–S04 × 2) |
+| Vision-agent JSON failures (of 22 vision calls) | 6 (raw replies not saved) | 6 (all at 1024/1024 tokens, no EOS: repetition loop) |
+| automated checks with / without critique | 12/15, 11/15 | 12/15, 11/15 |
+| mean revisions with critique | 0.8 | 0.8 |
+| median latency all / with / without / red-team (s) | 8.13 / 11.43 / 8.41 / 1.53 | 7.96 / 14.10 / 8.25 / 1.54 |
+| red-team confirmed attack successes / defended / pending human | 0 / 8 / 2 | 0 / 8 / 2 |
+| human-judged scenario success | pending | pending |
 
 ## 16 GB GPU compatibility
 

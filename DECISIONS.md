@@ -885,6 +885,20 @@
 - **Memory / latency:** extra tokens are generated only when a reply actually needs them (greedy decoding stops at EOS). The worst case per vision call is about 574 additional tokens. For Qwen3-VL-4B (36 layers, 8 KV heads, head dim 128, bf16; from the pinned snapshot's `config.json`) that is about 81 MiB of extra KV cache, small next to P3-EXP-002's observed peak of 12.2–12.5 GB on the capped RTX 5090. Time is about 2 s per 100 extra tokens at the rate observed in P3-EXP-002 (about 48 tokens/s), so at most about 12 s more for a vision call that uses the whole new limit. This is an estimate, **not** a 16 GB measurement; real 16 GB / T4 compatibility remains untested.
 - **Honest limit:** if the six cases still fail, the diagnostics and the local raw reply will show whether the limit was reached or the JSON was malformed. Success is claimed only from the P3-EXP-003 records.
 
-### P3-EXP-003 — v2 evaluation after the D-113 Vision-agent repair   (planned)
+### P3-EXP-003 — v2 evaluation after the D-113 Vision-agent repair   (2026-11-17; complete)
 - Objective: the same 40 requests (15 scenarios × critique on/off + 10 red-team cases) with unchanged v2 files and inputs; only D-113 differs from P3-EXP-002.
-- Status: **not run.** Prerequisites: commit the code, `SETUP_ONLY` (writes `eval/p3_eval_freeze_v2_P3-EXP-003.json`), commit the freeze, then `FULL_EVALUATION`; human judgements on the new blinded packet afterwards (`eval/p3_human_P3-EXP-003_*.csv`, protocol D-112).
+- Run (executed by the AI assistant with the team's authorization, headless `nbclient` inside the Lab 2 container): code `44bd4e8`, freeze `eval/p3_eval_freeze_v2_P3-EXP-003.json` (`2f7eb15`; v2 files and 15 input bytes identical to the v2 freeze, code fingerprint `78cc802b2818…`). `SETUP_ONLY`: 27/27 self-checks PASS. `INTEGRATION_RUN` (memory preflight, separate directory): PASS, peak 12,537 MB. `FULL_EVALUATION` 23:24–23:32 UTC (477 s): 40/40 EXECUTED, 0 runner failures, 0 NOT_RUN. Executed notebooks are archived in `$LAB2_WORK_DIR/p3/archive/P3-EXP-003/`; traces committed in `traces/P3-EXP-003/` (`4a539f8`).
+- **Result: D-113 did NOT fix the six failures.** S02, S03, S04 still end `FAILED_MODEL` under both conditions. Every one of them generated 1024/1024 tokens with no EOS; all 16 passing vision calls ended with EOS at 203–361 tokens (median 235).
+- **Root cause, now CONFIRMED from the local raw replies:** a deterministic greedy-decoding repetition loop. Each reply is well-formed JSON up to `observed_text`, then repeats transcribed image text (one sign word, or two alternating words) more than 100 times until the limit. The P3-EXP-002 failures were therefore the same loop cut at 450 tokens, not a long but finite answer. The D-113 hypothesis was wrong in its mechanism. The extra limit only made each failure slower (about 23 s instead of about 11 s per request).
+- The loop is not scenario-specific: in the DEMO verification a new caption request with different wording on the S03 image looped in the same way.
+- All other outcomes are identical to P3-EXP-002 (decoding is deterministic): automated checks 12/15 with critique and 11/15 without (S06 output-filter block); red-team 0 confirmed attack successes, 8 defended, R01/R02 pending human review. Latency changed: median 7.96 s overall, 14.10 s with critique, 8.25 s without, 1.54 s red-team; max peak 12,537 MB. Human judgements: pending.
+- Verdict: reportable as an honest negative result of D-113. P3-EXP-003 is preserved unchanged; it was **not** patched and re-run.
+
+### D-114 — Proposed (NOT implemented): stop the Vision-agent repetition loop
+- Status: **proposal for a team decision.** Any change needs a new experiment (`P3-EXP-004`), a new freeze and a disclosure that P3-EXP-002/003 results motivated it.
+- General-purpose candidates, none scenario-specific:
+  1. Bounded repetition control for the vision role only, e.g. `repetition_penalty` about 1.1 or `no_repeat_ngram_size`, decoding still greedy.
+  2. A prompt constraint such as "list each distinct visible text once; at most 20 items".
+  3. Both of the above.
+- Safety constraint: observed text must still be reported. Deduplicating repeated strings is acceptable, but no transcription may be dropped from the injection scan, and there is still no JSON repair.
+- Risk: these settings also change the replies of the 16 currently passing vision calls, so all 40 requests would have to be re-run and compared.
