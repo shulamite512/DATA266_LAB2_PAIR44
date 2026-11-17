@@ -1,0 +1,180 @@
+{
+ "request_id": "f14d8600e9f24aa9a422587d7afc2efc",
+ "created_at": "2026-11-17T23:31:35.715+00:00",
+ "route": [
+  "planner",
+  "prompt",
+  "generation",
+  "critique"
+ ],
+ "intent": "domain_style",
+ "status": "COMPLETED",
+ "revision_count": 0,
+ "enable_critique": false,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "Image generated (critique disabled).",
+ "final_image": {
+  "sha256": "714ccdfb999f2fc2fb7f9e9a89ba1e994a75997da9c0fd8012f8063fee0a53d7",
+  "width": 512,
+  "height": 512,
+  "mode": "RGB",
+  "source": "attempt-1"
+ },
+ "errors": [],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T23:31:35.716+00:00",
+   "elapsed_s": 0.0,
+   "status": "ok",
+   "input_summary": {
+    "request": "Draw a Pok\u00e9mon that looks like a teapot.",
+    "image_type": "NoneType"
+   },
+   "output_summary": {
+    "image": null
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-17T23:31:35.716+00:00",
+   "elapsed_s": 1.7829,
+   "status": "ok",
+   "input_summary": {
+    "request": "Draw a Pok\u00e9mon that looks like a teapot."
+   },
+   "output_summary": {
+    "intent": "domain_style",
+    "route": [
+     "planner",
+     "prompt",
+     "generation",
+     "critique"
+    ],
+    "safety": {
+     "unsafe": false,
+     "categories": [
+      "Art",
+      "Pok\u00e9mon",
+      "Teapot"
+     ],
+     "reason": "Art, Pok\u00e9mon, Teapot"
+    },
+    "ambiguous": false,
+    "clarification": null,
+    "deceptive_intent": false,
+    "rationale": "User wants a Pok\u00e9mon-style illustration of a teapot, which falls under domain_style since it requests rendering in Pok\u00e9mon art style."
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 3,
+   "agent": "orchestrator",
+   "started_at": "2026-11-17T23:31:37.499+00:00",
+   "elapsed_s": 0.0,
+   "status": "decision",
+   "input_summary": {},
+   "output_summary": {
+    "injection": {
+     "detected": false,
+     "matches": [],
+     "sources": []
+    },
+    "stop": null
+   },
+   "note": "planner_gate",
+   "diagnostics": {}
+  },
+  {
+   "step": 4,
+   "agent": "prompt",
+   "started_at": "2026-11-17T23:31:37.499+00:00",
+   "elapsed_s": 1.2159,
+   "status": "ok",
+   "input_summary": {
+    "revision_instruction": null
+   },
+   "output_summary": {
+    "prompt": "A Pok\u00e9mon designed as a teapot, whimsical and cute, with steam rising from its spout, sitting on a cozy table.",
+    "negative_prompt": "realistic, blurry, text, watermark, low quality, nsfw, nudity, gore, low quality, blurry, watermark, text",
+    "mode": "txt2img",
+    "strength": null,
+    "use_lora": true,
+    "preserve": [],
+    "source": "vlm",
+    "quarantine_removed": []
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 5,
+   "agent": "generation",
+   "started_at": "2026-11-17T23:31:38.715+00:00",
+   "elapsed_s": 0.7954,
+   "status": "ok",
+   "input_summary": {
+    "request": {
+     "mode": "txt2img",
+     "prompt": "A Pok\u00e9mon designed as a teapot, whimsical and cute, with steam rising from its spout, sitting on a cozy table.",
+     "negative_prompt": "realistic, blurry, text, watermark, low quality, nsfw, nudity, gore, low quality, blurry, watermark, text",
+     "seed": 266,
+     "steps": 30,
+     "guidance_scale": 7.5,
+     "strength": null,
+     "image_guidance_scale": null,
+     "adapter": "p2_lora",
+     "model_id": "stable-diffusion-v1-5/stable-diffusion-v1-5 + Part 2 LoRA [P2-EXP-001 run A (r4) sha 20d8d67121db]",
+     "requires_input_image": false
+    }
+   },
+   "output_summary": {
+    "n": 1,
+    "request": {
+     "mode": "txt2img",
+     "prompt": "A Pok\u00e9mon designed as a teapot, whimsical and cute, with steam rising from its spout, sitting on a cozy table.",
+     "negative_prompt": "realistic, blurry, text, watermark, low quality, nsfw, nudity, gore, low quality, blurry, watermark, text",
+     "seed": 266,
+     "steps": 30,
+     "guidance_scale": 7.5,
+     "strength": null,
+     "image_guidance_scale": null,
+     "adapter": "p2_lora",
+     "model_id": "stable-diffusion-v1-5/stable-diffusion-v1-5 + Part 2 LoRA [P2-EXP-001 run A (r4) sha 20d8d67121db]",
+     "requires_input_image": false
+    },
+    "image_ref": {
+     "sha256": "714ccdfb999f2fc2fb7f9e9a89ba1e994a75997da9c0fd8012f8063fee0a53d7",
+     "width": 512,
+     "height": 512,
+     "mode": "RGB",
+     "source": "attempt-1"
+    },
+    "nsfw_flag": false,
+    "seconds": 0.795,
+    "lora_active": true,
+    "adapter_sha256": "20d8d67121db3c6858a872528c2310d2eba7f5f55c8c0d70d61fe7fd359540bd",
+    "peak_gpu_mb": 12537
+   },
+   "note": "",
+   "diagnostics": {}
+  }
+ ]
+}

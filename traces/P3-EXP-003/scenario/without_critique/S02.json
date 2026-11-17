@@ -1,0 +1,123 @@
+{
+ "request_id": "9d6c5809fb51458290e8531ee31c5bb8",
+ "created_at": "2026-11-17T23:29:37.816+00:00",
+ "route": [
+  "planner",
+  "vision"
+ ],
+ "intent": "caption_question",
+ "status": "FAILED_MODEL",
+ "revision_count": 0,
+ "enable_critique": false,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "The vision model returned no valid JSON.",
+ "final_image": null,
+ "errors": [
+  {
+   "agent": "vision",
+   "kind": "model_output",
+   "message": "The vision model returned no valid JSON.",
+   "diagnostics": {
+    "output_tokens": 1024,
+    "max_new_tokens": 1024,
+    "hit_token_limit": true,
+    "ended_with_eos": false,
+    "json_parsed": false,
+    "validation_passed": false,
+    "raw_chars": 2537
+   }
+  }
+ ],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T23:29:37.816+00:00",
+   "elapsed_s": 0.0182,
+   "status": "ok",
+   "input_summary": {
+    "request": "What objects can you see in this photo?",
+    "image_type": "bytes"
+   },
+   "output_summary": {
+    "image": {
+     "sha256": "698ccfbfd168a8bbd8e7b60125255d84eac4ac5c920beeb542e2d3f52aa048b1",
+     "width": 1024,
+     "height": 756,
+     "mode": "RGB",
+     "source": "user"
+    }
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-17T23:29:37.834+00:00",
+   "elapsed_s": 1.4748,
+   "status": "ok",
+   "input_summary": {
+    "request": "What objects can you see in this photo?"
+   },
+   "output_summary": {
+    "intent": "caption_question",
+    "route": [
+     "planner",
+     "vision"
+    ],
+    "safety": {
+     "unsafe": false,
+     "categories": [],
+     "reason": ""
+    },
+    "ambiguous": false,
+    "clarification": null,
+    "deceptive_intent": false,
+    "rationale": "User is asking for a description of objects in a photo, which is a captioning question."
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 3,
+   "agent": "vision",
+   "started_at": "2026-11-17T23:29:39.309+00:00",
+   "elapsed_s": 21.4807,
+   "status": "error",
+   "input_summary": {
+    "image": {
+     "image_sha256": "698ccfbfd168a8bbd8e7b60125255d84eac4ac5c920beeb542e2d3f52aa048b1",
+     "size": [
+      1024,
+      756
+     ]
+    },
+    "intent": "caption_question"
+   },
+   "output_summary": {},
+   "note": "The vision model returned no valid JSON.",
+   "diagnostics": {
+    "output_tokens": 1024,
+    "max_new_tokens": 1024,
+    "hit_token_limit": true,
+    "ended_with_eos": false,
+    "json_parsed": false,
+    "validation_passed": false,
+    "raw_chars": 2537
+   }
+  }
+ ]
+}
