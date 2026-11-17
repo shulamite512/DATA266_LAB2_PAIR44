@@ -138,6 +138,13 @@ git log --oneline -4
 - **Part 2 human ratings** → `eval/p2_human_ratings.csv` (≥ 3 raters; template and rater packet in the work directory).
 - **Part 3 judgements (P3-EXP-003)** → `eval/p3_human_P3-EXP-003_{scenario,critic,redteam}_{member_a,member_b}.csv` and `eval/p3_human_P3-EXP-003_resolutions.csv` (templates and a blinded packet in the experiment directory). The P3-EXP-002 packet stays in its own directory, unchanged.
 
+## Submission documents
+
+- **Final evidence:** `SUBMISSION_CHECKLIST.md` lists readiness (COMPLETE / PENDING / BLOCKED / NOT VERIFIED), Hugging Face upload steps, and GitHub/Canvas steps. Final automated evidence is P2-EXP-001 and P3-EXP-003 (D-115).
+- `HUMAN_EVALUATION.md`: instructions for the 3 Part 2 raters and the 2 Part 3 judges, file formats, merging, disagreement resolution, `REPORT_ONLY` / `RESCORE_ONLY`.
+- `report/data266_lab2_report.tex`: IEEE draft for Parts 2–3 (Overleaf, IEEEtran; figures in `report/figures/`). Human results and Part 1 are marked `PENDING` / `MISSING`.
+- `links.txt`: links required for the Canvas ZIP (currently all `MISSING`).
+
 ## Results recorded so far (report evidence)
 
 Machine-generated values copied from the saved records. Sources: `$LAB2_WORK_DIR/p2/results/P2-EXP-001/report_summary.json`, `$LAB2_WORK_DIR/p3/experiments/P3-EXP-00{2,3}/evaluation_summary.json`. No human judgement exists yet.

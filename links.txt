@@ -1,0 +1,20 @@
+DATA 266 Lab 2 - submission links (Team [## - TO BE FILLED])
+Every line marked MISSING must be filled in before the Canvas ZIP is created. Verify the required set against the official requirements PDF.
+
+GitHub repository (private; instructor access granted): MISSING - repository not created or pushed yet (no git remote configured)
+Final report (PDF):                                    MISSING - report/data266_lab2_report.tex is a Parts 2-3 draft; Part 1 content and human results are pending
+
+Part 1
+  Kaggle notebook / competition submission:            MISSING - Part 1 not implemented in this repository
+
+Part 2
+  Hugging Face model - selected adapter (run A, r4):   MISSING - staged locally, upload not authorized
+  Hugging Face model - run A (r4):                     MISSING - staged locally (identical to the selected adapter; may share one repo)
+  Hugging Face model - run B (r64):                    MISSING - staged locally, upload not authorized
+  Hugging Face dataset - 120 generated images:         MISSING - staged locally, upload not authorized
+
+Part 3
+  Hugging Face dataset - evaluation inputs (v2):       MISSING - staged locally, upload not authorized
+  Gradio demo:                                         local only (127.0.0.1:7860, share=False) - demo video/screenshots MISSING if required
+
+Meeting recordings (knowledge transfer, design trade-offs): MISSING - see CONTRIBUTIONS.md
