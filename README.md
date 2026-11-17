@@ -6,7 +6,7 @@ Repository for DATA 266 (Fall 2026) Lab 2. GitHub name: `data266-lab2-team[##]`.
 |------|-------|----------|--------|
 | 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | Skeleton only |
 | 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | Full pipeline implemented (training, 120 images, metrics, human-eval materials, HF staging). **Not yet executed**: no adapter, image or metric exists yet |
-| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | Real-model pipeline, integration run, full evaluation and Gradio implemented. **Not yet executed**: depends on the Part 2 adapter |
+| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) archived; revised v2 evaluation (P3-EXP-002) prepared, **not yet run**; human judgements pending |
 
 Engineering decisions and experiments are logged chronologically in [`DECISIONS.md`](DECISIONS.md) (Parts 2/3 implementation: D-089 onwards).
 
@@ -31,7 +31,7 @@ _Pending: implementation not started._ The notebook will be run top to bottom wi
 |---|---|---|
 | `/app/implementation` | this repository | notebooks, `eval/`, `traces/` |
 | `/app/data266_lab2_work/p2` | `$LAB2_WORK_DIR/p2` | checkpoints, adapters, 120 images, metrics, human-eval packet, HF staging |
-| `/app/data266_lab2_work/p3` | `$LAB2_WORK_DIR/p3` | `inputs/` (team photos), evaluation results, traces, integration/demo evidence |
+| `/app/data266_lab2_work/p3` | `$LAB2_WORK_DIR/p3` | `inputs/v2/` (staged, hash-verified evaluation inputs), `experiments/<ID>/` results + report, integration/demo evidence, `hf_staging/`, `archive/` |
 | `/app/data266_lab2_work/hf_cache`, `torch_cache` | same | model/dataset downloads (persist across containers) |
 
 Start / stop (PowerShell, from `implementation\docker`):
@@ -63,11 +63,21 @@ Dataset `reach-vb/pokemon-blip-captions` (CC BY-NC-SA 4.0, copyrighted character
 
 ### Part 3
 
-Set `MODE`, then **Run All**: `SETUP_ONLY` (default; no weights) → `INTEGRATION_RUN` (three real end-to-end requests with the Part 2 LoRA; LoRA ON/OFF verified) → `FULL_EVALUATION` (15 scenarios × critique on/off + 10 red-team cases; resumable) → `RESCORE_ONLY` (real human judgements, no model re-run) → `DEMO` (local Gradio).
+Keep `EXPERIMENT_ID = "P3-EXP-002"`, set `MODE`, then **Run All**: `SETUP_ONLY` (default; no weights; stages + verifies inputs, writes the v2 freeze) → `INTEGRATION_RUN` (three real end-to-end requests with the Part 2 LoRA; LoRA ON/OFF verified) → `FULL_EVALUATION` (15 scenarios × critique on/off + 10 red-team cases; resumable; report) → `RESCORE_ONLY` (real human judgements, no model re-run) → `DEMO` (local Gradio, any valid image).
 
 - Five agents (Planner, Vision, Prompt, Generation, Critique) share one pydantic `AgentState`; ≤ 2 revisions; one JSON trace per request (copied to `traces/<EXPERIMENT_ID>/`).
-- Models: `Qwen/Qwen3-VL-4B-Instruct` (fallback `Qwen/Qwen2.5-VL-3B-Instruct`, recorded if used), SD 1.5 + the **Part 2 adapter read from `SELECTED_FINAL_ADAPTER.json`** (hash-verified; domain style is blocked, never served by base SD, when it is missing), `timbrooks/instruct-pix2pix` (documented fallback), CLIP ViT-L/14.
-- Text inside images is untrusted data and is never followed; generation/edit requests on images with instruction-like text are refused.
+- Models: `Qwen/Qwen3-VL-4B-Instruct` (fallback `Qwen/Qwen2.5-VL-3B-Instruct`, recorded if used), SD 1.5 + the **Part 2 adapter read from `SELECTED_FINAL_ADAPTER.json`** (hash-verified; domain style is blocked, never served by base SD, when it is missing), `timbrooks/instruct-pix2pix` (documented fallback), CLIP ViT-L/14 — all pinned to the revisions used in P3-EXP-001.
+- Text inside images is untrusted data and is never followed; generation/edit requests on images with instruction-like text (in any transcribed line, the joined transcription or the VLM description) are refused.
+- **Evaluation versions:** `P3-EXP-001` = preliminary run with the v1 files (`eval/p3_scenarios.csv`, `eval/p3_redteam.csv`, `eval/p3_eval_freeze.json`); 18/40 records `NOT_RUN` (missing team photos). Archived and read-only. `P3-EXP-002` = post-preliminary amendment v2 (`eval/p3_scenarios_v2.csv`, `eval/p3_redteam_v2.csv`, `eval/p3_input_manifest_v2.csv`, `eval/p3_eval_freeze_v2.json`; DECISIONS.md D-105 – D-112). **No personal photographs are needed.**
+- **Inputs (v2):** 3 held-out Part 2 TEST images (`p2_test:2/32/34`), 5 Wikimedia Commons photographs (CC BY / CC BY-SA / public domain, attribution in the manifest), 3 code-drawn injection posters, 4 deliberately broken files. Staged into `$LAB2_WORK_DIR/p3/inputs/v2/` and verified by SHA-256 before every use; nothing is ever substituted.
+
+#### Part 3 — revised evaluation, step by step
+
+1. **Input verification + freeze:** `MODE = "SETUP_ONLY"` → Run All. It downloads the five Commons originals (SHA-1 verified), extracts the three Part 2 test images from the dataset cache, renders the fixtures, checks every file, writes `eval/p3_eval_freeze_v2.json` and stages `$LAB2_WORK_DIR/p3/hf_staging/p3_inputs_v2/`. If Wikimedia answers HTTP 429, open the failing file's page (URL in the error), use *Download → Original file*, save it under `inputs/v2/originals/<name shown in the error>` and Run All again. Look at the staged images in `inputs/v2/` and confirm their suitability (manifest column `suitability_review`).
+2. **Freeze in Git** (commands below).
+3. **Full evaluation:** `MODE = "FULL_EVALUATION"` → Run All (stops if the freeze is not committed or the code changed after it; resumable).
+4. **Human rescoring:** follow `$LAB2_WORK_DIR/p3/experiments/P3-EXP-002/human_packet/JUDGING_INSTRUCTIONS.txt`, save the filled files as `eval/p3_human_P3-EXP-002_*.csv`, then `MODE = "RESCORE_ONLY"` → Run All.
+5. **Demo:** `MODE = "DEMO"` → Run All → `http://127.0.0.1:7860`.
 
 ### Freeze the pre-experiment state (run these yourself)
 
@@ -89,11 +99,28 @@ git log --oneline -3
 
 Clear notebook outputs before committing code changes (outputs change the notebook hash recorded in run manifests). Push only after team approval.
 
+**Part 3 v2 freeze (before P3-EXP-002):**
+
+```bash
+cd /app/implementation
+git status --short                       # expect: notebooks/p3_agents.ipynb, eval/*_v2.csv, README/DECISIONS/AI_USAGE, traces/P3-EXP-001/
+git add traces/P3-EXP-001                # preliminary evidence, unchanged
+git commit -m "Archive preliminary Part 3 evaluation traces (P3-EXP-001)"
+git add notebooks/p3_agents.ipynb eval/p3_scenarios_v2.csv eval/p3_redteam_v2.csv eval/p3_input_manifest_v2.csv README.md DECISIONS.md AI_USAGE.md
+git commit -m "Part 3 v2: post-preliminary amendment (dataset-sourced inputs, D-105..D-112); code freeze before P3-EXP-002"
+# now run MODE="SETUP_ONLY" (creates eval/p3_eval_freeze_v2.json), then:
+git add eval/p3_eval_freeze_v2.json
+git commit -m "Freeze Part 3 v2 evaluation inputs and configuration before P3-EXP-002"
+git log --oneline -4
+```
+
+`notebooks/p2_finetune.ipynb` is also modified (Part 2 run outputs); commit it separately if the team wants those outputs in the repository.
+
 ### Manual inputs (never generated by code)
 
-- **Team photos** in `$LAB2_WORK_DIR/p3/inputs/`: `team_photo_01` (scene with ≥ 3 objects), `team_photo_02` (indoor or outdoor scene with a clear main subject), `team_photo_03` (a photo suitable for sketch/enhance), `team_photo_04` (scene with plants/trees, also used for the Pokémon-style transfer), `team_person_01` (a consenting team member; red-team real-person cases). `.jpg/.jpeg/.png/.webp`. Missing files → their items are `NOT_RUN`.
+- **No photographs are needed for Part 3** (v2 uses dataset-sourced, licensed inputs; D-105, D-109). The former `team_photo_*` / `team_person_01` inputs are retired.
 - **Part 2 human ratings** → `eval/p2_human_ratings.csv` (≥ 3 raters; template and rater packet in the work directory).
-- **Part 3 judgements** → `eval/p3_human_judgements.csv` and `eval/p3_critic_human_agreement.csv` (templates next to the results).
+- **Part 3 judgements (P3-EXP-002)** → `eval/p3_human_P3-EXP-002_{scenario,critic,redteam}_{member_a,member_b}.csv` and `eval/p3_human_P3-EXP-002_resolutions.csv` (templates and a blinded packet in the experiment directory).
 
 ## 16 GB GPU compatibility
 
