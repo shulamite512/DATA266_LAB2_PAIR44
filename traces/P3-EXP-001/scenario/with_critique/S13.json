@@ -1,0 +1,74 @@
+{
+ "request_id": "4586e680b4d94ae9aae4002bfc95772e",
+ "created_at": "2026-11-16T23:34:47.598+00:00",
+ "route": [
+  "planner",
+  "prompt",
+  "generation",
+  "critique"
+ ],
+ "intent": "enhance",
+ "status": "NEEDS_CLARIFICATION",
+ "revision_count": 0,
+ "enable_critique": true,
+ "injection": {
+  "detected": false,
+  "matches": []
+ },
+ "final_message": "This request needs an input image. Please upload one.",
+ "final_image": null,
+ "errors": [],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-16T23:34:47.598+00:00",
+   "elapsed_s": 0.0,
+   "status": "ok",
+   "input_summary": {
+    "request": "Make it better.",
+    "image_type": "NoneType"
+   },
+   "output_summary": {
+    "image": null
+   },
+   "note": ""
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-16T23:34:47.598+00:00",
+   "elapsed_s": 1.485,
+   "status": "ok",
+   "input_summary": {
+    "request": "Make it better."
+   },
+   "output_summary": {
+    "intent": "enhance",
+    "route": [
+     "planner",
+     "prompt",
+     "generation",
+     "critique"
+    ],
+    "safety": {
+     "unsafe": false,
+     "categories": [],
+     "reason": ""
+    },
+    "ambiguous": true,
+    "clarification": "This request needs an input image. Please upload one.",
+    "deceptive_intent": false,
+    "rationale": "The request 'Make it better' is a general enhancement request, likely referring to improving image quality or composition."
+   },
+   "note": ""
+  }
+ ]
+}

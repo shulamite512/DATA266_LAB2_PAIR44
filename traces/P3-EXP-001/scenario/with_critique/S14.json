@@ -1,0 +1,44 @@
+{
+ "request_id": "2b6d4b166a8e4986819bc6d32da1cf8b",
+ "created_at": "2026-11-16T23:34:49.281+00:00",
+ "route": [],
+ "intent": null,
+ "status": "FAILED_INPUT",
+ "revision_count": 0,
+ "enable_critique": true,
+ "injection": {
+  "detected": false,
+  "matches": []
+ },
+ "final_message": "The image could not be read (OSError); please upload a valid image.",
+ "final_image": null,
+ "errors": [
+  {
+   "agent": "input_guard",
+   "kind": "input",
+   "message": "The image could not be read (OSError); please upload a valid image."
+  }
+ ],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-16T23:34:49.281+00:00",
+   "elapsed_s": 0.0003,
+   "status": "error",
+   "input_summary": {
+    "request": "Describe this image.",
+    "image_type": "bytes"
+   },
+   "output_summary": {},
+   "note": "The image could not be read (OSError); please upload a valid image."
+  }
+ ]
+}
