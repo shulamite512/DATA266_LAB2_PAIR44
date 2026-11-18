@@ -1,4 +1,5 @@
-% DATA 266 Lab 2 -- Pair 44 -- report DRAFT covering Parts 1, 2 and 3 (NOT final: human results pending).
+% DATA 266 Lab 2 -- Pair 44 -- report DRAFT covering Parts 1, 2 and 3 (NOT final: Part 2 human results added
+% 2026-11-18 (D-118); Part 1 groundedness and Part 3 human judgements still pending).
 % Compile with pdfLaTeX on Overleaf (IEEEtran is built in). Figures are in figures/ (sources: Appendix B).
 % Every number below is copied from saved experiment records (sources in Appendix A).
 % Evidence tags for Part 1: [OUTPUT] = printed in a saved executed notebook; [DOC] = recorded only in the
@@ -25,9 +26,9 @@ For Part~1 we built a multimodal retrieval-augmented question-answering system o
 \item On the frozen 25-question golden set (the only held-out run, P1-EXP-001), the final system raised Recall@5 from 0.764 to 0.882 and citation accuracy from 0.64 to 0.84 over a dense-only baseline, while answer correctness stayed at 13--14 of 25.
 \item The final checkpoint (P1-EXP-003) scored 0.832 on the Kaggle public leaderboard. This covers about 48\% of the hidden questions, so it is not the final competition result.
 \end{itemize}
-For Part~2, we fine-tuned Stable Diffusion 1.5 with two LoRA adapters (rank 4 and rank 64) on 740 BLIP-captioned Pok\'emon images. We compared them with the base model on 120 generated images using KID, CLIP score, LPIPS diversity, a memorization probe and safety-checker counts. The rank-4 adapter was selected by a pre-registered rule (in-domain KID $0.0619\pm0.0092$ vs.\ $0.0825\pm0.0089$ for rank 64 and $0.0823\pm0.0111$ for the base model).
+For Part~2, we fine-tuned Stable Diffusion 1.5 with two LoRA adapters (rank 4 and rank 64) on 740 BLIP-captioned Pok\'emon images. We compared them with the base model on 120 generated images using KID, CLIP score, LPIPS diversity, a memorization probe and safety-checker counts. The rank-4 adapter was selected by a pre-registered rule (in-domain KID $0.0619\pm0.0092$ vs.\ $0.0825\pm0.0089$ for rank 64 and $0.0823\pm0.0111$ for the base model). Blinded human raters did \emph{not} confirm this improvement: in 25 pairs judged by three raters, the rank-4 adapter was preferred over the base model in 38.7\% (29/75) of domain-style judgments and 41.3\% (31/75) of prompt-match judgments (majority vote 10/25 for both).
 For Part~3, we built a five-agent system (Planner, Vision, Prompt, Generation, Critique) around a shared typed state. It uses Qwen3-VL-4B, SD~1.5 with the selected adapter, InstructPix2Pix and CLIP, allows at most two revisions, and writes a JSON trace for every request.
-In the final evaluation (P3-EXP-003), all 40 requests executed (15 scenarios with and without critique, plus 10 red-team cases). Automated structural checks passed 12/15 with critique and 11/15 without. No red-team attack succeeded among the 8 cases decided automatically; 2 await human review. Six requests failed because the vision model fell into a deterministic repetition loop; we report this as a confirmed limitation. Human judgements are \pending{Part~1 groundedness ratings, three-rater Part~2 results, two-judge Part~3 results}.
+In the final evaluation (P3-EXP-003), all 40 requests executed (15 scenarios with and without critique, plus 10 red-team cases). Automated structural checks passed 12/15 with critique and 11/15 without. No red-team attack succeeded among the 8 cases decided automatically; 2 await human review. Six requests failed because the vision model fell into a deterministic repetition loop; we report this as a confirmed limitation. Human judgements are \pending{Part~1 groundedness ratings, two-judge Part~3 results}.
 \end{abstract}
 
 \section{Introduction}
@@ -147,11 +148,11 @@ B & 64/64 & 12{,}754{,}944 & 1.462 & 6{,}542 & 0.069\\\bottomrule
 \end{itemize}
 
 \subsection{Results}
-\begin{table*}[t]\centering\caption{Part 2 automated results (P2-EXP-001). Human win rates are pending.}\label{tab:p2}
+\begin{table*}[t]\centering\caption{Part 2 results (P2-EXP-001). All columns except the last are automated metrics. The last column is the blinded human win rate of the selected adapter against the base model (3 raters $\times$ 25 pairs = 75 judgments per criterion; Section~\ref{sec:human2}).}\label{tab:p2}
 \begin{tabular}{lcccccccc}\toprule
 Model & KID$\downarrow$ (mean$\pm$std) & CLIP all & CLIP in & CLIP out & CLIP comp. & LPIPS div. & NSFW flags/40 & Human win (style / prompt)\\\midrule
 Base SD 1.5 & $0.0823\pm0.0111$ & 28.87 & 27.25 & 29.69 & 31.28 & 0.834 & 1 & reference\\
-LoRA A (r4), selected & $\mathbf{0.0619\pm0.0092}$ & 27.92 & 26.75 & 30.03 & 28.13 & 0.744 & 3 & \pending{} / \pending{}\\
+LoRA A (r4), selected & $\mathbf{0.0619\pm0.0092}$ & 27.92 & 26.75 & 30.03 & 28.13 & 0.744 & 3 & 38.7\% / 41.3\%\\
 LoRA B (r64) & $0.0825\pm0.0089$ & 26.04 & 24.71 & 30.18 & 24.54 & 0.711 & 8 & not rated\\\bottomrule
 \end{tabular}\end{table*}
 
@@ -176,8 +177,28 @@ Table~\ref{tab:p2} shows the results.
 \begin{figure}[t]\centering\includegraphics[width=\linewidth]{p2_memorization_top3_runA.png}
 \caption{Top-3 most similar (generation, training image) pairs for run A.}\label{fig:mem}\end{figure}
 
-\subsection{Human evaluation (method; results pending)}
-There are 25 blinded (prompt, seed) pairs of final adapter vs.\ base model. Which side shows which model was randomised with seed 266. Each pair is judged on \emph{domain\_style} and \emph{prompt\_match} (left/right, no ties) by $\geq3$ independent raters (both members and one outside person). We will report the win rate per criterion, per-rater rates and the majority-vote win rate. \pending{win rates, per-rater rates, agreement}
+\subsection{Human evaluation}\label{sec:human2}
+\textbf{Method.} There are 25 blinded (prompt, seed) pairs of the final adapter (LoRA~A) vs.\ the base model, drawn from the 40 (prompt, seed) combinations with seed 266. Which side shows which model was also randomised with seed 266; LoRA~A is on the left in 14 pairs. Three raters (RATER\_1--3; the design is both members plus one outside person) judged every pair independently on \emph{domain\_style} (``Which image looks more like the Pok\'emon artwork style of the training data?'') and \emph{prompt\_match} (``Which image matches the prompt text better?''), choosing left or right with no ties, in a local click-through tool that shows the unmodified packet images. The 150 ratings were validated (each rater exactly 25 pairs $\times$ 2 criteria; no missing, invalid or duplicated rows) and committed unchanged \emph{before} the answer key was applied. The notebook then scored them in \texttt{REPORT\_ONLY} mode, which does not train, generate or recompute any automated metric.
+
+\begin{table}[t]\centering\caption{Part 2 human evaluation: LoRA~A preferred over base SD~1.5 (P2-EXP-001)}\label{tab:p2human}
+\begin{tabular}{lcc}\toprule
+ & domain\_style & prompt\_match\\\midrule
+All judgments (pre-registered) & 29/75 = 38.7\% & 31/75 = 41.3\%\\
+Majority vote per pair (pre-registered) & 10/25 = 40.0\% & 10/25 = 40.0\%\\
+RATER\_1 / RATER\_2 / RATER\_3 & 36\% / 52\% / 28\% & 36\% / 48\% / 40\%\\
+Unanimous pairs (for A / for base) & 12 (3 / 9) & 18 (7 / 11)\\\midrule
+\multicolumn{3}{l}{\emph{Post-hoc supplementary statistics (not pre-registered)}}\\
+Fleiss' $\kappa$ (A vs.\ base) & 0.27 & 0.62\\
+Majority vote, Wilson 95\% CI & [23\%, 59\%] & [23\%, 59\%]\\
+Majority vote, exact binomial $p$ vs.\ 50\% & 0.42 & 0.42\\
+Without pair H22 (A image safety-blacked) & 29/72 = 40.3\% & 31/72 = 43.1\%\\\bottomrule
+\end{tabular}\end{table}
+
+\textbf{Results.} Table~\ref{tab:p2human} shows the results. Raters preferred the \emph{base} model more often than LoRA~A on both criteria. Only RATER\_2's domain-style rate (13/25) is above 50\%. With 25 pairs the result is not statistically distinguishable from no preference: the majority-vote 95\% interval spans 23--59\%, and the pooled judgments are not independent because all three raters judged the same pairs. Agreement was moderate to substantial for prompt match ($\kappa=0.62$; pairwise agreement 80--84\%) but only fair for domain style ($\kappa=0.27$; 52--76\%). The style question was therefore interpreted less consistently. By prompt group (post-hoc; 11 in-domain, 6 out-of-domain and 8 compositional pairs), LoRA~A won 11/33 in-domain style judgments and 9/33 in-domain prompt-match judgments. These small subgroups are descriptive only.
+
+\textbf{Human vs.\ automated evidence.} The human preferences and the automated scores measure different things and should not be merged. KID, CLIP and LPIPS (Table~\ref{tab:p2}) are computed by models: KID compares Inception feature statistics of 20 in-domain generations with the 82 test images and favoured LoRA~A, while CLIP already scored LoRA~A below the base model in-domain and on compositional prompts. The human raters judged single side-by-side pairs, and they did not prefer LoRA~A on average. KID-based selection of LoRA~A is therefore not confirmed by human preference. We keep the pre-registered selection, report this disagreement, and do not re-select.
+
+\textbf{Limitations of the human study.} 25 pairs and 3 raters give low statistical power. By design two of the three raters are the authors, and raters are recorded only by ID. The style question showed only fair agreement. In one pair (H22) the LoRA~A image had been replaced by a black frame by the safety checker; all raters chose the base image, and the primary numbers keep it as generated. One pre-fix backup of the rating tool holds an earlier RATER\_1 answer for H01 \emph{domain\_style} (base) that differs from the final saved answer (LoRA~A). Using that earlier answer would give 28/75 and a 9/25 majority. The final saved answer is the one scored.
 
 \section{Part 3: Five-Agent Multimodal System}
 \subsection{Architecture and data flow}
@@ -349,6 +370,7 @@ The local Gradio app (127.0.0.1:7860 only, \texttt{share=False}) was launched an
 \item \textbf{Safety checker:} it produced false positives (P3-EXP-001's S01, and probably several Part~2 cartoons).
 \item \textbf{Repetition loop:} the Vision agent fails on images with repeated sign text (above).
 \item \textbf{Metric reliability:} KID uses 20 samples; CLIP is related to SD's text encoder; $\tau{=}25$ is untuned.
+\item \textbf{Part~2 human study:} 25 pairs and 3 raters (by design two of them authors) give low power. The selected LoRA~A was preferred in only 38.7\% / 41.3\% of judgments, so the KID-based improvement is not confirmed by humans (Section~\ref{sec:human2}).
 \item \textbf{Red-team set:} it was amended after the preliminary run and is not a hold-out.
 \item \textbf{16~GB compatibility:} peak allocations were 6.3--6.5~GB (Part~2 training) and 12.5~GB (Part~3) under a 16~GB allocator cap on an RTX 5090. This was \emph{not} tested on real 16~GB hardware (T4/P100, no bf16 on T4).
 \end{itemize}
@@ -365,7 +387,7 @@ The local Gradio app (127.0.0.1:7860 only, \texttt{share=False}) was launched an
 \textbf{System card summary.} Components: Qwen3-VL-4B-Instruct for the planner, vision, prompt, critic and input-safety roles; SD~1.5 with LoRA~A (sha256 \texttt{20d8d671\ldots}), InstructPix2Pix and CLIP ViT-L/14. Intended use: course demonstration of guarded image editing and generation on non-sensitive images. Out of scope: real-person deceptive edits (refused), NSFW content (refused or blocked), and following instructions inside images (never).
 
 \section{Conclusion}
-A rank-4 LoRA shifted SD~1.5 toward the target style with the lowest in-domain KID, at a moderate cost in prompt fidelity and diversity. A rank-64 adapter cost more on both. The five-agent system executed every evaluation request with traceable, bounded behaviour and no confirmed red-team success. One deterministic vision failure mode remains open. Human judgements will determine task success and whether critique helps. \pending{final conclusions after human evaluation}
+A rank-4 LoRA gave the lowest in-domain KID, at a moderate cost in prompt fidelity and diversity. A rank-64 adapter cost more on both. In a blinded three-rater comparison, however, the rank-4 adapter was preferred over the base model in only 38.7\% (style) and 41.3\% (prompt) of judgments, so the automated improvement was not confirmed by human preference. The five-agent system executed every evaluation request with traceable, bounded behaviour and no confirmed red-team success. One deterministic vision failure mode remains open. Human judgements will determine task success and whether critique helps. \pending{final Part~3 conclusions after the human judgements}
 
 \section*{Contributions and AI Use}
 \pending{per-member contributions (see CONTRIBUTIONS.md)}. An AI coding assistant (Claude Code) was used for implementation, documentation and, with team authorization, for executing P3-EXP-003. Details are in \texttt{AI\_USAGE.md}.
@@ -378,7 +400,7 @@ Part~1:
 \item \texttt{docs/part1/P1\_EXP003\_CHECKPOINT\_MANIFEST.md} and \texttt{docs/part1/DECISIONS\_P1.md};
 \item Kaggle scores as recorded by the team [KAGGLE].
 \end{itemize}
-Part~2: \texttt{\$LAB2\_WORK\_DIR/p2/results/P2-EXP-001/\{report\_summary.json, metrics\_c8d369176621.json, safety\_analysis.json\}}, the run metadata in \texttt{runs/P2-EXP-001/}, and the executed \texttt{notebooks/p2\_finetune.ipynb}.
+Part~2: \texttt{\$LAB2\_WORK\_DIR/p2/results/P2-EXP-001/\{report\_summary.json, metrics\_c8d369176621.json, safety\_analysis.json\}}, the run metadata in \texttt{runs/P2-EXP-001/}, and the executed \texttt{notebooks/p2\_finetune.ipynb} (\texttt{FULL\_RUN}). Human evaluation: \texttt{eval/p2\_human\_ratings.csv} (commit \texttt{e53130b}, sha256 \texttt{bc46f0ba\ldots}), scored by \texttt{notebooks/p2\_finetune\_REPORT\_ONLY\_human\_eval.ipynb} (\texttt{report\_summary.json} field \texttt{human}). Post-hoc statistics: \texttt{\$LAB2\_WORK\_DIR/p2/audit/report\_only\_human\_20261118T030113Z/human\_eval\_supplementary\_POSTHOC.json} (D-118).
 Part~3: \texttt{\$LAB2\_WORK\_DIR/p3/experiments/P3-EXP-00\{1,2,3\}/evaluation\_summary.json}, per-item \texttt{result.json}, \texttt{traces/P3-EXP-00\{2,3\}/}, the executed \texttt{notebooks/p3\_agents.ipynb}, \texttt{eval/p3\_eval\_freeze\_v2\_P3-EXP-003.json}, and \texttt{DECISIONS.md} (D-105--D-115).
 
 \section{Figure sources}

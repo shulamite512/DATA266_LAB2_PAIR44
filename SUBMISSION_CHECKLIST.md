@@ -2,22 +2,22 @@
 
 **Requirement source.** The 17 requirements below were verified by the team from `DATA266_Lab2_Requirements.pdf` and `DATA266_Fall2026_Lab_2.pdf`. The PDFs themselves are not on this machine. Statuses come from evidence checked locally.
 
-**Overall verdict: READY WITH CONDITIONS.** All local preparation is done. Human evaluations, personal/team details, the Part 1 Kaggle details and all publication steps remain.
+**Overall verdict: READY WITH CONDITIONS.** All local preparation is done. The Part 2 human evaluation is complete and scored (D-118). The Part 3 human judgements, personal/team details, the Part 1 Kaggle details and all publication steps remain.
 
 Legend: **COMPLETE** · **PENDING HUMAN INPUT** · **PENDING PUBLICATION** (needs your authorization) · **BLOCKED** · **NOT VERIFIED**
 
 | # | Requirement | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | One IEEE PDF covering Parts 1–3, ≤ 12 pages per part + appendices | **PENDING HUMAN INPUT** | `report/data266_lab2_report.tex`: all three parts, about 5,400 words. 21 `\pending{}` fields remain (names, human results, Kaggle private score, screenshots). **No PDF yet:** there is no TeX toolchain here, so compile on Overleaf (§3). |
+| 1 | One IEEE PDF covering Parts 1–3, ≤ 12 pages per part + appendices | **PENDING HUMAN INPUT** | `report/data266_lab2_report.tex`: all three parts, about 5,400 words. The Part 2 human results are filled in (D-118). The remaining `\pending{}` fields cover names, the Part 1 groundedness, the Part 3 human results, the Kaggle private score and screenshots. **No PDF yet:** there is no TeX toolchain here, so compile on Overleaf (§3). |
 | 2 | Architecture diagram, baseline/final results, analysis, safety per part | COMPLETE (draft) | Figs. 1–2 (TikZ), Tables I–VI, safety sections for each part |
-| 3 | Executed notebooks with saved outputs | COMPLETE | `p1_rag.ipynb` (P1-EXP-003, 20 outputs), `p2_finetune.ipynb` (P2-EXP-001 FULL_RUN, 61), `p3_agents.ipynb` (P3-EXP-003 FULL_EVALUATION, 67) |
+| 3 | Executed notebooks with saved outputs | COMPLETE | `p1_rag.ipynb` (P1-EXP-003, 20 outputs), `p2_finetune.ipynb` (P2-EXP-001 FULL_RUN, 61), `p2_finetune_REPORT_ONLY_human_eval.ipynb` (P2-EXP-001 REPORT_ONLY with the real ratings, D-118), `p3_agents.ipynb` (P3-EXP-003 FULL_EVALUATION, 67) |
 | 4 | Reproducible requirements, README, fixed seeds, run metadata | COMPLETE for P2/P3 · **NOT VERIFIED** for P1 | P2/P3: `docker/requirements-p2p3.lock.txt` (207 pins), run manifests, seed 266. P1: `requirements-p1.txt` holds only the *recorded* versions (no full freeze), and model revisions were not pinned. |
 | 5 | Private GitHub repo with instructor/ISA read access | **BLOCKED** | `shulamite512/DATA266_LAB2_PAIR44` is **PUBLIC** and empty (GitHub API, 2026-11-18). Make it private and add the instructor/ISA before pushing. Naming differs from `data266-lab2-team##` (team choice; flag). |
 | 6 | Tags `p1-v1.0`, `p2-v1.0`, `p3-v1.0` | **PENDING HUMAN INPUT** | Not created. Recommended: `p1-v1.0` → `eb87662`; `p2-v1.0` / `p3-v1.0` → the final commit after the human ratings are scored (§4). |
-| 7 | Part 2 adapters + generated-image dataset on Hugging Face | **PENDING PUBLICATION** | Staged and verified; `publication/HF_PUBLICATION_PLAN.md` |
+| 7 | Part 2 adapters + generated-image dataset on Hugging Face | **PENDING PUBLICATION** | Staged; `publication/HF_PUBLICATION_PLAN.md`. **Re-check before upload:** the D-118 `REPORT_ONLY` run added the human result to the staged `run_A/README.md` (sha256 now `3a722831…`), so `publication/hf_publication_manifest.json` (`d63bcf5a…`) is stale for that card. Regenerate the manifest and re-approve it. |
 | 8 | Part 2 model card, Part 3 system card | COMPLETE (local) | Cards in the HF staging folders (real repo ids, D-117); system card `$WORK/p3/experiments/P3-EXP-003/system_card.md` (summary in the report) |
 | 9 | Part 3 reproducible input images on Hugging Face | **PENDING PUBLICATION** | `p3_inputs_v2` staged (20 files, manifest with licences and hashes) |
-| 10 | ≥ 3 genuine Part 2 raters | **PENDING HUMAN INPUT** | Packet and template ready (`HUMAN_EVALUATION.md` § Part 2) |
+| 10 | ≥ 3 genuine Part 2 raters | COMPLETE | `eval/p2_human_ratings.csv` (3 raters × 25 pairs × 2 criteria = 150 rows, validated, committed `e53130b` before scoring), scored by `notebooks/p2_finetune_REPORT_ONLY_human_eval.ipynb`: LoRA A win rate 38.7 % style / 41.3 % prompt (D-118). The team should confirm that the rater composition (both members + one outside person) is as designed. |
 | 11 | Independent Part 3 judgments by both members | **PENDING HUMAN INPUT** | Blinded P3-EXP-003 packet ready: 30 scenarios + 20 critic attempts + 2 red-team cases |
 | 12 | CONTRIBUTIONS.md with real contributions + recording links | **PENDING HUMAN INPUT** | Task table prepared; names, handles, owners and recording links are blank |
 | 13 | AI_USAGE.md | COMPLETE | Updated through this preparation. The "Other AI tools" section must be completed by the team if any were used. |
@@ -38,14 +38,14 @@ Legend: **COMPLETE** · **PENDING HUMAN INPUT** · **PENDING PUBLICATION** (need
 |---|---|---|
 | P1-EXP-001 / 002 / 003 | executed; history merged (`dbd01db`); 003 = checkpoint `eb87662` | P1-EXP-003 |
 | P1-EXP-004 (uncommitted, original Part 1 folder) | 2 executed runs (50/52, 52/53 self-checks), D-110/D-111 code never run | not integrated |
-| P2-EXP-001 | complete; REPORT_ONLY re-staged the upload folders (D-117) | yes |
+| P2-EXP-001 | complete; REPORT_ONLY re-staged the upload folders (D-117); human ratings scored by REPORT_ONLY (D-118) | yes |
 | P3-EXP-001 / 002 / 003 | complete; 003 has 6 `FAILED_MODEL` records (confirmed repetition loop) | P3-EXP-003 |
 
 ## 2. Report inputs still needed
 Search `report/data266_lab2_report.tex` for `PENDING`:
 - **Front matter:** names; repository access.
 - **Part 1:** groundedness (blocked: full answers not preserved), selected Kaggle submission, private score.
-- **Part 2:** human win rates, memorization and safety-flag judgements.
+- **Part 2:** memorization and safety-flag judgements (the human win rates are filled in, D-118).
 - **Part 3:** human pass rates, κ, critic agreement, R01/R02 verdicts and attack-success rate, screenshots.
 - **End matter:** contributions, conclusions, and verification of the references.
 

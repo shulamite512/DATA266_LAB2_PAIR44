@@ -47,6 +47,13 @@ This file lists every AI coding assistant used in this project and what it was u
     - Wrote the HF publication plan and manifest, the Canvas ZIP builder, `requirements-p1.txt`, and updated README, CONTRIBUTIONS (template), links.txt, HUMAN_EVALUATION, SUBMISSION_CHECKLIST and DECISIONS.
     - Checked the selected GitHub repository read-only (public, empty).
     - **Not done:** no rating or judgement; no names, contributions or links invented; nothing pushed, uploaded or submitted; the PDF was not compiled (no TeX here).
+  - 2026-11-18 (Part 2 human results, team request; executed by the AI assistant with the team's explicit authorization; no training, generation or metric re-run):
+    - Validated the three raters' completed `eval/p2_human_ratings.csv` against the frozen template and rater sheet, and against the rating tool's per-rater files (byte-identical).
+    - Snapshotted the raw rating files with hashes, then committed the ratings unchanged (`e53130b`) **before** the answer key was applied.
+    - Ran a headless `REPORT_ONLY` copy of `p2_finetune.ipynb` (only the `MODE` line differs) and saved it as `notebooks/p2_finetune_REPORT_ONLY_human_eval.ipynb`. A hash audit of all 481 Part 2 work files showed that only derived report files and two staged model cards changed.
+    - Computed post-hoc supplementary statistics (Fleiss' κ, Wilson CIs, binomial tests, prompt-group breakdown, NSFW-pair sensitivity), labelled as not pre-registered.
+    - Updated the report, README, SUBMISSION_CHECKLIST, DECISIONS (D-118) and this file.
+    - **Not done:** no rating was created, changed or imputed; the assistant did not take part in rating; nothing pushed, uploaded or submitted; the HF approval manifest was not regenerated (flagged for re-approval).
 
 All design decisions were reviewed and approved by the team before implementation. They are logged in `DECISIONS.md`.
 

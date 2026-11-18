@@ -944,3 +944,45 @@
   - Result, by hash comparison of all 458 Part 2 files: only the three staged model cards (now with repo ids), the staged `metadata.jsonl` (now strict JSON: 120 rows, 0 NaN; D-116) and `report_summary.json` (run stamp) changed. One run manifest was added. Images, metrics, figures, checkpoints and the pointer are byte-identical.
 - **GitHub:** the selected repository `shulamite512/DATA266_LAB2_PAIR44` is **public** and empty (GitHub API, 2026-11-18). It must be made private before any push. Its name differs from the course convention `data266-lab2-team##`; this is a team choice, flagged for review.
 - **Publication preparation:** `publication/` (approval manifest with hashes, rights audit, upload commands, deterministic Canvas ZIP builder). Nothing uploaded, pushed or submitted.
+
+### D-118 — Part 2 human evaluation scored (P2-EXP-001, RESULT) (2026-11-18)
+- **Input:** the three raters' completed ratings were merged by the rating tool (`$WORK/p2/human_eval/rating_ui.py`) into `eval/p2_human_ratings.csv`.
+  - 150 rows; sha256 `bc46f0ba66ba1480633a1390aaaa16dab46739ac33ff702bedaca21b7f306b73`.
+- **Validation (before the answer key was used):**
+  - Header `rater,pair_id,criterion,choice`.
+  - RATER_1–3 have exactly 50 rows each: 25 pairs H01–H25 × `domain_style`/`prompt_match`.
+  - Every choice is `left`/`right`; no empty, invalid or duplicated rows.
+  - The keys equal the frozen `p2_human_ratings_TEMPLATE.csv`, in the same order, and the pairs equal `rater_sheet.csv`.
+  - Each rater's rows are byte-identical to `rater_n_completed.csv` and `ui_progress/RATER_n_progress.csv`.
+- **Evidence preserved:**
+  - Read-only copies plus a SHA-256 manifest (rating files, tool, sheet, template, instructions; packet images hashed) in `$WORK/p2/human_eval/evidence_snapshot_20261118T030010Z/`. The originals were left in place, unchanged.
+  - Ratings committed unchanged in `e53130b` **before** scoring.
+- **Scoring:** headless `REPORT_ONLY` (nbclient, container) of a copy of `notebooks/p2_finetune.ipynb`.
+  - Source sha256 `0d86b227…`, the same as in D-117. The only change is `MODE = "REPORT_ONLY"`.
+  - Saved with outputs as `notebooks/p2_finetune_REPORT_ONLY_human_eval.ipynb`. `p2_finetune.ipynb` keeps its `FULL_RUN` outputs and is unchanged.
+  - Status `HUMAN_EVALUATION_COMPLETE`, no problems.
+- **Hash audit of all 481 Part 2 work files** (`$WORK/p2/audit/report_only_human_20261118T030113Z/`, which also holds a backup of the earlier derived files):
+  - Changed only: `results/P2-EXP-001/{report_summary.json, results_table.csv, results_table.md}` and the staged `hf_staging/P2-EXP-001/{run_A,final}/README.md` (now with the human result).
+  - Added: one run manifest.
+  - Adapters, images, metrics, per-image metrics, figures, checkpoints and `SELECTED_FINAL_ADAPTER.json` are byte-identical. Nothing was trained, generated or recomputed.
+- **Official result (pre-registered protocol), LoRA A (selected final) vs base SD 1.5:**
+  - `domain_style`: win rate 29/75 = **0.3867**; majority vote 10/25 = 0.40; per rater 0.36 / 0.52 / 0.28; 12 unanimous pairs (3 for A, 9 for base).
+  - `prompt_match`: 31/75 = **0.4133**; majority vote 10/25 = 0.40; per rater 0.36 / 0.48 / 0.40; 18 unanimous pairs (7 for A, 11 for base).
+- **Post-hoc supplementary statistics (NOT pre-registered; `human_eval_supplementary_POSTHOC.json` and its script in the audit folder):**
+  - Fleiss' κ (A vs base): 0.27 for style; 0.62 for prompt.
+  - Pairwise agreement: 52–76 % for style; 80–84 % for prompt.
+  - Wilson 95 % CI for the majority vote: [0.23, 0.59] for both criteria; exact binomial p = 0.42 against 0.5.
+  - Pooled (anti-conservative, non-independent judgments): style [0.28, 0.50] with p = 0.064; prompt [0.31, 0.53] with p = 0.165.
+  - By prompt group (11 in-domain / 6 out-of-domain / 8 compositional pairs): style 11/33, 9/18, 9/24; prompt 9/33, 12/18, 10/24.
+  - Position: 46.7 % of all choices were `left`; A was on the left in 14/25 pairs.
+- **Disclosures:**
+  - H22 (P20 seed 0): the A image is a safety-checker black frame, and all raters chose base. Excluding H22 gives 29/72 = 0.403 and 31/72 = 0.431 (sensitivity only; the primary number keeps it).
+  - `ui_progress_backups/20261118_before_fix/RATER_1_progress.csv` holds 1/50 answers from before a rating-tool fix: H01 `domain_style` = `left` (base). The final saved answer is `right` (A). The reason for the change is not recorded. Using the earlier answer would give 28/75 and a 9/25 majority. The final saved answer is scored.
+- **Interpretation:** human raters did not prefer the KID-selected adapter over the base model on either criterion. The automated improvement (lower in-domain KID) is therefore not confirmed by human preference.
+  - With 25 pairs the result is also not distinguishable from no preference.
+  - The pre-registered selection of A stands and is **not** changed.
+- **Unchanged:** Part 1 and Part 3 results.
+- **Open items:**
+  - `publication/hf_publication_manifest.json` is stale for `run_A/README.md` (now `3a722831…`). Regenerate it and re-approve it before any upload.
+  - The rater composition (both members + one outside person) is the design; the team should confirm it.
+  - `notebooks/p2_human_rating_ui.ipynb` (untracked) was not committed: the team decides.
