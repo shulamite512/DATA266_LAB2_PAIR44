@@ -26,6 +26,8 @@ kaggle.json
 !eval/*.json
 # Part 3 per-request JSON traces are submitted (D-079, D-100)
 !traces/**/*.json
+# Hugging Face publication approval manifest (hashes of staged files; D-117)
+!publication/hf_publication_manifest.json
 # ...but no images in traces/ (e.g. downloaded Wikimedia originals; inputs live in $LAB2_WORK_DIR, D-109)
 traces/**/*.jpg
 traces/**/*.jpeg
