@@ -1,11 +1,38 @@
 {
  "final_model": "run1_lora_r8",
- "vs": "base",
- "note": "Parth's ratings pending",
- "raters": 1,
- "judgements": 25,
+ "compared_with": "base",
+ "raters": 2,
+ "judgements": 50,
  "style_choice_final_win_rate": 0.64,
- "style_choice_majority_win_rate": 0.64,
- "prompt_choice_final_win_rate": 0.56,
- "prompt_choice_majority_win_rate": 0.56
+ "style_choice_majority_win_rate": 0.52,
+ "prompt_choice_final_win_rate": 0.5,
+ "prompt_choice_majority_win_rate": 0.28,
+ "rater_agreement": {
+  "style_choice": 0.76,
+  "prompt_choice": 0.56
+ },
+ "per_rater_final_win_rate": {
+  "chelsi": {
+   "style_choice_final": 0.64,
+   "prompt_choice_final": 0.56
+  },
+  "parth": {
+   "style_choice_final": 0.64,
+   "prompt_choice_final": 0.44
+  }
+ },
+ "per_category_final_win_rate": {
+  "compositional": {
+   "style_choice_final": 0.833,
+   "prompt_choice_final": 0.667
+  },
+  "in_domain": {
+   "style_choice_final": 0.654,
+   "prompt_choice_final": 0.423
+  },
+  "out_of_domain": {
+   "style_choice_final": 0.417,
+   "prompt_choice_final": 0.5
+  }
+ }
 }
