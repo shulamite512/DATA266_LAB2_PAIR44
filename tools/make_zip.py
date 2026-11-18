@@ -13,9 +13,13 @@ def main(out="L2_colab.zip"):
     n = 0
     with zipfile.ZipFile(out_path, "w", zipfile.ZIP_DEFLATED) as z:
         for dirpath, dirnames, filenames in os.walk(ROOT):
-            dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+            at_root = os.path.abspath(dirpath) == ROOT
+            dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS
+                           and not (at_root and d.startswith("part"))]  # results folders are not needed to run
             for f in filenames:
                 if f.endswith((".zip", ".pyc")) or f in SKIP_FILES or f.startswith("fin_run"):
+                    continue
+                if at_root and f.endswith(".ipynb"):  # loose downloaded notebooks in the repo root
                     continue
                 full = os.path.join(dirpath, f)
                 rel = os.path.relpath(full, ROOT).replace(os.sep, "/")

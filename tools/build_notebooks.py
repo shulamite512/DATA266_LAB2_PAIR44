@@ -83,7 +83,7 @@ MODEL_CHOICE = '''# ===== MODEL CHOICE (edit BACKEND, then Run all) =====
 #  "gemini": Google Gemini via the google-genai SDK - FREE key from aistudio.google.com, secret GEMINI_API_KEY
 #  "claude" : Claude Opus 5.5 via the Anthropic API - needs an ANTHROPIC_API_KEY secret, costs a few dollars
 #  Hosted APIs must be named in the README with their model version (lab rule).
-BACKEND = "qwen3"
+BACKEND = "qwen7b"
 QWEN3_MODEL = "Qwen/Qwen3-14B"      # or "Qwen/Qwen3-8B" (faster)
 QWEN3_THINKING = False
 os.environ["P1_BACKEND"] = "local"   # reset; the branches below override it for hosted backends
