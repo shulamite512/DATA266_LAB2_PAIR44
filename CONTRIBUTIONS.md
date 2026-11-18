@@ -11,7 +11,7 @@ Repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
 >
 > From `git log`: every commit so far comes from one Git identity (Part 1 history included). If the course reviews per-member commit history, the partner should commit their own work from their own account, for example their rating/judging files or report sections.
 
-## Part 1 — Multimodal RAG (P1-EXP-001 … P1-EXP-003; checkpoint `eb87662`)
+## Part 1 — Multimodal RAG (final: P1-KAGGLE-V14-R1, `79af4ba`; history P1-EXP-001 … P1-EXP-003)
 
 | Task | Lead | Partner | Notes |
 |------|------|---------|-------|
@@ -31,7 +31,7 @@ Repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
 | LoRA run A (rank 4) / run B (rank 64) | | | |
 | Baseline + 120-image generation, grids | | | |
 | KID, CLIP, LPIPS, memorization, safety analysis | | | |
-| Human evaluation (≥ 3 raters; outside rater recruited by) | | | pending |
+| Human evaluation (≥ 3 raters; outside rater recruited by) | | | complete: 3 raters, 150 ratings, scored (D-118) |
 | Model cards / Hugging Face packaging | | | upload pending authorization |
 
 ## Part 3 — Multi-agent system (P3-EXP-001/002/003)
@@ -41,7 +41,7 @@ Repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
 | Five-agent architecture, shared state, orchestrator, traces | | | |
 | Guardrails, red-team cases, scenarios and rubrics | | | |
 | Evaluation runs and failure analysis (vision repetition loop) | | | |
-| Human judging (`member_a` / `member_b`) | | | both members, independently; pending |
+| Human judging (`member_a` / `member_b`) | | | `member_a` completed all 52 judgements; `member_b` did not complete. The second evaluation is AI (Claude), disclosed in `AI_USAGE.md`; it is **not** a member's contribution (D-119) |
 | Gradio demo | | | |
 | System card | | | |
 

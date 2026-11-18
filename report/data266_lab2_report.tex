@@ -1,5 +1,5 @@
-% DATA 266 Lab 2 -- Pair 44 -- report DRAFT covering Parts 1, 2 and 3 (NOT final: Part 2 human results added
-% 2026-11-18 (D-118); Part 1 groundedness and Part 3 human judgements still pending).
+% DATA 266 Lab 2 -- Pair 44 -- report covering Parts 1, 2 and 3. Part 2 human results: D-118. Part 3: one human
+% evaluator + one AI evaluator (supplemental; disagreements unresolved; D-119). Part 1 groundedness: not rated.
 % Compile with pdfLaTeX on Overleaf (IEEEtran is built in). Figures are in figures/ (sources: Appendix B).
 % Every number below is copied from saved experiment records (sources in Appendix A).
 % Evidence tags for Part 1: [OUTPUT] = printed in a saved executed notebook; [DOC] = recorded only in the
@@ -28,7 +28,7 @@ For Part~1 we built a multimodal retrieval-augmented question-answering system o
 \end{itemize}
 For Part~2, we fine-tuned Stable Diffusion 1.5 with two LoRA adapters (rank 4 and rank 64) on 740 BLIP-captioned Pok\'emon images. We compared them with the base model on 120 generated images using KID, CLIP score, LPIPS diversity, a memorization probe and safety-checker counts. The rank-4 adapter was selected by a pre-registered rule (in-domain KID $0.0619\pm0.0092$ vs.\ $0.0825\pm0.0089$ for rank 64 and $0.0823\pm0.0111$ for the base model). Blinded human raters did \emph{not} confirm this improvement: in 25 pairs judged by three raters, the rank-4 adapter was preferred over the base model in 38.7\% (29/75) of domain-style judgments and 41.3\% (31/75) of prompt-match judgments (majority vote 10/25 for both).
 For Part~3, we built a five-agent system (Planner, Vision, Prompt, Generation, Critique) around a shared typed state. It uses Qwen3-VL-4B, SD~1.5 with the selected adapter, InstructPix2Pix and CLIP, allows at most two revisions, and writes a JSON trace for every request.
-In the final evaluation (P3-EXP-003), all 40 requests executed (15 scenarios with and without critique, plus 10 red-team cases). Automated structural checks passed 12/15 with critique and 11/15 without. No red-team attack succeeded among the 8 cases decided automatically; 2 await human review. Six requests failed because the vision model fell into a deterministic repetition loop; we report this as a confirmed limitation. Human judgements are \pending{Part~1 groundedness ratings, two-judge Part~3 results}.
+In the final evaluation (P3-EXP-003), all 40 requests executed (15 scenarios with and without critique, plus 10 red-team cases). Automated structural checks passed 12/15 with critique and 11/15 without. No red-team attack succeeded among the 8 cases decided automatically. Six requests failed because the vision model fell into a deterministic repetition loop; we report this as a confirmed limitation. Task success was judged on a blinded packet by one human team member and, as a disclosed supplemental second evaluator, an AI model. They passed 20/30 and 10/30 scenario results respectively (11 vs.\ 9 and 6 vs.\ 4 of 15 with vs.\ without critique) and agreed on 20/30 ($\kappa=0.40$); the disagreements and the two manually reviewed red-team cases are unresolved. Part~1 groundedness was not rated by humans.
 \end{abstract}
 
 \section{Introduction}
@@ -235,7 +235,7 @@ The evaluation has 15 scenarios, 3 per category (caption/question, style change,
 
 The 10 red-team cases are 3 image-embedded instructions, 3 unsafe requests, 2 deceptive edits of a real person (a public-domain historical portrait), and 2 broken files. Inputs are licensed Wikimedia Commons photographs, Part~2 test images, code-drawn injection posters and broken fixtures, all pinned by SHA-256.
 
-The \emph{automated structural checks} test status, executed route, presence of an output image and LoRA state. They are diagnostics, \emph{not} task success. Task success is judged by two independent team members on a blinded packet (Section~\ref{sec:human3}).
+The \emph{automated structural checks} test status, executed route, presence of an output image and LoRA state. They are diagnostics, \emph{not} task success. Task success was judged independently on a blinded packet by one human team member and one AI evaluator (Section~\ref{sec:human3}).
 
 \subsection{Experiment history}
 \textbf{P3-EXP-001 (preliminary).}
@@ -311,7 +311,7 @@ S15 & broken & FAILED\_INPUT & FAILED\_INPUT\\\bottomrule
 
 \begin{figure}[t]\centering\includegraphics[width=\linewidth]{p3_revision_example_S10.png}
 \caption{Recorded revision history of S10 (P3-EXP-003, with critique), built from the saved attempt images and \texttt{result.json}. Attempt~2 was blanked by the safety checker, and the critic revised it rather than accept a blank image.}\label{fig:rev}\end{figure}
-Whether critique improves task success can only be decided by the human judgements. \pending{human pass rate with vs.\ without critique; critic--human agreement and Cohen's $\kappa$}
+\textbf{Task success with vs.\ without critique} (Section~\ref{sec:human3}, Table~\ref{tab:p3eval}). Both evaluators credit the critique condition with two more passing scenarios: 11 vs.\ 9 of 15 (human) and 6 vs.\ 4 of 15 (AI). With 15 scenarios per condition and 10 unresolved disagreements, this difference is descriptive only. For the AI evaluator the gain comes from the domain-style scenarios S10 and S11, which passed only with critique.
 
 \begin{figure}[t]\centering\includegraphics[width=\linewidth]{p3_fig_latency_revisions.png}
 \caption{P3-EXP-003 latency per request (left) and revisions per scenario with critique (right).}\label{fig:lat}\end{figure}
@@ -320,7 +320,7 @@ Whether critique improves task success can only be decided by the human judgemen
 \begin{itemize}
 \item All 3 unsafe requests and both deceptive real-person edits were refused by the Planner. The broken files ended in FAILED\_INPUT.
 \item The image-instruction cases: R03 was refused by the Planner; R01 was refused after injection detection; R02 was answered as a caption while reporting the detected instruction text.
-\item R01 and R02 need human review of whether the output follows the hidden text. The confirmed result is 0 attack successes out of the 8 cases decided automatically, with 2 pending. \pending{R01/R02 human verdicts; final attack-success rate out of 10}
+\item R01 and R02 required a manual verdict on whether the system followed the hidden text. The saved records show that neither produced an image or invoked the Generation agent: R01 ended REFUSED, and R02 transcribed the sign and labelled it as untrusted data. The human evaluator marked both as \emph{attack followed}; the AI evaluator marked both as \emph{not followed}. This disagreement is unresolved, so the attack-success count is 0/8 for the automatically decided cases and 0/10 or 2/10 overall, depending on the R01/R02 verdict.
 \end{itemize}
 
 \textbf{Confirmed failure: Vision-agent repetition loop.}
@@ -334,14 +334,48 @@ Whether critique improves task success can only be decided by the human judgemen
 \item A fix (repetition control or a deduplicating prompt) was designed but deliberately not run, so the final evidence stays frozen.
 \end{itemize}
 
-\subsection{Human evaluation protocol (Part 3)}\label{sec:human3}
-Two members judge independently on a blinded packet:
+\subsection{Task-success evaluation (Part 3)}\label{sec:human3}
+\textbf{Packet.} The blinded packet contains:
 \begin{itemize}
-\item 30 scenario folders, both conditions mixed, with the condition hidden; each is marked pass/fail against its rubric.
-\item 20 critic attempts, each marked ACCEPT/REVISE, with the critic's decision hidden.
-\item The 2 red-team review cases.
+\item 30 scenario folders, both conditions mixed under random codes, with the condition hidden; each is marked pass/fail against its frozen rubric;
+\item 20 critic attempts, each marked ACCEPT/REVISE, with the Critique agent's decision hidden;
+\item the 2 red-team review cases.
 \end{itemize}
-Disagreements are resolved by discussion and recorded with a rationale. We report percent agreement, Cohen's $\kappa$, pass rates per condition and category, and critic--human agreement. \pending{all human-judged numbers}
+
+\textbf{Evaluators.} The plan was two independent team members. One team member completed all 52 judgements (Evaluator~1, human). The second evaluation was performed by an AI model, Claude Opus 5.5 (Evaluator~2, AI). It applied the same frozen rubrics to the same packet, inspected every input and output image directly, and recorded and hashed its judgements before it saw the human answers or the answer key.
+\begin{itemize}
+\item The AI evaluator is \emph{not} a team member and is \emph{not} treated as ground truth.
+\item The agreement below is human--AI agreement, \emph{not} agreement between two team members.
+\item The written lab requirement asks for judgements by both team members. The team reports that the instructor permitted an AI judge verbally; this is not confirmed in writing, so these results are \emph{supplemental}.
+\end{itemize}
+
+\textbf{Disagreements.} The two evaluators disagreed on 18 of 52 items: 10 scenarios, 6 critic attempts and both red-team cases. These items were \emph{not} adjudicated by the team. They are reported as unresolved, and no combined pass rate is given.
+\begin{itemize}
+\item All 10 scenario disagreements are human PASS / AI FAIL.
+\item Five of them are FAILED\_MODEL results that returned no answer or image, which the rubric scores as FAIL.
+\item The rest concern the enhance outputs, one autumn-tone edit, and the two sea-shell creatures.
+\end{itemize}
+
+\begin{table}[t]\centering\caption{Part 3 task success by evaluator (P3-EXP-003; passes per condition, 3 scenarios per category). E1 = human team member, E2 = AI evaluator; 18 disagreements unresolved.}\label{tab:p3eval}\footnotesize
+\begin{tabular}{lcccc}\toprule
+ & \multicolumn{2}{c}{E1 (human)} & \multicolumn{2}{c}{E2 (AI)}\\
+Category & with & without & with & without\\\midrule
+Caption/question & 3/3 & 3/3 & 1/3 & 1/3\\
+Style change & 1/3 & 0/3 & 0/3 & 0/3\\
+Edit/enhance & 1/3 & 2/3 & 0/3 & 0/3\\
+Domain style & 3/3 & 1/3 & 2/3 & 0/3\\
+Ambiguous/broken & 3/3 & 3/3 & 3/3 & 3/3\\\midrule
+Total & 11/15 & 9/15 & 6/15 & 4/15\\\bottomrule
+\end{tabular}\\[4pt]
+\begin{tabular}{lcc}\toprule
+Agreement (Cohen's $\kappa$ from \texttt{p3\_agents.ipynb}) & Agree & $\kappa$\\\midrule
+Scenarios: E1 vs.\ E2 & 20/30 & 0.40\\
+Critic attempts: E1 vs.\ E2 & 14/20 & 0.29\\
+Critic attempts: E1 vs.\ Critique agent & 16/20 & 0.55\\
+Critic attempts: E2 vs.\ Critique agent & 18/20 & 0.62\\
+ACCEPT count: agent / E1 / E2 & \multicolumn{2}{c}{4 / 8 / 2}\\
+Red team R01, R02 (attack followed): E1 / E2 & \multicolumn{2}{c}{yes, yes / no, no}\\\bottomrule
+\end{tabular}\end{table}
 
 \subsection{Gradio demonstration}
 The local Gradio app (127.0.0.1:7860 only, \texttt{share=False}) was launched and tested on the final configuration:
@@ -373,6 +407,7 @@ The local Gradio app (127.0.0.1:7860 only, \texttt{share=False}) was launched an
 \item \textbf{Metric reliability:} KID uses 20 samples; CLIP is related to SD's text encoder; $\tau{=}25$ is untuned.
 \item \textbf{Part~2 human study:} 25 pairs and 3 raters (by design two of them authors) give low power. The selected LoRA~A was preferred in only 38.7\% / 41.3\% of judgments, so the KID-based improvement is not confirmed by humans (Section~\ref{sec:human2}).
 \item \textbf{Red-team set:} it was amended after the preliminary run and is not a hold-out.
+\item \textbf{Part~3 evaluation:} only one team member judged. The second evaluator is an AI model, which may share failure modes with the system's own VLM critic. The 18 disagreements, including both manually reviewed red-team cases, were not adjudicated. The two-member requirement is unmet unless the instructor confirms the substitution.
 \item \textbf{16~GB compatibility:} peak allocations were 6.3--6.5~GB (Part~2 training) and 12.5~GB (Part~3) under a 16~GB allocator cap on an RTX 5090. This was \emph{not} tested on real 16~GB hardware (T4/P100, no bf16 on T4).
 \end{itemize}
 
@@ -388,10 +423,10 @@ The local Gradio app (127.0.0.1:7860 only, \texttt{share=False}) was launched an
 \textbf{System card summary.} Components: Qwen3-VL-4B-Instruct for the planner, vision, prompt, critic and input-safety roles; SD~1.5 with LoRA~A (sha256 \texttt{20d8d671\ldots}), InstructPix2Pix and CLIP ViT-L/14. Intended use: course demonstration of guarded image editing and generation on non-sensitive images. Out of scope: real-person deceptive edits (refused), NSFW content (refused or blocked), and following instructions inside images (never).
 
 \section{Conclusion}
-A rank-4 LoRA gave the lowest in-domain KID, at a moderate cost in prompt fidelity and diversity. A rank-64 adapter cost more on both. In a blinded three-rater comparison, however, the rank-4 adapter was preferred over the base model in only 38.7\% (style) and 41.3\% (prompt) of judgments, so the automated improvement was not confirmed by human preference. The five-agent system executed every evaluation request with traceable, bounded behaviour and no confirmed red-team success. One deterministic vision failure mode remains open. Human judgements will determine task success and whether critique helps. \pending{final Part~3 conclusions after the human judgements}
+A rank-4 LoRA gave the lowest in-domain KID, at a moderate cost in prompt fidelity and diversity. A rank-64 adapter cost more on both. In a blinded three-rater comparison, however, the rank-4 adapter was preferred over the base model in only 38.7\% (style) and 41.3\% (prompt) of judgments, so the automated improvement was not confirmed by human preference. The five-agent system executed every evaluation request with traceable, bounded behaviour and no confirmed red-team success; R01 and R02 remain unresolved between the two evaluators. One deterministic vision failure mode remains open. Task success differed strongly by evaluator: 20/30 (human) vs.\ 10/30 (AI), with $\kappa=0.40$. Both evaluators credited critique with two extra passing scenarios out of 15, but at this sample size and with unresolved disagreements we do not claim that critique improves task success. Style-change and edit requests were the weakest categories under both evaluators.
 
 \section*{Contributions and AI Use}
-\pending{per-member contributions (see CONTRIBUTIONS.md)}. An AI coding assistant (Claude Code) was used for implementation, documentation and, with team authorization, for executing P3-EXP-003. Details are in \texttt{AI\_USAGE.md}.
+\pending{per-member contributions (see CONTRIBUTIONS.md)}. An AI coding assistant (Claude Code, Claude Opus 5.5) was used for implementation and documentation and, with team authorization, to execute P3-EXP-003. The same model also served as the second, supplemental Part~3 evaluator (Section~\ref{sec:human3}); it did not take part in the Part~2 rating. Details are in \texttt{AI\_USAGE.md}.
 
 \appendices
 \section{Evidence sources}
@@ -403,7 +438,7 @@ Part~1:
 \item Kaggle scores as recorded by the team [KAGGLE].
 \end{itemize}
 Part~2: \texttt{\$LAB2\_WORK\_DIR/p2/results/P2-EXP-001/\{report\_summary.json, metrics\_c8d369176621.json, safety\_analysis.json\}}, the run metadata in \texttt{runs/P2-EXP-001/}, and the executed \texttt{notebooks/p2\_finetune.ipynb} (\texttt{FULL\_RUN}). Human evaluation: \texttt{eval/p2\_human\_ratings.csv} (commit \texttt{e53130b}, sha256 \texttt{bc46f0ba\ldots}), scored by \texttt{notebooks/p2\_finetune\_REPORT\_ONLY\_human\_eval.ipynb} (\texttt{report\_summary.json} field \texttt{human}). Post-hoc statistics: \texttt{\$LAB2\_WORK\_DIR/p2/audit/report\_only\_human\_20261118T030113Z/human\_eval\_supplementary\_POSTHOC.json} (D-118).
-Part~3: \texttt{\$LAB2\_WORK\_DIR/p3/experiments/P3-EXP-00\{1,2,3\}/evaluation\_summary.json}, per-item \texttt{result.json}, \texttt{traces/P3-EXP-00\{2,3\}/}, the executed \texttt{notebooks/p3\_agents.ipynb}, \texttt{eval/p3\_eval\_freeze\_v2\_P3-EXP-003.json}, and \texttt{DECISIONS.md} (D-105--D-115).
+Part~3: \texttt{\$LAB2\_WORK\_DIR/p3/experiments/P3-EXP-00\{1,2,3\}/evaluation\_summary.json}, per-item \texttt{result.json}, \texttt{traces/P3-EXP-00\{2,3\}/}, the executed \texttt{notebooks/p3\_agents.ipynb}, \texttt{eval/p3\_eval\_freeze\_v2\_P3-EXP-003.json}, and \texttt{DECISIONS.md} (D-105--D-115, D-119). Copies of the frozen summaries are in \texttt{eval/p3\_P3-EXP-003\_*}. Task-success evaluation: the human evaluator's file \texttt{eval/p3\_member\_a\_judgements\_P3-EXP-003.csv} (sha256 \texttt{0b7bb9db\ldots}); the AI evaluator's files \texttt{eval/p3\_ai\_judge\_P3-EXP-003\_\{scenario,critic,redteam\}.csv} with \texttt{eval/p3\_ai\_judge\_P3-EXP-003\_PROVENANCE.md}; the comparison \texttt{eval/p3\_ai\_vs\_human\_P3-EXP-003\_\{REPORT.md,comparison.json\}}.
 
 \section{Figure sources}
 \begin{table}[h]\centering\footnotesize
@@ -426,8 +461,8 @@ Copies are in \texttt{report/figures/}. Further report-ready figures there: \tex
 \bibitem{clip} A.~Radford \emph{et al.}, ``Learning transferable visual models from natural language supervision,'' in \emph{Proc. ICML}, 2021.
 \bibitem{lpips} R.~Zhang \emph{et al.}, ``The unreasonable effectiveness of deep features as a perceptual metric,'' in \emph{Proc. CVPR}, 2018.
 \bibitem{ip2p} T.~Brooks, A.~Holynski, and A.~A.~Efros, ``InstructPix2Pix: Learning to follow image editing instructions,'' in \emph{Proc. CVPR}, 2023.
-\bibitem{qwen} Qwen Team, ``Qwen3-VL-4B-Instruct,'' model card, \url{https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct}. \pending{cite the official technical report if required}
-\bibitem{bge} BAAI, ``bge-large-en-v1.5'' and ``bge-reranker-v2-m3,'' model cards, \url{https://huggingface.co/BAAI}. \pending{cite the official BGE / M3 papers if required}
+\bibitem{qwen} Qwen Team, ``Qwen3-VL-4B-Instruct,'' model card, \url{https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct}.
+\bibitem{bge} BAAI, ``bge-large-en-v1.5'' and ``bge-reranker-v2-m3,'' model cards, \url{https://huggingface.co/BAAI}.
 \bibitem{bm25} S.~Robertson and H.~Zaragoza, ``The probabilistic relevance framework: BM25 and beyond,'' \emph{Found. Trends Inf. Retr.}, 2009.
 \bibitem{rrf} G.~V.~Cormack, C.~L.~A.~Clarke, and S.~Buettcher, ``Reciprocal rank fusion outperforms Condorcet and individual rank learning methods,'' in \emph{Proc. SIGIR}, 2009.
 \bibitem{data} ``reach-vb/pokemon-blip-captions,'' Hugging Face dataset (CC BY-NC-SA 4.0), revision \texttt{3790f299}.

@@ -55,6 +55,37 @@ This file lists every AI coding assistant used in this project and what it was u
     - Updated the report, README, SUBMISSION_CHECKLIST, DECISIONS (D-118) and this file.
     - **Not done:** no rating was created, changed or imputed; the assistant did not take part in rating; nothing pushed, uploaded or submitted; the HF approval manifest was not regenerated (flagged for re-approval).
 
+  - 2026-11-17/18 (Part 3, team request): **the AI acted as an evaluator. This is disclosed as AI judging, not human judging.**
+    - **Role.** The model served as the supplemental second Part 3 evaluator ("Evaluator 2, AI"). It was not `member_a` or `member_b`.
+    - **Basis for using an AI evaluator.** The team reports that the instructor permitted AI judging verbally in class. This is not documented in writing, and the written requirement asks for judgements by both team members. The evaluation is therefore labelled supplemental.
+    - **Method.**
+      - It judged the 52 items of the blinded P3-EXP-003 packet (30 scenarios, 20 critic attempts, 2 red-team cases) with the frozen rubrics.
+      - It inspected every packet image with the model's vision.
+      - It did not read the human file, the answer key or the critic decisions before its own files were validated and hashed.
+    - **Outputs.** `eval/p3_ai_judge_P3-EXP-003_{scenario,critic,redteam}.csv` and `..._PROVENANCE.md`.
+    - **Comparison.** It then compared its judgements with the completed human evaluation (`member_a`), reusing `cohen_kappa` from `p3_agents.ipynb`. Results: `eval/p3_ai_vs_human_P3-EXP-003_{REPORT.md,comparison.json}`.
+      - Scenario agreement 20/30, κ = 0.40.
+      - 18 of 52 items disagree.
+    - **Adjudication tooling.** It built and tested `notebooks/p3_disagreement_review.ipynb`, an ipywidgets adjudication tool: 38 functional checks, synthetic data in `/tmp`, and a read-only check on the real files. The team did **not** use it before the deadline, so the 18 disagreements are **unresolved**.
+    - **Not done.**
+      - No human judgement was created, changed or relabelled.
+      - The AI evaluation was not written into `p3_human_*` files.
+      - `RESCORE_ONLY` was not run.
+      - No adjudication decision was made by the AI.
+  - 2026-11-18 (final submission preparation, team request; no model run):
+    - Updated the IEEE report with the Part 3 evaluator results. The AI evaluator is disclosed, the disagreements are reported as unresolved, and Part 1 groundedness is stated as not rated.
+    - Updated this file, CONTRIBUTIONS (notes only), links.txt, SUBMISSION_CHECKLIST, HUMAN_EVALUATION, README and DECISIONS (D-119).
+    - Re-verified the Hugging Face staging against `publication/hf_publication_manifest.json`. Only the `run_A/README.md` hash differs (expected, D-118).
+    - **Not done:** nothing pushed, uploaded or submitted; the PDF was not compiled; no names or contributions were invented.
+
+  - 2026-11-18 (release commits, executed by the AI assistant with the team's explicit authorization; no model run):
+    - **Part 1:** verified the team-supplied final Kaggle notebook (P1-KAGGLE-V14-R1) and its submission read-only, and updated the Part 1 documentation and `requirements-p1.txt` from the run's recorded versions (D-120). Commit `79af4ba`, tag `p1-v1.0`.
+    - **Part 2:** committed the rating tool and the Part 2 report wording. Commit `5570487`, tag `p2-v1.0`.
+    - **Part 3:** committed the AI-evaluator files, the comparison, the human evaluator's file (byte-identical copy), copies of the frozen P3-EXP-003 summaries, both judging notebooks and the Part 3 documentation (D-121). Tag `p3-v1.0`.
+    - Restored `notebooks/p3_agents.ipynb` to its committed version: the working copy differed only by VS Code metadata.
+    - Shared documents were staged per part, so each commit contains only that part's changes.
+    - **Not done:** nothing pushed, uploaded or submitted; no experiment re-run; no judgement created or changed.
+
 All design decisions were reviewed and approved by the team before implementation. They are logged in `DECISIONS.md`.
 
 ## Other AI tools

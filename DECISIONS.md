@@ -987,6 +987,36 @@
   - The rater composition (both members + one outside person) is the design; the team should confirm it.
   - `notebooks/p2_human_rating_ui.ipynb` (untracked) was not committed: the team decides.
 
+### D-119 — Part 3 task-success evaluation: one human + one AI evaluator (supplemental); disagreements unresolved (2026-11-18)
+- **Situation:** only `member_a` completed the blinded P3-EXP-003 judgements: 52/52 in `notebooks/p3_human_rating_ui.ipynb`, file sha256 `0b7bb9db…`. `member_b` did not complete. The team reports that the instructor permitted AI judging verbally; this is not documented in writing.
+- **Decision (team request):** an AI evaluator (Claude Opus 5.5) judged the same packet independently with the frozen rubrics.
+  - It inspected every image.
+  - Its judgements were hashed before it saw the human answers or the key.
+  - Files: `eval/p3_ai_judge_P3-EXP-003_*` and `..._PROVENANCE.md`.
+  - The AI is never labelled as a team member and is not ground truth.
+- **Results:**
+
+  | | human | AI | agreement |
+  |---|---|---|---|
+  | Scenario passes | 20/30 (11 with / 9 without critique) | 10/30 (6 / 4) | 20/30, κ = 0.40 |
+  | Critic attempts | 16/20 with the Critique agent (κ 0.55) | 18/20 with the Critique agent (κ 0.62) | 14/20, κ = 0.29 |
+  | R01/R02 attack followed | yes / yes | no / no | none |
+
+  The comparison is in `eval/p3_ai_vs_human_P3-EXP-003_{REPORT.md,comparison.json}`.
+- **Disagreements:**
+  - 18 of 52 items disagree.
+  - An adjudication tool was built and tested (`notebooks/p3_disagreement_review.ipynb`), but the deadline stopped further evaluation work.
+  - The disagreements are reported as **unresolved**. No adjudicated or combined score exists or is claimed.
+- **Not used:** `RESCORE_ONLY` and the `eval/p3_human_*` files. They assume two members, and using them with the AI file would misrepresent the AI as `member_b`. P3-EXP-003 and its `evaluation_summary.json` are unchanged.
+- **Compliance flag:** the written two-member requirement is not met unless the instructor confirms the substitution. The report, README, HUMAN_EVALUATION, AI_USAGE and SUBMISSION_CHECKLIST label the evaluation as supplemental.
+- **Report:** placeholders resolved from evidence:
+  - Part 3 evaluator results and conclusions;
+  - Part 1 groundedness stated as not rated, with the reason;
+  - memorization and safety-flag wording;
+  - the model-card citations kept.
+
+  The remaining `\pending` items need team input.
+
 ### D-120 — Part 1 final notebook: P1-KAGGLE-V14-R1 (Kaggle T4) replaces the P1-EXP-003 checkpoint as the final version (2026-11-18)
 - **Team decision:** the final Part 1 implementation is `P1-KAGGLE-V14-R1`, executed on Kaggle.
   - The team placed its executed notebook as `notebooks/p1_rag.ipynb` and its generated submission as `eval/p1_submission.csv`.
@@ -1016,3 +1046,16 @@
   - requirements-p1.txt;
   - requirements.txt (comment only).
 - **Tag:** `p1-v1.0` points to the commit that adds this notebook and CSV, not to `eb87662`.
+
+### D-121 — Part 3 release commit and tag p3-v1.0 (2026-11-18)
+- **Content:** the Part 3 evaluation evidence of P3-EXP-003, as reported under D-119.
+  - **AI evaluator:** `eval/p3_ai_judge_P3-EXP-003_{scenario,critic,redteam}.csv` + `_PROVENANCE.md`, unchanged since the freeze hashes in that file.
+  - **Comparison:** `eval/p3_ai_vs_human_P3-EXP-003_{REPORT.md,comparison.json}`.
+  - **Human evaluator:** `eval/p3_member_a_judgements_P3-EXP-003.csv`, a byte-identical copy of the rating-tool file, sha256 `0b7bb9db…`. It is deliberately not named `p3_human_*_member_a.csv`, because `RESCORE_ONLY` is not used (D-119).
+  - **Frozen summaries:** unchanged copies of `$WORK/p3/experiments/P3-EXP-003/{evaluation_summary.json, experiment_manifest.json, system_card.md, report/*.csv, report/report_summary.md}` as `eval/p3_P3-EXP-003_*`, so the reported numbers can be checked from the repository.
+  - **Notebooks:** `notebooks/p3_human_rating_ui.ipynb` (the blinded judging tool used by `member_a`) and `notebooks/p3_disagreement_review.ipynb` (the adjudication tool; built and tested, **not used**).
+  - **Documents:** the Part 3 documentation.
+- **Status:** the 18 disagreements remain **unresolved**.
+- **Not included:** packet images, the private packet key, model weights, generated images, caches.
+- **Restored:** `notebooks/p3_agents.ipynb` was restored to its committed P3-EXP-003 version. The working copy differed only by VS Code metadata (`language_info`, widget number formatting).
+- **Tag:** `p3-v1.0` points to this commit. `p1-v1.0` and `p2-v1.0` are unchanged.

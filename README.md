@@ -8,7 +8,7 @@ Repository for DATA 266 (Fall 2026) Lab 2: https://github.com/shulamite512/DATA2
 |------|-------|----------|--------|
 | 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | **Final: P1-KAGGLE-V14-R1**, executed on Kaggle (NVIDIA Tesla T4; 2,616 s ≈ 43.6 min of the 5,400 s budget): label router + dense + BM25 + RRF + CPU reranker + registry; Qwen3-VL-4B in 4-bit NF4 (bitsandbytes). 40-row submission `eval/p1_submission.csv`, validator `valid: 40 rows` (answered 32, conflict 3, session_override 3, not_found 2). Its Kaggle score is not recorded here. Historical: held-out golden set P1-EXP-001 (earlier code; baseline 14/25 vs final 13/25, Recall@5 0.764 → 0.882) and checkpoint P1-EXP-003 (`eb87662`). V14-R1 was not evaluated on the golden set (D-120). Log: `docs/part1/DECISIONS_P1.md`, D-120. **Pending:** Kaggle notebook link |
 | 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | **P2-EXP-001 executed** (`FULL_RUN`, 2026-11-16): LoRA A (r4) and B (r64) trained 1,500 steps each; 120/120 images (base/A/B × 20 prompts × 2 seeds); KID, CLIP, LPIPS, memorization and safety computed; final adapter **A** (lower in-domain KID 0.0619 vs 0.0825). **Human evaluation complete** (3 raters × 25 blinded pairs; `eval/p2_human_ratings.csv`, scored by `REPORT_ONLY`, D-118): LoRA A preferred over base in 38.7 % (style) and 41.3 % (prompt) of judgments. **Pending:** the authorized Hugging Face upload |
-| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) and P3-EXP-002 (v2, 40/40 executed, six `FAILED_MODEL` vision records) archived; **P3-EXP-003 executed** (40/40; the D-113 token-limit repair did not fix S02–S04: confirmed repetition loop, proposed fix D-114 not implemented); human judgements pending |
+| 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) and P3-EXP-002 (v2, 40/40 executed, six `FAILED_MODEL` vision records) archived; **P3-EXP-003 executed** (40/40; the D-113 token-limit repair did not fix S02–S04: confirmed repetition loop, proposed fix D-114 not implemented); task success judged by one human + one AI evaluator (supplemental, D-119) |
 
 Engineering decisions and experiments are logged chronologically in [`DECISIONS.md`](DECISIONS.md) (Parts 2/3 implementation: D-089 onwards). The Part 1 log is [`docs/part1/DECISIONS_P1.md`](docs/part1/DECISIONS_P1.md); its D-numbers after D-088 are a **separate namespace**, because the two logs diverged.
 
@@ -141,19 +141,19 @@ git log --oneline -4
 
 - **No photographs are needed for Part 3** (v2 uses dataset-sourced, licensed inputs; D-105, D-109). The former `team_photo_*` / `team_person_01` inputs are retired.
 - **Part 2 human ratings** → `eval/p2_human_ratings.csv` (**done**: 3 raters, 150 rows, committed in `e53130b` before scoring).
-- **Part 3 judgements (P3-EXP-003)** → `eval/p3_human_P3-EXP-003_{scenario,critic,redteam}_{member_a,member_b}.csv` and `eval/p3_human_P3-EXP-003_resolutions.csv` (templates and a blinded packet in the experiment directory). The P3-EXP-002 packet stays in its own directory, unchanged.
+- **Part 3 judgements (P3-EXP-003).** `member_a` completed all 52 judgements in the rating UI. `member_b` did not complete. A supplemental AI evaluation was added (D-119). The `eval/p3_human_*` files that `RESCORE_ONLY` reads were not created, because only one member judged. The P3-EXP-002 packet stays in its own directory, unchanged.
 
 ## Submission documents
 
 - **Final evidence:** `SUBMISSION_CHECKLIST.md` lists readiness (COMPLETE / PENDING / BLOCKED / NOT VERIFIED), Hugging Face upload steps, and GitHub/Canvas steps. Final automated evidence is P2-EXP-001 and P3-EXP-003 (D-115).
 - `HUMAN_EVALUATION.md`: instructions for the 3 Part 2 raters and the 2 Part 3 judges, file formats, merging, disagreement resolution, `REPORT_ONLY` / `RESCORE_ONLY`.
-- `report/data266_lab2_report.tex`: IEEE draft for Parts 1–3 (Overleaf, IEEEtran; figures in `report/figures/`). The Part 2 human results are filled in (D-118). Part 1 groundedness, the Part 3 human results and personal details are still marked `PENDING` / `MISSING`.
+- `report/data266_lab2_report.tex`: IEEE draft for Parts 1–3 (Overleaf, IEEEtran; figures in `report/figures/`). The Part 2 human results (D-118) and the Part 3 human/AI evaluator results (D-119) are filled in. Repository access, UI screenshots, Hugging Face publication and contributions are still marked `PENDING`.
 - `links.txt`: links required for the Canvas ZIP (GitHub URL known; tags, Hugging Face uploads and the Kaggle link are pending).
 - `publication/`: `HF_PUBLICATION_PLAN.md` and `hf_publication_manifest.json` (Hugging Face approval manifest with hashes; nothing uploaded) and `build_canvas_zip.py` (deterministic Canvas ZIP; refuses the final name while items are missing).
 
 ## Results recorded so far (report evidence)
 
-Machine-generated values copied from the saved records. Sources: `$LAB2_WORK_DIR/p2/results/P2-EXP-001/report_summary.json`, `$LAB2_WORK_DIR/p3/experiments/P3-EXP-00{2,3}/evaluation_summary.json`. Only the Part 2 human ratings exist so far (below); the Part 3 judgements are pending.
+Machine-generated values copied from the saved records. Sources: `$LAB2_WORK_DIR/p2/results/P2-EXP-001/report_summary.json`, `$LAB2_WORK_DIR/p3/experiments/P3-EXP-00{2,3}/evaluation_summary.json`. Part 2 human ratings and the Part 3 human + AI evaluations are below.
 
 **Part 1** (final notebook P1-KAGGLE-V14-R1; the golden-set numbers are historical, from earlier code):
 - Final submission (V14-R1, Kaggle T4): 40 rows, validator `valid: 40 rows`; statuses answered 32, conflict 3, session_override 3, not_found 2; 2 rows retried, 0 fallbacks; runtime 2,616 s. Its Kaggle score is not recorded in this repository. Not evaluated on the golden set.
@@ -203,7 +203,27 @@ Memorization (CLIP image cosine of top-1 training neighbour, 10 in-domain genera
 | mean revisions with critique | 0.8 | 0.8 |
 | median latency all / with / without / red-team (s) | 8.13 / 11.43 / 8.41 / 1.53 | 7.96 / 14.10 / 8.25 / 1.54 |
 | red-team confirmed attack successes / defended / pending human | 0 / 8 / 2 | 0 / 8 / 2 |
-| human-judged scenario success | pending | pending |
+| scenario success judged on the blinded packet | — | human 20/30 (11 / 9 with / without critique); AI 10/30 (6 / 4); see below |
+
+**Part 3 task-success evaluation (P3-EXP-003; supplemental, D-119).**
+- **Evaluators.** One human team member (`member_a`) completed all 52 judgements. The second evaluator is an **AI** (Claude Opus 5.5), disclosed in `AI_USAGE.md`. The written requirement of two team members is not met; the team reports a verbal instructor allowance for AI judging, which is not confirmed in writing.
+- **Scenarios.** 20/30 agree, Cohen's κ = 0.40. All 10 disagreements are human PASS / AI FAIL.
+- **Critic attempts.**
+
+  | comparison | agreement | κ |
+  |---|---|---|
+  | human vs AI | 14/20 | 0.29 |
+  | human vs Critique agent | 16/20 | 0.55 |
+  | AI vs Critique agent | 18/20 | 0.62 |
+
+  ACCEPT counts: agent 4, human 8, AI 2.
+- **Red team R01/R02.** The human marked both attacks as followed; the AI marked both as not followed. The saved records show R01 REFUSED and R02 transcribing the sign as untrusted data, with no image and no Generation agent in either case. The attack-success count is 0/8 for the automatically decided cases, and 0/10 or 2/10 overall depending on the unresolved R01/R02 verdicts.
+- **Disagreements.** 18 of 52 items. They are **unresolved**: no adjudicated or combined score is reported.
+- **Sources:**
+  - `eval/p3_ai_judge_P3-EXP-003_*` (AI files and provenance);
+  - `eval/p3_ai_vs_human_P3-EXP-003_{REPORT.md,comparison.json}`;
+  - the human file `eval/p3_member_a_judgements_P3-EXP-003.csv`, a byte-identical copy of `$LAB2_WORK_DIR/p3/human_eval_ui/P3-EXP-003/member_a_completed.csv` (sha256 `0b7bb9db…`);
+  - the frozen P3-EXP-003 summaries, copied unchanged: `eval/p3_P3-EXP-003_{evaluation_summary.json,experiment_manifest.json,report_summary.md,system_card.md,*.csv}`.
 
 ## 16 GB GPU compatibility
 

@@ -81,6 +81,16 @@ EOF
 
 ## Part 3: two judges
 
+> **Actual outcome (2026-11-18, D-119).**
+> - **Judges.** Only `member_a` completed the 52 judgements, in `notebooks/p3_human_rating_ui.ipynb`. The file is `$WORK\p3\human_eval_ui\P3-EXP-003\member_a_completed.csv`, sha256 `0b7bb9db…`, unchanged. A byte-identical copy is committed as `eval/p3_member_a_judgements_P3-EXP-003.csv`. `member_b` did not complete.
+> - **Second evaluator.** A supplemental second evaluation was performed by an **AI** (Claude Opus 5.5) on the same packet and rubrics. It is stored separately as `eval/p3_ai_judge_P3-EXP-003_*` and is never labelled as a team member.
+> - **Comparison.** Human vs AI: `eval/p3_ai_vs_human_P3-EXP-003_REPORT.md`. Scenario agreement 20/30, κ = 0.40.
+> - **Disagreements.** There are 18. They are **unresolved**: the adjudication tool `notebooks/p3_disagreement_review.ipynb` exists but was not used before the deadline.
+> - **Not used.**
+>   - The export to `eval/p3_human_*` files and `RESCORE_ONLY` were not used. They assume two team members, and feeding the AI file in as `member_b` would misrepresent it.
+>   - Steps 1–4 below are therefore the original plan, not what happened.
+> - **Compliance.** The written requirement asks for both members' judgements. The team reports that the instructor permitted an AI judge verbally; this is not confirmed in writing.
+
 **Materials:** `$WORK\p3\experiments\P3-EXP-003\`
 
 | Path | Purpose |

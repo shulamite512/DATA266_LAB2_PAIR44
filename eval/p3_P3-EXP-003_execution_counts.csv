@@ -1,0 +1,4 @@
+kind,condition,expected,executed,executed_with_system_failure_status,failed_runner,not_run,missing_record
+scenario,with_critique,15,15,3,0,0,0
+scenario,without_critique,15,15,3,0,0,0
+redteam,with_critique,10,10,0,0,0,0

@@ -7,9 +7,9 @@ GitHub repository (private, instructor/ISA read access):
   Note: the course convention is data266-lab2-team## ; the team chose DATA266_LAB2_PAIR44
 
 Git tags (commit IDs after the tags are created and pushed):
-  p1-v1.0: annotated tag on the commit "Finalize Part 1 Kaggle V14-R1 notebook and submission" (final notebook P1-KAGGLE-V14-R1 + eval/p1_submission.csv)
-  p2-v1.0: annotated tag on the commit "Finalize Part 2 P2-EXP-001 release" (P2-EXP-001: LoRA A selected; 3-rater human evaluation scored, D-118)
-  p3-v1.0: PENDING - final commit after the Part 3 judgements are scored (RESCORE_ONLY)
+  p1-v1.0: 79af4ba3651ef1d8bf8a70ed07fbb343c078cb8d - "Finalize Part 1 Kaggle V14-R1 notebook and submission" (final notebook P1-KAGGLE-V14-R1 + eval/p1_submission.csv; tag local, not yet pushed)
+  p2-v1.0: 5570487fdd0a2bf59d465c3766df282b325a156f - "Finalize Part 2 P2-EXP-001 release" (P2-EXP-001: LoRA A selected; 3-rater human evaluation scored, D-118)
+  p3-v1.0: annotated tag on the commit "Finalize Part 3 P3-EXP-003 release" (P3-EXP-003 + one human and one AI evaluation, D-119/D-121)
 
 Part 1
   Final Kaggle notebook: MISSING - Kaggle URL of the P1-KAGGLE-V14-R1 notebook (its executed copy is notebooks/p1_rag.ipynb)
