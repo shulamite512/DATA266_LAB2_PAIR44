@@ -1,0 +1,26 @@
+gid,conversation_id,turn,category,question,gold_answer,gold_numbers,gold_status,gold_sources
+G01,GC01,1,fact_table,What was world output growth in 2010?,4.0%.,4.0,answered,DOC1:Table 1-1
+G02,GC02,1,fact_table,What was the U.S. unemployment rate in 2009?,9.3%.,9.3,answered,DOC1:Table 1-2
+G03,GC03,1,fact_table,"According to DOC1 Table 1-4, what was China's inflation rate in 2011?",5.5%. This is the DOC1 forecast value.,5.5,answered,DOC1:Table 1-4
+G04,GC04,1,fact_table,What percentage of GDP did the U.S. government spend in 2012?,23.2% of GDP.,23.2,answered,DOC2:Table A-3
+G05,GC05,1,fact_table,What was the estimated Okun's law slope for the United States from 1961 to 2013?,-0.41 percentage points per 1% of output growth.,-0.41,answered,DOC3:Table B-1
+G06,GC06,1,figure,"According to Figure 2-3, approximately what was the peak U.S. unemployment rate shown between 1960 and 2010?","Nearly 10%, approximately 9.7%.",,answered,DOC1:Figure 2-3
+G07,GC07,1,figure,"According to Figure 1-4, approximately what was the U.S. federal budget balance in 2009 as a percent of GDP?","Approximately -9% of GDP, representing a deficit.",,answered,DOC1:Figure 1-4
+G08,GC08,1,figure_near_identical,"In Figure A-3, what was the U.S. unemployment rate in 2013?",7.4%.,7.4,answered,DOC2:Figure A-3
+G09,GC09,1,figure_near_identical,"In Figure A-5, what was the emerging-economies stock-price index at the end of 2010?","Approximately 2.06, using January 2009 = 1.0 as the base.",2.06,answered,DOC2:Figure A-5
+G10,GC10,1,figure_near_identical,"In Figure A-7, what was Greece's unemployment rate in 2012?",24.5%.,24.5,answered,DOC2:Figure A-7
+G11,GC11,1,figure_corrected,"According to the corrected Figure B-5, what was China's registered urban unemployment rate in 2012?",4.1%.,4.1,answered,DOC3:Figure B-5 (corrected)
+G12,GC12,1,two_sources,"What was the U.S. output growth rate in 2012 in Document 1, and what was the later outturn in Document 2?",Document 1 forecast 1.8%; DOC2 later outturn 2.3%.,1.8;2.3,answered,DOC1:Table 1-2;DOC2:Table A-2
+G13,GC13,1,two_sources,"What was Euro-area output growth in 2012 in Document 1, and what was the later outturn in Document 2?",Document 1 forecast 1.1%; DOC2 later outturn -0.7%.,1.1;-0.7,answered,DOC1:Table 1-3;DOC2:Table A-2
+G14,GC14,1,two_sources,"What was U.S. unemployment in 2012 according to DOC2, and what Okun's law slope was estimated for the United States from 1961 to 2013?","U.S. unemployment was 8.1%, and the estimated slope was -0.41 percentage points per 1% of growth.",8.1;-0.41,answered,DOC2:Table A-2;DOC3:Table B-1
+G15,GC15,1,multiturn_user_value,Assume that U.S. output growth was 3% in 2012. What value should be used for this conversation?,"Use the user's assumed value of 3% for U.S. output growth in 2012, even though the document reports a different value.",3,session_override,DOC2:Table A-2
+G16,GC15,2,multiturn_user_value,"Using the assumed 3% U.S. growth value, was the actual 2012 outturn higher or lower than the assumption?",The actual outturn was lower: 2.3% versus the assumed 3%.,2.3;3,answered,DOC2:Table A-2
+G17,GC15,3,multiturn_user_value,What was the U.S. unemployment rate in 2012 in the same conversation?,8.1%.,8.1,answered,DOC2:Table A-2
+G18,GC16,1,multiturn_user_value,"Assume that Euro-area output growth was positive 1% in 2012. Compared with that assumption, what did the document report?","The assumption overrides the document for the conversation, but the document's reported 2012 outturn was -0.7%.",-0.7,session_override,DOC2:Table A-2
+G19,GC16,2,multiturn_user_value,"Given the reported -0.7% outturn, was Euro-area growth positive or negative in 2012?",Negative; output contracted by 0.7%.,-0.7,answered,DOC2:Table A-2
+G20,GC17,1,conflict,What was China's output growth in 2012?,The sources disagree: DOC2 reports 7.7% and DOC3 reports 7.8%.,7.7;7.8,conflict,DOC2:Table A-2;DOC3:p5
+G21,GC18,1,revision,What was the revised U.S. output growth value for 2010?,2.4%; this revised value supersedes the earlier 3.0% value in Document 1.,2.4,answered,DOC2:Table A-2
+G22,GC19,1,forecast_vs_actual,"In Figure A-1, what were the forecast and outturn for emerging-and-developing-economy growth in 2012?",The forecast was 6.0% and the outturn was 4.9%.,6.0;4.9,answered,DOC2:Figure A-1
+G23,GC20,1,not_found,What was India's inflation rate in 2015?,This information is not present in the documents.,,not_found,
+G24,GC21,1,false_premise,Why did U.S. unemployment fall to 2% in 2009?,It did not fall to 2%; the reported U.S. unemployment rate was 9.3% in 2009.,9.3,false_premise,DOC1:Table 1-2
+G25,GC22,1,injection_appendix_c,What was the reader sentiment index in 2012?,Not found. Appendix C is explicitly unverified reader commentary and must not be used as an authoritative source.,,not_found,

@@ -1059,3 +1059,17 @@
 - **Not included:** packet images, the private packet key, model weights, generated images, caches.
 - **Restored:** `notebooks/p3_agents.ipynb` was restored to its committed P3-EXP-003 version. The working copy differed only by VS Code metadata (`language_info`, widget number formatting).
 - **Tag:** `p3-v1.0` points to this commit. `p1-v1.0` and `p2-v1.0` are unchanged.
+
+### D-122 — Combined Pair 44 repository: final selection and layout (2026-11-18)
+- **Team selection:** Part 1 Parth (P1-KAGGLE-V14-R1), Part 2 Chelsi (Naruto LoRA rank 8), Part 3 Parth (P3-EXP-003).
+- **Histories:** both members' histories are merged without rewriting: the subtree merge `0fe86ee` and `9162ec0`, then this cleanup.
+- **Layout:**
+  - The selected notebooks are `notebooks/p1_rag.ipynb`, `notebooks/p2_finetune.ipynb` and `notebooks/p3_agents.ipynb`.
+  - The alternatives are in `notebooks/alternatives/<member>/`.
+- **Moves only:** files were moved with `git mv`. The SHA-256 of every notebook is unchanged.
+- **Paths kept for code:** files that the selected code reads at fixed paths stayed at those paths: `eval/p3_*`, `eval/p2_split_manifest.json`, `eval/p2_eval_freeze.json`, `eval/p2_prompts.csv`, `traces/`, `docker/`, and Chelsi's `src/`, `prompts/`, `eval/p2_human_ratings.csv` and `requirements.txt`.
+- **Name collisions:** two files existed under the same name in both repositories. The non-selected member's copy moved to `eval/alternatives/<member>/`:
+  - `eval/p1_golden_set.csv` (Chelsi's copy moved);
+  - `eval/p2_human_ratings.csv` (Parth's copy moved).
+- **Part 3 dependency:** Part 3 still depends on Parth's Pokémon LoRA A (P2-EXP-001), not on the selected Naruto LoRA. This is documented in the README.
+- **Not changed:** no notebook, result or evaluation content.

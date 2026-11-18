@@ -1,5 +1,13 @@
-> **Combined repository:** this folder is Parth's complete repository, with its history preserved by a subtree merge. All paths in this README are relative to `Parth/`. The Docker setup in `Parth/docker/` mounts this folder. The final selection is in the root `README.md`: Part 1 and Part 3 from here, Part 2 from Chelsi.
-
+> **Parth's original repository README** (from before the merge). Paths inside it refer to the combined layout as follows:
+> - `notebooks/p1_rag.ipynb` and `notebooks/p3_agents.ipynb`: unchanged.
+> - `notebooks/p2_*`: now `notebooks/alternatives/parth/`. The root `notebooks/p2_finetune.ipynb` is now Chelsi's selected Part 2.
+> - `notebooks/p3_human_rating_ui.ipynb` and `p3_disagreement_review.ipynb`: now `notebooks/evaluation/`.
+> - `eval/p2_human_ratings.csv`: now `eval/alternatives/parth/`.
+> - `DECISIONS.md` and `HUMAN_EVALUATION.md`: now `docs/`.
+> - `report/`: now `docs/report/`. `publication/`: now `docs/publication/`. `build_canvas_zip.py` there was written for the old layout.
+> - `requirements.txt`: now `docs/history/requirements-initial-parth.txt`.
+>
+> The README for the combined repository is the root `README.md`.
 # DATA 266 Lab 2 — Pair Programming Team 44
 
 Repository for DATA 266 (Fall 2026) Lab 2: https://github.com/shulamite512/DATA266_LAB2_PAIR44 (to be private with instructor/ISA read access; nothing pushed yet).

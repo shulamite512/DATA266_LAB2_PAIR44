@@ -1,39 +1,39 @@
-# AI usage
+# AI usage — Pair Programming Team 44
 
-| Tool | Model / version | Parts |
-|---|---|---|
-| Claude Code (VS Code extension) | Claude Opus 5.5 (`claude-opus-5-5`) | 1, 2, 3 |
+| Tool | Model | Used by | Parts |
+|---|---|---|---|
+| Claude Code (VS Code extension) | Claude Opus 5.5 (`claude-opus-5-5`) | Parth Patel, Chelsi Shulamite | 1, 2, 3 |
 
-## What the AI assistant was used for
-* **Code:** wrote the code in `src/` for all three parts (Part 1 ingestion, retrieval, answering and evaluation;
-  Part 2 data preparation, LoRA training, generation and evaluation; Part 3 agents, orchestrator and Gradio app),
-  the notebook generators in `tools/`, the dependency installer and the upload-zip builder.
-* **Evaluation templates:** drafted the Part 3 scenarios and red-team cases (`eval/p3_scenarios.json`,
-  `eval/p3_redteam.json`) and the empty rating sheets.
-* **Debugging:** diagnosed and fixed errors we hit on Colab/Kaggle (package installs, ChromaDB naming, a shadowed
-  variable in Part 2, Hugging Face upload, the red-team counting bug, the human-agreement calculation).
-* **Checking our golden set:** compared each of our 25 golden-set answers with the PDFs and pointed out two rows that
-  conflicted with the documents' own rules (G03, G20); we chose how to change them.
-* **Analysis code:** wrote the code that computes the human-evaluation numbers from our rating files
-  (`notebooks/Chelsi/human_eval_results.ipynb`, built by `tools/build_human_eval_notebook.py`) and extracted result
-  tables from notebook outputs into `part1/`-`part3/`.
-* **Repository and documentation:** organized the repository, ran the git commands (commits, tags, pushes), and
-  drafted `README.md` and the Hugging Face model card.
+No hosted AI API was used in any submitted run. Chelsi's Part 1 code has optional `gemini` and `claude` backends, which were explored during development but not used for submitted results.
 
-## What we did ourselves
-* Ran every notebook on Colab/Kaggle GPUs and chose the final Part 1 backend and the final Part 2 run.
-* Wrote the 25 golden-set questions and answers (Part 1).
-* All human ratings: Part 1 groundedness, Part 2 blinded pair comparisons, Part 3 scenario judgements and critic
-  labels, including resolving our disagreements.
-* Wrote the Part 2 dataset description.
-* Wrote the report and all analysis in our own words. Every number in the report comes from an executed notebook output.
+## Chelsi's implementation (selected Part 2; alternative Parts 1 and 3)
+- **Code:** the assistant wrote the code in `src/` (Part 1 ingestion, retrieval, answering and evaluation; Part 2 data preparation, LoRA training, generation and evaluation; Part 3 agents, orchestrator and Gradio app), the notebook generators in `tools/`, the dependency installer and the upload-zip builder.
+- **Evaluation templates:** it drafted the Part 3 scenarios, the red-team cases and the empty rating sheets.
+- **Debugging:** it fixed installation, ChromaDB naming, a shadowed variable, the Hugging Face upload, the red-team counting bug and the human-agreement calculation.
+- **Golden set:** it checked the golden-set answers against the PDFs and flagged two rows (G03, G20). The team decided how to change them.
+- **Results and documentation:** it wrote the code behind `notebooks/evaluation/chelsi_human_eval_results.ipynb`, extracted result tables, ran Git commands, and drafted the README and model card.
+- **Done by the team:** ran every notebook on Colab/Kaggle GPUs; chose the final backend and the final Part 2 run; wrote the golden set; did all human ratings; wrote the Part 2 dataset description.
 
-_(Both members: check and correct this list before submitting.)_
+## Parth's implementation (selected Parts 1 and 3; alternative Part 2)
+- **Design:** the assistant proposed architecture options that the team corrected and approved. They are logged as decisions in `docs/DECISIONS.md` and `docs/part1/DECISIONS_P1.md`.
+- **Implementation:** it wrote and debugged the notebooks, the Docker environment, the evaluation freezes, the rating tools and the documentation. It validated them statically before each experiment.
+- **Execution:** with the team's explicit authorization, it executed P3-EXP-003 (headless, in the team's Docker container) and the Part 2 `REPORT_ONLY` scoring. The team ran the Part 1 Kaggle notebook and the Part 2 training.
+- **Release:** it prepared the release commits and tags, and combined both repositories into this one.
 
-## Parth's implementation (`Parth/`)
-Parth's work also used Claude Code (Claude Opus 5.5). The full, dated account is in [`Parth/AI_USAGE.md`](Parth/AI_USAGE.md). It covers:
-- implementation and documentation;
-- executing P3-EXP-003 with the team's authorization;
-- acting as the **disclosed supplemental AI evaluator** for Parth's Part 3 task-success evaluation. This is not a human judgement.
+The complete dated log is in `docs/AI_USAGE_LOG_parth.md`.
 
-The same assistant also prepared this combined repository: the merge commit that places Parth's history under `Parth/`, these pointer READMEs and `links.txt`. It changed no notebook, result or evaluation file.
+## AI used as an evaluator (Part 3, Parth's P3-EXP-003)
+Claude Opus 5.5 served as the **second, supplemental task-success evaluator** for Parth's Part 3. It is not a team member, and its judgements are not human judgements.
+- **Method:**
+  - It judged the 52 items of the blinded packet (30 scenarios, 20 critic attempts, 2 red-team cases) with the frozen rubrics.
+  - It inspected every image itself.
+  - It recorded and hashed its judgements before it saw the human answers or the answer key.
+- **Files:** `eval/p3_ai_judge_P3-EXP-003_*` with `_PROVENANCE.md`; the comparison is in `eval/p3_ai_vs_human_P3-EXP-003_REPORT.md`.
+- **Result:** agreement with the human evaluator was 20/30 scenarios (κ = 0.40), and 18 disagreements are unresolved.
+- **Compliance note:** the written lab requirement asks for judgements by both team members. The team reports that the instructor allowed AI judging verbally; this is not confirmed in writing.
+
+## What the team did
+- Ran the experiments.
+- Supplied and approved all human ratings and judgements.
+- Made the selection decisions.
+- Reviewed every result reported here.
