@@ -1,8 +1,16 @@
-﻿GitHub repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
-p1-v1.0 commit: 8a70b1a
-p2-v1.0 commit: 8a70b1a
-p3-v1.0 commit: 8a70b1a
-Hugging Face Part 2 model (run 1, final): https://huggingface.co/chels512/data266-lab2-naruto-run1-lora-r8
-Hugging Face Part 2 model (run 2): https://huggingface.co/chels512/data266-lab2-naruto-run2-lora-r32
-Hugging Face Part 2 image dataset: https://huggingface.co/datasets/chels512/data266-lab2-p2-generations
-Final Kaggle notebook:
+Team: Pair_Programming_Team_44
+Members:
+  Parth Patel - SJSU ID:
+  Chelsi Shulamite - SJSU ID:
+GitHub repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
+p1-v1.0 commit:
+p2-v1.0 commit:
+p3-v1.0 commit:
+Kaggle team name:
+Final Kaggle notebook (URL and version):
+Hugging Face Part 2 model, run 1 (final, LoRA rank 8): https://huggingface.co/chels512/data266-lab2-naruto-run1-lora-r8
+Hugging Face Part 2 model, run 2 (LoRA rank 32): https://huggingface.co/chels512/data266-lab2-naruto-run2-lora-r32
+Hugging Face Part 2 generated-image dataset: https://huggingface.co/datasets/chels512/data266-lab2-p2-generations
+Hugging Face Part 3 input-image dataset:
+Hugging Face Space (optional):
+Meeting recordings (optional):

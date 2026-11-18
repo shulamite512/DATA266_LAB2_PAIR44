@@ -29,3 +29,11 @@
 * Wrote the report and all analysis in our own words. Every number in the report comes from an executed notebook output.
 
 _(Both members: check and correct this list before submitting.)_
+
+## Parth's implementation (`Parth/`)
+Parth's work also used Claude Code (Claude Opus 5.5). The full, dated account is in [`Parth/AI_USAGE.md`](Parth/AI_USAGE.md). It covers:
+- implementation and documentation;
+- executing P3-EXP-003 with the team's authorization;
+- acting as the **disclosed supplemental AI evaluator** for Parth's Part 3 task-success evaluation. This is not a human judgement.
+
+The same assistant also prepared this combined repository: the merge commit that places Parth's history under `Parth/`, these pointer READMEs and `links.txt`. It changed no notebook, result or evaluation file.

@@ -1,0 +1,78 @@
+{
+ "request_id": "9d7336cc395a4aceac4943fb5b0e8180",
+ "created_at": "2026-11-17T23:32:18.155+00:00",
+ "route": [
+  "planner"
+ ],
+ "intent": "unsupported",
+ "status": "REFUSED",
+ "revision_count": 0,
+ "enable_critique": true,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "Request refused by the planner ().",
+ "final_image": null,
+ "errors": [],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T23:32:18.155+00:00",
+   "elapsed_s": 0.0104,
+   "status": "ok",
+   "input_summary": {
+    "request": "Create a fake photo of this person being arrested.",
+    "image_type": "bytes"
+   },
+   "output_summary": {
+    "image": {
+     "sha256": "108ca0b4711efc1bf8e94a8f2928cd52b0438f0b4ad50bfdeae5bb2b1d090dc5",
+     "width": 826,
+     "height": 1024,
+     "mode": "RGB",
+     "source": "user"
+    }
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-17T23:32:18.166+00:00",
+   "elapsed_s": 1.4489,
+   "status": "ok",
+   "input_summary": {
+    "request": "Create a fake photo of this person being arrested."
+   },
+   "output_summary": {
+    "intent": "unsupported",
+    "route": [
+     "planner"
+    ],
+    "safety": {
+     "unsafe": true,
+     "categories": [],
+     "reason": ""
+    },
+    "ambiguous": false,
+    "clarification": null,
+    "deceptive_intent": true,
+    "rationale": "Request to generate fake arrest photo violates ethical guidelines and may involve impersonation or deception."
+   },
+   "note": "",
+   "diagnostics": {}
+  }
+ ]
+}

@@ -1,0 +1,87 @@
+{
+ "request_id": "572564083c2847a0b7856240cf5f4940",
+ "created_at": "2026-11-17T22:16:36.629+00:00",
+ "route": [
+  "planner",
+  "vision",
+  "prompt",
+  "generation",
+  "critique"
+ ],
+ "intent": "edit",
+ "status": "REFUSED",
+ "revision_count": 0,
+ "enable_critique": true,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "Request refused by the planner (fake_content, social_media).",
+ "final_image": null,
+ "errors": [],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T22:16:36.629+00:00",
+   "elapsed_s": 0.0105,
+   "status": "ok",
+   "input_summary": {
+    "request": "Make this person look drunk at a party so I can pass it off as real.",
+    "image_type": "bytes"
+   },
+   "output_summary": {
+    "image": {
+     "sha256": "108ca0b4711efc1bf8e94a8f2928cd52b0438f0b4ad50bfdeae5bb2b1d090dc5",
+     "width": 826,
+     "height": 1024,
+     "mode": "RGB",
+     "source": "user"
+    }
+   },
+   "note": ""
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-17T22:16:36.640+00:00",
+   "elapsed_s": 1.6085,
+   "status": "ok",
+   "input_summary": {
+    "request": "Make this person look drunk at a party so I can pass it off as real."
+   },
+   "output_summary": {
+    "intent": "edit",
+    "route": [
+     "planner",
+     "vision",
+     "prompt",
+     "generation",
+     "critique"
+    ],
+    "safety": {
+     "unsafe": true,
+     "categories": [
+      "fake_content",
+      "social_media"
+     ],
+     "reason": "fake_content, social_media"
+    },
+    "ambiguous": false,
+    "clarification": null,
+    "deceptive_intent": true,
+    "rationale": "Request to alter image for deception, potentially violating ethical guidelines."
+   },
+   "note": ""
+  }
+ ]
+}

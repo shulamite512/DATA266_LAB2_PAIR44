@@ -1,0 +1,93 @@
+# AI Usage Declaration
+
+This file lists every AI coding assistant used in this project and what it was used for.
+
+## Claude Code (Anthropic)
+
+- **Interface:** Claude Code VS Code extension
+- **Model:** Claude Opus 5.5 (`claude-opus-5-5`)
+- **Used by:** `[MEMBER NAME — TO BE FILLED]`
+- **Used for (cumulative; append as usage grows):**
+  - 2026-10-17: inspected the lab requirements and provided files, and summarised the Part 1 requirements.
+  - 2026-10-17: created the repository skeleton (`README.md`, `DECISIONS.md`, `CONTRIBUTIONS.md`, `AI_USAGE.md`, `.gitignore`, and the `notebooks/p1_rag.ipynb` skeleton) under the team's direction.
+  - 2026-10-17: Part 1 architecture design and review: proposed options, which the team corrected and approved (DECISIONS.md D-013 to D-035).
+  - 2026-10-17: implemented and refined the gated pre-experiment smoke-test harness in `p1_rag.ipynb`, plus the helper functions it validates (caption/figure/table extraction, table normalization, `ConversationState`, index fingerprint).
+  - 2026-10-17: ran it locally on a Mac (CPU only) and debugged the PDF, figure and table extraction checks against the provided documents.
+  - 2026-10-17: validated the answer schema, citation/label grammar (against `validate_submission.py`), conversation isolation and index immutability through the local smoke test.
+  - 2026-10-17: maintained `DECISIONS.md` from the measured local smoke-test results (D-041 to D-044).
+  - **Not done yet:** GPU-dependent smoke stages (embedder, reranker, VLM, GPU memory) are untested; no full RAG pipeline exists; no P1-EXP-001 run has occurred.
+  - 2026-10-17: Part 2 architecture design: proposed options, which the team corrected and approved; verified the dataset cards, leading to the Pokémon dataset decision (DECISIONS.md D-045 to D-064).
+  - 2026-10-17: implemented the gated smoke-test harness in `notebooks/p2_finetune.ipynb` (local P2-L\* stages and the prepared GPU P2-S\* stages), plus the helper functions it validates.
+  - 2026-10-17: ran local tests of dataset cleaning and deduplication, the split, 512×512 preprocessing, tokenization, and LoRA plumbing on a tiny randomly initialised UNet (no pretrained diffusion weights).
+  - 2026-10-17: debugged the Hugging Face dataset-column handling issue (a parquet physical-column index mismatch in the caption-size check).
+  - 2026-10-17: maintained `DECISIONS.md` for Part 2 from the measured local results.
+  - **Part 2 not done yet:** no real diffusion training has occurred; no GPU Part 2 stage (P2-S0 to P2-S7) has run; P2-EXP-001 has not occurred.
+  - 2026-10-17: Part 3 architecture design: proposed options, which the team corrected and approved (DECISIONS.md D-068 to D-088).
+  - 2026-10-17: implemented `notebooks/p3_agents.ipynb`: typed state and state machine, the five agents, orchestrator, JSON traces, Gradio app, evaluation helpers, the local P3-L\* smoke stages, and the prepared GPU P3-S\* stages.
+  - 2026-10-17: ran the local smoke test with mock backends (no VLM or diffusion weights) and debugged what it found: the vision Q&A contract was not enforced; an injected payload survived trigger-word stripping; tests mutated a global config value; a test-data error. Also resolved the gradio / huggingface-hub / kubernetes / pydantic dependency conflict.
+  - **Part 3 not done yet:** no real agent model (VLM, SD 1.5, instruct-pix2pix, CLIP) has been run; no GPU Part 3 stage (P3-S0 to P3-S10) has run; P3-EXP-001 has not occurred.
+  - 2026-11-16 (RTX 5090 Windows machine): inspected the machine read-only (GPU, Docker, disks) and set up the dedicated Docker environment (`docker/`: Dockerfile, compose file, dependency dry-run resolution, lock file; DECISIONS.md D-089).
+  - 2026-11-16: completed `notebooks/p2_finetune.ipynb`: run modes, data preparation with frozen split, frozen-prompt creation/verification, LoRA training with checkpoint/resume and provenance, resumable 120-image generation, KID/CLIP/LPIPS/memorization with a separately labelled sensitivity analysis, pre-registered final-adapter selection, human-evaluation materials and rating validation, report tables/figures, Hugging Face staging with an upload gate, safety record (D-090 to D-096).
+  - 2026-11-16: completed `notebooks/p3_agents.ipynb`: real backends (VLM fallback, revision pinning), per-request LoRA activation with verification (fixing LoRA leakage into non-domain requests), instruct-pix2pix CPU residency (fixing GPU co-residency), integration run, frozen `eval/p3_scenarios.csv` and `eval/p3_redteam.csv`, resumable fingerprinted evaluation runner, scoring/rescoring from real judgements, Gradio panels, system-card draft (D-097 to D-102).
+  - 2026-11-16: removed the smoke-test appendices from the final notebooks (originals preserved in `original_snapshot_2026-11-16/`), updated README, DECISIONS and this file.
+  - **Validation performed by the assistant was static only** (AST parse, nbformat schema, pyflakes rules, cell-order dependency check, library-signature inspection). **The assistant did not execute any notebook cell, training, generation, model inference or evaluation**; all experiments are run by the team.
+  - 2026-11-17: Part 3 post-preliminary amendment (DECISIONS.md D-105 to D-112): read the saved P3-EXP-001 results and traces (read-only) and diagnosed R01 (injection split over transcribed lines) and S01 (SD safety-checker false positive on a held-out test image) and the planned-vs-executed route check; wrote the v2 evaluation files (`eval/p3_scenarios_v2.csv`, `eval/p3_redteam_v2.csv` by a script that copies v1 text verbatim; `eval/p3_input_manifest_v2.csv`); researched Wikimedia Commons licences through the Commons API and chose replacement photographs from previews; hashed the three Part 2 test images' bytes from the local dataset cache (read-only); updated `notebooks/p3_agents.ipynb` (input staging/verification, v2 freeze, fixes, accounting, blinded two-judge protocol, report, HF input-dataset staging with an upload gate) and archived the executed P3-EXP-001 notebook outside the repository.
+  - **Not done by the assistant:** no notebook cell, model, staging run or evaluation was executed (validation was static: nbformat schema, AST parse, ruff pyflakes rules); the Commons files could not be pre-staged (Wikimedia HTTP 429); nothing was committed, pushed or uploaded. P3-EXP-002 has not run; the staged images still need the team's visual confirmation.
+  - 2026-11-17 (after the team ran P3-EXP-002): read-only failure audit of the six `FAILED_MODEL` vision records (traces, `result.json`, `evaluation_summary.json`, notebook code). Root cause reported as a **hypothesis** (450-token vision limit; raw replies had not been saved). Then implemented D-113 in `notebooks/p3_agents.ipynb`: vision `max_new_tokens` 450 → 1024, generation diagnostics (tokens, limit reached, JSON parsed/validated) in traces and records, a local-only capped and redacted raw reply on failure, a no-model self-check, a separate P3-EXP-003 freeze that must match the v2 freeze, P3-EXP-002 archived, and report sections for vision diagnostics and the P3-EXP-002 comparison. Also updated `.gitignore` (images under `traces/`, `*_LOCAL_ONLY*`), README, DECISIONS (P3-EXP-002 result record, D-113, P3-EXP-003 plan) and this file. Before editing, copied the executed P3-EXP-002 notebook to `$LAB2_WORK_DIR/p3/archive/P3-EXP-002/` (byte-identical) and cleared outputs in the repository copy.
+  - **Not done by the assistant:** no notebook cell, model loading, inference, staging, evaluation or GPU test was run (validation was static: nbformat schema, per-cell and whole-notebook AST parse, ruff F/E9 rules, code diff against the committed version, hash comparison of the preserved P3-EXP-001/002 artifacts). Nothing was committed, pushed or uploaded. Whether the six failures are fixed is unknown until the team runs P3-EXP-003.
+  - 2026-11-17, **executed by the AI assistant with the team's explicit authorization for this task:** committed the P3-EXP-002 traces and the P3-EXP-003 implementation, ran P3-EXP-003 `SETUP_ONLY` and committed its freeze, then ran an `INTEGRATION_RUN` memory preflight, the full `FULL_EVALUATION` (40 real requests with the real models and the Part 2 LoRA A) and a local-only Gradio DEMO verification (HTTP check plus caption, style-change and unsafe requests). Headless `nbclient` inside the Lab 2 container; the repository notebook was never edited during the runs. The assistant inspected the saved records and the local raw replies, found that D-113 did **not** fix S02–S04 (confirmed repetition loop) and recorded this as a negative result and an unimplemented proposal (D-114), without patching or re-running P3-EXP-003. It committed the P3-EXP-003 traces and the executed notebook, and updated README (Part 2 status from verified P2-EXP-001 records; results tables), DECISIONS and this file. A hash check confirmed P3-EXP-001/002 and Part 2 outputs unchanged. **Not done:** no Part 2 retraining or regeneration; no human judgement or rating (none exist); `CONTRIBUTIONS.md` not filled (needs the team); nothing pushed, uploaded or submitted.
+
+  - 2026-11-17 (submission preparation, team request; no model run): wrote `HUMAN_EVALUATION.md`, `SUBMISSION_CHECKLIST.md`, `links.txt`, the IEEE draft `report/data266_lab2_report.tex` (values copied from saved records; human results, Part 1 and author data left as `PENDING`/`MISSING`), and the `CONTRIBUTIONS.md` task template (no contributions assigned). Fixed the NaN-in-JSON writer of the Part 2 Hugging Face image metadata (D-116), validated on the 120 existing records. Restored two DECISIONS planning entries that had been edited in place, as the log's append-only rule requires (D-115). Tested the rating-merge snippet on synthetic data in `/tmp` only; the data was deleted and never written to `eval/`. **Not done:** no rating or judgement filled, no upload, push or submission, and the report was not compiled (no TeX on this machine).
+  - 2026-11-18 (final submission preparation, Pair 44, team request; no training or evaluation re-run):
+    - Searched the local drives and found the separately developed Part 1 repository on D:. Verified its executed checkpoints read-only (P1-EXP-001 metrics and P1-EXP-003 submission run against the saved outputs).
+    - Merged its history into this repository, taking the P1-EXP-003 notebook and golden set as exact blobs (D-117).
+    - Set the team's Hugging Face repo ids and ran Part 2 `REPORT_ONLY` headlessly to regenerate the upload staging (hash-verified: only derived files changed).
+    - Built a revision-history figure from saved P3-EXP-003 files.
+    - Extended the IEEE draft to Parts 1–3.
+    - Wrote the HF publication plan and manifest, the Canvas ZIP builder, `requirements-p1.txt`, and updated README, CONTRIBUTIONS (template), links.txt, HUMAN_EVALUATION, SUBMISSION_CHECKLIST and DECISIONS.
+    - Checked the selected GitHub repository read-only (public, empty).
+    - **Not done:** no rating or judgement; no names, contributions or links invented; nothing pushed, uploaded or submitted; the PDF was not compiled (no TeX here).
+  - 2026-11-18 (Part 2 human results, team request; executed by the AI assistant with the team's explicit authorization; no training, generation or metric re-run):
+    - Validated the three raters' completed `eval/p2_human_ratings.csv` against the frozen template and rater sheet, and against the rating tool's per-rater files (byte-identical).
+    - Snapshotted the raw rating files with hashes, then committed the ratings unchanged (`e53130b`) **before** the answer key was applied.
+    - Ran a headless `REPORT_ONLY` copy of `p2_finetune.ipynb` (only the `MODE` line differs) and saved it as `notebooks/p2_finetune_REPORT_ONLY_human_eval.ipynb`. A hash audit of all 481 Part 2 work files showed that only derived report files and two staged model cards changed.
+    - Computed post-hoc supplementary statistics (Fleiss' κ, Wilson CIs, binomial tests, prompt-group breakdown, NSFW-pair sensitivity), labelled as not pre-registered.
+    - Updated the report, README, SUBMISSION_CHECKLIST, DECISIONS (D-118) and this file.
+    - **Not done:** no rating was created, changed or imputed; the assistant did not take part in rating; nothing pushed, uploaded or submitted; the HF approval manifest was not regenerated (flagged for re-approval).
+
+  - 2026-11-17/18 (Part 3, team request): **the AI acted as an evaluator. This is disclosed as AI judging, not human judging.**
+    - **Role.** The model served as the supplemental second Part 3 evaluator ("Evaluator 2, AI"). It was not `member_a` or `member_b`.
+    - **Basis for using an AI evaluator.** The team reports that the instructor permitted AI judging verbally in class. This is not documented in writing, and the written requirement asks for judgements by both team members. The evaluation is therefore labelled supplemental.
+    - **Method.**
+      - It judged the 52 items of the blinded P3-EXP-003 packet (30 scenarios, 20 critic attempts, 2 red-team cases) with the frozen rubrics.
+      - It inspected every packet image with the model's vision.
+      - It did not read the human file, the answer key or the critic decisions before its own files were validated and hashed.
+    - **Outputs.** `eval/p3_ai_judge_P3-EXP-003_{scenario,critic,redteam}.csv` and `..._PROVENANCE.md`.
+    - **Comparison.** It then compared its judgements with the completed human evaluation (`member_a`), reusing `cohen_kappa` from `p3_agents.ipynb`. Results: `eval/p3_ai_vs_human_P3-EXP-003_{REPORT.md,comparison.json}`.
+      - Scenario agreement 20/30, κ = 0.40.
+      - 18 of 52 items disagree.
+    - **Adjudication tooling.** It built and tested `notebooks/p3_disagreement_review.ipynb`, an ipywidgets adjudication tool: 38 functional checks, synthetic data in `/tmp`, and a read-only check on the real files. The team did **not** use it before the deadline, so the 18 disagreements are **unresolved**.
+    - **Not done.**
+      - No human judgement was created, changed or relabelled.
+      - The AI evaluation was not written into `p3_human_*` files.
+      - `RESCORE_ONLY` was not run.
+      - No adjudication decision was made by the AI.
+  - 2026-11-18 (final submission preparation, team request; no model run):
+    - Updated the IEEE report with the Part 3 evaluator results. The AI evaluator is disclosed, the disagreements are reported as unresolved, and Part 1 groundedness is stated as not rated.
+    - Updated this file, CONTRIBUTIONS (notes only), links.txt, SUBMISSION_CHECKLIST, HUMAN_EVALUATION, README and DECISIONS (D-119).
+    - Re-verified the Hugging Face staging against `publication/hf_publication_manifest.json`. Only the `run_A/README.md` hash differs (expected, D-118).
+    - **Not done:** nothing pushed, uploaded or submitted; the PDF was not compiled; no names or contributions were invented.
+
+  - 2026-11-18 (release commits, executed by the AI assistant with the team's explicit authorization; no model run):
+    - **Part 1:** verified the team-supplied final Kaggle notebook (P1-KAGGLE-V14-R1) and its submission read-only, and updated the Part 1 documentation and `requirements-p1.txt` from the run's recorded versions (D-120). Commit `79af4ba`, tag `p1-v1.0`.
+    - **Part 2:** committed the rating tool and the Part 2 report wording. Commit `5570487`, tag `p2-v1.0`.
+    - **Part 3:** committed the AI-evaluator files, the comparison, the human evaluator's file (byte-identical copy), copies of the frozen P3-EXP-003 summaries, both judging notebooks and the Part 3 documentation (D-121). Tag `p3-v1.0`.
+    - Restored `notebooks/p3_agents.ipynb` to its committed version: the working copy differed only by VS Code metadata.
+    - Shared documents were staged per part, so each commit contains only that part's changes.
+    - **Not done:** nothing pushed, uploaded or submitted; no experiment re-run; no judgement created or changed.
+
+All design decisions were reviewed and approved by the team before implementation. They are logged in `DECISIONS.md`.
+
+## Other AI tools
+
+`[None so far — add any other assistant here with what it was used for]`

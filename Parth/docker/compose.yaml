@@ -1,0 +1,42 @@
+# DATA 266 Lab 2 — Parts 2 and 3 (DECISIONS.md D-089). Start from implementation\docker:
+#   docker compose up -d --build
+# Values marked ${...} come from docker/.env (git-ignored). HF_TOKEN is taken from the host shell only if set.
+name: data266-lab2
+
+services:
+  lab2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: data266-lab2:p2p3-torch2.14.1-cu130
+    container_name: data266-lab2
+    restart: "no"
+    shm_size: "8gb"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]          # exactly one GPU (team rule 3)
+              capabilities: [gpu]
+    environment:
+      CUDA_VISIBLE_DEVICES: "0"
+      PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"   # less fragmentation under the 16 GB cap
+      LAB2_REPO_DIR: /app/implementation
+      P2_WORK_DIR: /app/data266_lab2_work/p2
+      P3_WORK_DIR: /app/data266_lab2_work/p3
+      HF_HOME: /app/data266_lab2_work/hf_cache
+      TORCH_HOME: /app/data266_lab2_work/torch_cache        # KID Inception / LPIPS AlexNet weights
+      MPLCONFIGDIR: /tmp/matplotlib
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      GRADIO_ANALYTICS_ENABLED: "False"
+      GRADIO_SERVER_NAME: "0.0.0.0"      # needed INSIDE the container; the host port below is bound to 127.0.0.1
+      GRADIO_SERVER_PORT: "7860"
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:?set JUPYTER_TOKEN in docker/.env}
+      HF_TOKEN: ${HF_TOKEN:-}
+    ports:
+      - "127.0.0.1:8888:8888"            # Jupyter — local machine only
+      - "127.0.0.1:7860:7860"            # Gradio  — local machine only (never a public share link)
+    volumes:
+      - ../:/app/implementation          # the Git repository (this folder's parent)
+      - ${LAB2_WORK_DIR:?set LAB2_WORK_DIR in docker/.env}:/app/data266_lab2_work   # persistent outputs + caches

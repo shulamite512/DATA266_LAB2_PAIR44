@@ -1,0 +1,237 @@
+{
+ "eval_version": "v2",
+ "for_experiment": "P3-EXP-003",
+ "amendment": {
+  "type": "POST_PRELIMINARY_AMENDMENT",
+  "reason": "P3-EXP-001 (preliminary) could not execute 18 of its 40 evaluation records because five development-specific team photographs (team_photo_01..04, team_person_01) were never supplied. The course kickoff slides allow COCO, Part 2 test split, own photos and red-team images as inputs, so personal photographs are not required.",
+  "input_changes": "team:* inputs replaced by licensed Wikimedia Commons photographs (commons:*); dataset_test:k renamed to explicit p2_test:<index> (same images and bytes); synthetic:* -> fixture:* and broken:* staged as hashed files. See eval/p3_input_manifest_v2.csv and the amendment_note columns.",
+  "scenario_changes": "requests, expected routes, expected statuses and pass rubrics copied verbatim from v1",
+  "redteam_changes": "R07/R08 rubric: only the input description changed (team member -> public-domain historical portrait); attack-success criteria unchanged. New human_review column for R01/R02 only (the rubric clauses the automated rule cannot decide).",
+  "implementation_changes": "D-106 injection scan over the joined transcription and the VLM description (R01 miss); D-107 input safety-checker flags must be confirmed by the VLM (S01 false positive); D-108 evaluator checks the EXECUTED agent route and separates EXECUTED/FAILED/NOT_RUN; D-110 pinned-revision check for a published Part 2 adapter.",
+  "status_note": "written after P3-EXP-001 results were seen and before any P3-EXP-002 request; the red-team set is therefore NOT an untouched hold-out for the revised safety logic"
+ },
+ "experiment_amendment": {
+  "decision": "D-113",
+  "type": "CONFIGURATION_REPAIR_AFTER_OBSERVED_FAILURES",
+  "previous_experiment": "P3-EXP-002 (archived read-only; freeze eval/p3_eval_freeze_v2.json)",
+  "motivation": "In P3-EXP-002, S02, S03 and S04 ended FAILED_MODEL ('The vision model returned no valid JSON.') under both critique conditions. Their vision steps took 9.70-9.89 s versus 4.5-7.9 s for passing ones, consistent with replies cut off at max_new_tokens = 450. The raw replies were not saved, so this cause is a HYPOTHESIS, not a confirmed fact.",
+  "change": "VLM_MAX_NEW_TOKENS['vision'] 450 -> 1024; vision-agent diagnostics (output tokens, limit, limit reached, JSON parsed/validated) in traces and result records; on a failure a capped, secret-redacted raw reply is kept locally (VISION_RAW_FAILURE_FILE), never in Git, reports or uploads.",
+  "unchanged": "v2 scenarios, red-team cases, input manifest and input bytes (verified against eval/p3_eval_freeze_v2.json); all prompts and rubrics; models and pinned revisions; greedy decoding; other token limits; safety policies; MAX_REVISIONS = 2; no JSON repair.",
+  "results_used": "P3-EXP-002 results WERE seen before this freeze and motivated the change. P3-EXP-003 is therefore NOT an untouched independent hold-out; it is a re-run of the same v2 evaluation after a documented configuration repair."
+ },
+ "base_freeze": {
+  "file": "eval/p3_eval_freeze_v2.json",
+  "sha256": "f1ab6b20daab31091986a428c37714fd94a60885851f989449d39d937c665edb",
+  "for_experiment": "P3-EXP-002",
+  "files_identical": true,
+  "inputs_identical": true
+ },
+ "files": {
+  "p3_scenarios_v2.csv": "4f393ad42af3f97610eb6a4fc1dc35269eb7d14394644952b3a8ff5031aae9c8",
+  "p3_redteam_v2.csv": "2c14677c72e00fe7212794c442f4f21fd2668219cff916f688a5dd44a5cf0dfb",
+  "p3_input_manifest_v2.csv": "5c25997a0a4672834be33aa28bfd7fb4f7fce3aeea6a9e1372132249eb2f2096",
+  "p2_split_manifest.json": "9040871dd680aace991ba384300ad0a7d8e7a0bc0376aec71a3bd9c5cf8ea169"
+ },
+ "v1_files_for_P3_EXP_001": {
+  "p3_scenarios.csv": "cfc0c974397a5186cf7b0c234964c7d1cb04833ed73ddd5b6b978a0e208485bc",
+  "p3_redteam.csv": "b95efad17772293c4e71ebd856c7c63de51efe14436c0eac6fb6b48f75e1aaa8",
+  "p3_eval_freeze.json": "7de3db6f025804be3fa7d1aac451eb3dab5d1bf72d4a99bf1c0bf648cef90d04"
+ },
+ "inputs": {
+  "broken:empty_file": {
+   "staged_file": "broken_empty_file.png",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "bytes": 0,
+   "width": null,
+   "height": null,
+   "decodes": false,
+   "source_type": "broken_fixture",
+   "license": "CC0-1.0 (created by the team)"
+  },
+  "broken:not_an_image": {
+   "staged_file": "broken_not_an_image.png",
+   "sha256": "0728ae374cbfed042ada7690a359bc6a0c9b158f3cc6892714326910014da38f",
+   "bytes": 34,
+   "width": null,
+   "height": null,
+   "decodes": false,
+   "source_type": "broken_fixture",
+   "license": "CC0-1.0 (created by the team)"
+  },
+  "broken:tiny_image": {
+   "staged_file": "broken_tiny_image.png",
+   "sha256": "c8f540e9ec006118b8e4a2a9b1a770a6fd4006b3c662e2d989fd036fee440ccc",
+   "bytes": 77,
+   "width": null,
+   "height": null,
+   "decodes": true,
+   "source_type": "broken_fixture",
+   "license": "CC0-1.0 (created by the team)"
+  },
+  "broken:truncated_png": {
+   "staged_file": "broken_truncated_png.png",
+   "sha256": "7781aea1b0ef4d487b3e4d93cc146a882e35dfbfbcae16b6a18ee042a170221d",
+   "bytes": 300,
+   "width": null,
+   "height": null,
+   "decodes": false,
+   "source_type": "broken_fixture",
+   "license": "CC0-1.0 (created by the team)"
+  },
+  "commons:brick_building": {
+   "staged_file": "commons_brick_building.png",
+   "sha256": "32798c637c47723706a525a6c7744bd7503588a58395be558ddd0c4708799151",
+   "bytes": 1529745,
+   "width": 1024,
+   "height": 768,
+   "decodes": true,
+   "source_type": "wikimedia_commons",
+   "license": "CC BY-SA 4.0"
+  },
+  "commons:cat_garden": {
+   "staged_file": "commons_cat_garden.png",
+   "sha256": "bb68420d85d0403081b99a7430ddbc193bbebe4086109e64779c979013c8003b",
+   "bytes": 1120164,
+   "width": 1024,
+   "height": 656,
+   "decodes": true,
+   "source_type": "wikimedia_commons",
+   "license": "CC BY 4.0"
+  },
+  "commons:dog_lawn": {
+   "staged_file": "commons_dog_lawn.png",
+   "sha256": "a42235f3dd0454b1607b1973d3f67ed882684dffc54e1d523cfada6fa9544f1a",
+   "bytes": 963119,
+   "width": 683,
+   "height": 1024,
+   "decodes": true,
+   "source_type": "wikimedia_commons",
+   "license": "CC BY 4.0"
+  },
+  "commons:portrait_adult_pd": {
+   "staged_file": "commons_portrait_adult_pd.png",
+   "sha256": "c45d26a9cdb1b89960f4269d567e2528af162ccdebe20a3a0caf2bafe9cc3655",
+   "bytes": 482948,
+   "width": 826,
+   "height": 1024,
+   "decodes": true,
+   "source_type": "wikimedia_commons",
+   "license": "Public domain (Commons: pd; Library of Congress: no known restrictions on publication)"
+  },
+  "commons:tray_meal": {
+   "staged_file": "commons_tray_meal.png",
+   "sha256": "ef200f9a66387a060446245b72da825f4f4f896103d656686bbe575d9247a231",
+   "bytes": 1186699,
+   "width": 1024,
+   "height": 756,
+   "decodes": true,
+   "source_type": "wikimedia_commons",
+   "license": "CC BY-SA 4.0"
+  },
+  "fixture:injection_ignore": {
+   "staged_file": "fixture_injection_ignore.png",
+   "sha256": "03b11a714a602e36e0658defab95d239204a60ea3dfdb8f6ba000b392c5e5033",
+   "bytes": 20127,
+   "width": 768,
+   "height": 512,
+   "decodes": true,
+   "source_type": "code_fixture",
+   "license": "CC0-1.0 (created by the team)"
+  },
+  "fixture:injection_obey": {
+   "staged_file": "fixture_injection_obey.png",
+   "sha256": "f8e7ccb5e2e02d8efff0f3b642738af75d9d4e947ca8ec0ff78c1732b076225f",
+   "bytes": 21209,
+   "width": 768,
+   "height": 512,
+   "decodes": true,
+   "source_type": "code_fixture",
+   "license": "CC0-1.0 (created by the team)"
+  },
+  "fixture:injection_system": {
+   "staged_file": "fixture_injection_system.png",
+   "sha256": "60ff337b9dcdaea711e5a623e167eef788f8341a3369741750cb1ecef6923a93",
+   "bytes": 21074,
+   "width": 768,
+   "height": 512,
+   "decodes": true,
+   "source_type": "code_fixture",
+   "license": "CC0-1.0 (created by the team)"
+  },
+  "p2_test:2": {
+   "staged_file": "p2_test_2.jpg",
+   "sha256": "de01d1f34a6b7160410e9c780ce585f05e162c1749f7993c36d890d61daa16a6",
+   "bytes": 98440,
+   "width": 789,
+   "height": 789,
+   "decodes": true,
+   "source_type": "p2_test",
+   "license": "cc-by-nc-sa-4.0 as stated by the dataset card; depicted characters are copyrighted by their owners"
+  },
+  "p2_test:32": {
+   "staged_file": "p2_test_32.jpg",
+   "sha256": "7b370e555f00e7a8c6fcf7db1efbac260b669335ce42ed85aa02d374b513e5b3",
+   "bytes": 235214,
+   "width": 1280,
+   "height": 1280,
+   "decodes": true,
+   "source_type": "p2_test",
+   "license": "cc-by-nc-sa-4.0 as stated by the dataset card; depicted characters are copyrighted by their owners"
+  },
+  "p2_test:34": {
+   "staged_file": "p2_test_34.jpg",
+   "sha256": "96521563c7bfea1f90979ec215613c45b5373b6c53c0ae1523a01bf85c3d32d7",
+   "bytes": 60219,
+   "width": 431,
+   "height": 431,
+   "decodes": true,
+   "source_type": "p2_test",
+   "license": "cc-by-nc-sa-4.0 as stated by the dataset card; depicted characters are copyrighted by their owners"
+  }
+ },
+ "model_config": {
+  "model_revisions": {
+   "Qwen/Qwen3-VL-4B-Instruct": "ebb281ec70b05090aa6165b016eac8ec08e71b17",
+   "openai/clip-vit-large-patch14": "32bd64288804d66eefd0ccbe215aa642df71cc41",
+   "stable-diffusion-v1-5/stable-diffusion-v1-5": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+   "timbrooks/instruct-pix2pix": "31519b5cb02a7fd89b906d88731cd4d6a7bbf88d"
+  },
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "vlm_fallback": "Qwen/Qwen2.5-VL-3B-Instruct",
+  "base": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+  "edit": "timbrooks/instruct-pix2pix",
+  "clip": "openai/clip-vit-large-patch14",
+  "p2_adapter_sha256": "20d8d67121db3c6858a872528c2310d2eba7f5f55c8c0d70d61fe7fd359540bd",
+  "p2_adapter_experiment": "P2-EXP-001",
+  "p2_adapter_run": "A",
+  "config_sha256": "31f8235d1e5f61a880827edf0b9ebde2ed483d9af34777dcc25eff6a31a29260"
+ },
+ "generation_config": {
+  "vlm_max_new_tokens": {
+   "planner": 200,
+   "vision": 1024,
+   "prompt": 220,
+   "critic": 160,
+   "input_safety": 80
+  },
+  "do_sample": false,
+  "vlm_max_pixels": 802816,
+  "max_revisions": 2
+ },
+ "implementation": {
+  "notebook_code_sha256": "78cc802b2818fe8b4ef24aaab2707ffbeb401ec2acaed2548a2b4e0d2ea2e5c7",
+  "pillow": "11.3.0",
+  "datasets": "5.0.1"
+ },
+ "frozen_at": "2026-11-17T23:20:41+00:00",
+ "git": {
+  "git_available": true,
+  "is_repo_with_commit": true,
+  "commit": "44bd4e814215a4cf7851ad058c7ddd313b87e80e",
+  "dirty": true,
+  "dirty_files": [
+   " M notebooks/p2_finetune.ipynb"
+  ]
+ },
+ "results_used": "P3-EXP-002 results WERE seen before this freeze and motivated the change. P3-EXP-003 is therefore NOT an untouched independent hold-out; it is a re-run of the same v2 evaluation after a documented configuration repair."
+}

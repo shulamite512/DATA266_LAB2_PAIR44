@@ -1,4 +1,4 @@
-﻿# DATA 266 Lab 2 - Pair 44
+# DATA 266 Lab 2 - Pair 44
 
 Three systems built on one 16 GB GPU (Kaggle or Colab Tesla T4), seed 266 throughout:
 
@@ -7,6 +7,34 @@ Three systems built on one 16 GB GPU (Kaggle or Colab Tesla T4), seed 266 throug
 3. **Part 3 - A five-agent image system** (Planner, Vision, Prompt Engineering, Generator, Critique) with a Gradio app, scenario tests and red-team tests.
 
 All numbers below come from the executed notebooks in `notebooks/Chelsi/` and the files in `part1/`, `part2/`, `part3/` and `eval/`.
+
+
+## Final graded implementations (team decision, Pair_Programming_Team_44)
+
+| Part | Selected implementation | Notebook with saved outputs | Evaluation evidence |
+|---|---|---|---|
+| 1 | **Parth**: P1-KAGGLE-V14-R1 (Kaggle Tesla T4) | [`Parth/notebooks/p1_rag.ipynb`](Parth/notebooks/p1_rag.ipynb) | `Parth/eval/p1_submission.csv` (40 rows, validator valid), `Parth/eval/p1_golden_set.csv`, `Parth/requirements-p1.txt`, `Parth/docs/part1/` |
+| 2 | **Chelsi**: Naruto LoRA, run 1 (rank 8) final | [`notebooks/Chelsi/p2_finetune.ipynb`](notebooks/Chelsi/p2_finetune.ipynb) | `part2/Chelsi/`, `eval/p2_human_ratings.csv`, `notebooks/Chelsi/human_eval_results.ipynb`, `prompts/`, Hugging Face links in `links.txt` |
+| 3 | **Parth**: P3-EXP-003 | [`Parth/notebooks/p3_agents.ipynb`](Parth/notebooks/p3_agents.ipynb) | `Parth/eval/p3_*` (frozen scenarios, red-team cases, freezes, P3-EXP-003 summaries, evaluator files), `Parth/traces/P3-EXP-003/` |
+
+**Alternative implementations (kept, not selected):**
+- Chelsi's Part 1 is in `notebooks/Chelsi/p1_rag.ipynb` and `p1_eval.ipynb`.
+- Chelsi's Part 3 is in `notebooks/Chelsi/p3_agents.ipynb`.
+- Parth's Part 2 is in `Parth/notebooks/p2_finetune.ipynb` and `Parth/notebooks/p2_finetune_REPORT_ONLY_human_eval.ipynb`.
+
+Each member's evaluations belong to that member's implementation. They are not mixed.
+
+**Part 3 depends on Parth's Part 2 adapter, not on the selected Part 2.** Parth's P3-EXP-003 ran with Parth's own Pokémon LoRA A (P2-EXP-001, rank 4, sha256 `20d8d671…`). Its domain-style scenarios and rubrics assume that style. It does **not** use the selected Naruto LoRA. Reproduction instructions are in `Parth/README.md`: the Docker setup is in `Parth/docker/`, the paths there are relative to `Parth/`, and the LoRA is produced by `Parth/notebooks/p2_finetune.ipynb`.
+
+**Part 3 evaluation provenance (Parth).**
+- Task success was judged by one human team member and, as a disclosed supplemental second evaluator, an AI model (Claude Opus 5.5).
+- 18 disagreements are unresolved.
+- See `Parth/HUMAN_EVALUATION.md`, `Parth/AI_USAGE.md` and `Parth/DECISIONS.md` (D-119).
+
+**Layout and tags.**
+- `Parth/` contains Parth's complete repository with its full Git history (merged, not rewritten).
+- Everything else at the root is Chelsi's repository, unchanged.
+- The official tags `p1-v1.0`, `p2-v1.0` and `p3-v1.0` still point to `8a70b1a`, an earlier state of Chelsi's repository. Moving them to the combined commit needs both members' approval (see `links.txt`).
 
 ---
 
@@ -51,6 +79,7 @@ part1-3/      results per part, one folder per member (submission files, figures
 eval/         golden set, scenarios, red-team cases and human rating sheets
 prompts/      Part 2 evaluation prompts (fixed before training)
 tools/        build_notebooks.py (generates the notebooks), make_zip.py (upload bundle for Colab/Kaggle)
+Parth/        Parth's complete implementation (Parts 1-3; selected for Parts 1 and 3) with its own README, eval/, traces/, docker/
 ```
 
 ## How to run

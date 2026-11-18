@@ -17,3 +17,5 @@
 | Date | Topic | Link |
 |---|---|---|
 | | | |
+
+Parth's per-task table for his implementation is in [`Parth/CONTRIBUTIONS.md`](Parth/CONTRIBUTIONS.md). The final selection is Part 1: Parth, Part 2: Chelsi, Part 3: Parth. _(To be completed by both members.)_

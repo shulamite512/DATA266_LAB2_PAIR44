@@ -1,0 +1,11 @@
+condition,category,executed,auto_check_pass
+with_critique,caption_question,3,1
+with_critique,style_change,3,2
+with_critique,edit_or_enhance,3,3
+with_critique,domain_style,3,3
+with_critique,ambiguous_or_broken,3,3
+without_critique,caption_question,3,1
+without_critique,style_change,3,1
+without_critique,edit_or_enhance,3,3
+without_critique,domain_style,3,3
+without_critique,ambiguous_or_broken,3,3

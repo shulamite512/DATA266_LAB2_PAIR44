@@ -1,0 +1,35 @@
+# DATA 266 Lab 2 — Parts 2 and 3 GPU container: TOP-LEVEL requirements (DECISIONS.md D-089).
+# Installed ON TOP of pytorch/pytorch:2.14.1-cuda13.0-cudnn9-runtime. torch / torchvision / triton / CUDA
+# libraries come from the base image and are protected by a constraints file generated at build time
+# (they are never upgraded or replaced). The fully resolved, exact versions are in requirements-p2p3.lock.txt.
+#
+# Reference versions = the versions that passed the local Mac smoke tests (D-063, D-085). They are
+# re-verified here by a pip dry-run resolution before installation (D-089); they are not proof of GPU correctness.
+
+# --- Hugging Face stack (transformers < 5: v4 APIs; this keeps huggingface-hub < 1.0) ---
+transformers==4.57.6
+diffusers==0.39.0
+peft==0.21.2
+accelerate==1.15.0
+datasets==5.0.1
+safetensors
+huggingface-hub<1.0
+
+# --- Part 2 metrics ---
+torchmetrics
+torch-fidelity
+lpips
+scipy
+
+# --- Part 3 agents / app (gradio 6 requires huggingface-hub >= 1, incompatible with transformers < 5) ---
+gradio==5.50.0
+pydantic>=2.0
+
+# --- Data, tables, figures ---
+pandas>=1.5
+matplotlib
+
+# --- Notebook server and kernel ---
+jupyterlab
+ipykernel
+ipywidgets

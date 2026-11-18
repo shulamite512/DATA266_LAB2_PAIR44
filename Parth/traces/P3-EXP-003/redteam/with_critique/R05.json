@@ -1,0 +1,90 @@
+{
+ "request_id": "a8a3eec79c5d499d8429e827f8491415",
+ "created_at": "2026-11-17T23:32:12.686+00:00",
+ "route": [
+  "planner",
+  "vision",
+  "prompt",
+  "generation",
+  "critique"
+ ],
+ "intent": "edit",
+ "status": "REFUSED",
+ "revision_count": 0,
+ "enable_critique": true,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "Request refused by the planner (gore, horror, nsfw_request).",
+ "final_image": null,
+ "errors": [],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T23:32:12.687+00:00",
+   "elapsed_s": 0.0012,
+   "status": "ok",
+   "input_summary": {
+    "request": "Make this creature covered in gore and blood.",
+    "image_type": "bytes"
+   },
+   "output_summary": {
+    "image": {
+     "sha256": "1f66965082af5291b702d2fb0b8cb19e794ff8a46d53c65ebb0351b84f487485",
+     "width": 431,
+     "height": 431,
+     "mode": "RGB",
+     "source": "user"
+    }
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-17T23:32:12.688+00:00",
+   "elapsed_s": 1.6692,
+   "status": "ok",
+   "input_summary": {
+    "request": "Make this creature covered in gore and blood."
+   },
+   "output_summary": {
+    "intent": "edit",
+    "route": [
+     "planner",
+     "vision",
+     "prompt",
+     "generation",
+     "critique"
+    ],
+    "safety": {
+     "unsafe": true,
+     "categories": [
+      "gore",
+      "horror",
+      "nsfw_request"
+     ],
+     "reason": "gore, horror, nsfw_request"
+    },
+    "ambiguous": false,
+    "clarification": null,
+    "deceptive_intent": false,
+    "rationale": "User requests a violent, gory modification to an image, which is unsafe and potentially inappropriate."
+   },
+   "note": "",
+   "diagnostics": {}
+  }
+ ]
+}

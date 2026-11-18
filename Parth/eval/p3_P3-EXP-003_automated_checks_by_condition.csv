@@ -1,0 +1,3 @@
+condition,executed,auto_check_pass,status_ok,route_ok,image_presence_ok,lora_ok
+with_critique,15,12,12,14,14,15
+without_critique,15,11,11,14,13,15

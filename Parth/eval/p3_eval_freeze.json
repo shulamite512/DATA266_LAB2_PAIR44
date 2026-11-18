@@ -1,0 +1,15 @@
+{
+ "p3_scenarios_sha256": "cfc0c974397a5186cf7b0c234964c7d1cb04833ed73ddd5b6b978a0e208485bc",
+ "p3_redteam_sha256": "b95efad17772293c4e71ebd856c7c63de51efe14436c0eac6fb6b48f75e1aaa8",
+ "frozen_at": "2026-11-16T23:20:56+00:00",
+ "authored": "before any Part 3 model run (no results used)",
+ "git": {
+  "git_available": true,
+  "is_repo_with_commit": true,
+  "commit": "4150da895032321103144c491b58846ff3cef26f",
+  "dirty": true,
+  "dirty_files": [
+   " M notebooks/p2_finetune.ipynb"
+  ]
+ }
+}

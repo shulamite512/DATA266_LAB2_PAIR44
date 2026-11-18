@@ -1,0 +1,157 @@
+{
+ "request_id": "b9ced6dbefef4ded829c23b911f77b70",
+ "created_at": "2026-11-17T23:29:30.381+00:00",
+ "route": [
+  "planner",
+  "vision"
+ ],
+ "intent": "caption_question",
+ "status": "ANSWERED",
+ "revision_count": 0,
+ "enable_critique": false,
+ "injection": {
+  "detected": false,
+  "matches": [],
+  "sources": []
+ },
+ "final_message": "Answered from the image.",
+ "final_image": null,
+ "errors": [],
+ "config": {
+  "vlm": "Qwen/Qwen3-VL-4B-Instruct",
+  "p2_adapter": "P2-EXP-001 run A (r4) sha 20d8d67121db",
+  "edit_backend": "ip2p",
+  "max_revisions": 2,
+  "clip_threshold": 25.0,
+  "input_safety_policy": "checker_then_vlm_confirm"
+ },
+ "steps": [
+  {
+   "step": 1,
+   "agent": "input_guard",
+   "started_at": "2026-11-17T23:29:30.381+00:00",
+   "elapsed_s": 0.0032,
+   "status": "ok",
+   "input_summary": {
+    "request": "Describe this image in one sentence.",
+    "image_type": "bytes"
+   },
+   "output_summary": {
+    "image": {
+     "sha256": "ae96fbaebf3018cf4dff1fc69b8e63e234e2a711b66de0d11b718312e945d93f",
+     "width": 789,
+     "height": 789,
+     "mode": "RGB",
+     "source": "user"
+    }
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 2,
+   "agent": "planner",
+   "started_at": "2026-11-17T23:29:30.384+00:00",
+   "elapsed_s": 2.4682,
+   "status": "ok",
+   "input_summary": {
+    "request": "Describe this image in one sentence."
+   },
+   "output_summary": {
+    "intent": "caption_question",
+    "route": [
+     "planner",
+     "vision"
+    ],
+    "safety": {
+     "unsafe": false,
+     "categories": [
+      "input_flag_cleared_by_vlm",
+      "input_safety_checker_flag"
+     ],
+     "reason": "input_flag_cleared_by_vlm, input_safety_checker_flag"
+    },
+    "ambiguous": false,
+    "clarification": null,
+    "deceptive_intent": false,
+    "rationale": "User is asking for a one-sentence description of the image."
+   },
+   "note": "",
+   "diagnostics": {}
+  },
+  {
+   "step": 3,
+   "agent": "vision",
+   "started_at": "2026-11-17T23:29:32.852+00:00",
+   "elapsed_s": 4.666,
+   "status": "ok",
+   "input_summary": {
+    "image": {
+     "image_sha256": "ae96fbaebf3018cf4dff1fc69b8e63e234e2a711b66de0d11b718312e945d93f",
+     "size": [
+      789,
+      789
+     ]
+    },
+    "intent": "caption_question"
+   },
+   "output_summary": {
+    "caption": "A cartoonish red and white spherical creature with angry, sharp eyes.",
+    "objects": [
+     "spherical creature"
+    ],
+    "scene": "white background",
+    "observed_text": [],
+    "contains_person": false,
+    "real_person_likely": false,
+    "qa": [
+     {
+      "question": "Describe this image in one sentence.",
+      "answer": "A cartoonish red and white spherical creature with angry, sharp eyes."
+     },
+     {
+      "question": "What is the main subject of the image?",
+      "answer": "A cartoonish red and white spherical creature with angry, sharp eyes."
+     },
+     {
+      "question": "What is the setting or background?",
+      "answer": "White background"
+     }
+    ],
+    "confidence": 0.98,
+    "limitations": [
+     "Cannot interpret or infer context beyond what is visually present.",
+     "Cannot determine if the image is from a real-world source or a fictional universe without additional metadata."
+    ]
+   },
+   "note": "",
+   "diagnostics": {
+    "output_tokens": 220,
+    "max_new_tokens": 1024,
+    "hit_token_limit": false,
+    "ended_with_eos": true,
+    "json_parsed": true,
+    "validation_passed": true,
+    "raw_chars": 921
+   }
+  },
+  {
+   "step": 4,
+   "agent": "orchestrator",
+   "started_at": "2026-11-17T23:29:37.520+00:00",
+   "elapsed_s": 0.0,
+   "status": "decision",
+   "input_summary": {},
+   "output_summary": {
+    "injection": {
+     "detected": false,
+     "matches": [],
+     "sources": []
+    },
+    "stop": null
+   },
+   "note": "planner_gate",
+   "diagnostics": {}
+  }
+ ]
+}
