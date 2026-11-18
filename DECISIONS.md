@@ -986,3 +986,33 @@
   - `publication/hf_publication_manifest.json` is stale for `run_A/README.md` (now `3a722831…`). Regenerate it and re-approve it before any upload.
   - The rater composition (both members + one outside person) is the design; the team should confirm it.
   - `notebooks/p2_human_rating_ui.ipynb` (untracked) was not committed: the team decides.
+
+### D-120 — Part 1 final notebook: P1-KAGGLE-V14-R1 (Kaggle T4) replaces the P1-EXP-003 checkpoint as the final version (2026-11-18)
+- **Team decision:** the final Part 1 implementation is `P1-KAGGLE-V14-R1`, executed on Kaggle.
+  - The team placed its executed notebook as `notebooks/p1_rag.ipynb` and its generated submission as `eval/p1_submission.csv`.
+  - P1-EXP-003 (`eb87662`) is historical. Its manifest `docs/part1/P1_EXP003_CHECKPOINT_MANIFEST.md` is kept unchanged as evidence.
+- **Saved run (outputs of the committed notebook):**
+  - **Hardware and software:** Kaggle NVIDIA Tesla T4 (14,912 MB), 1 GPU; Python 3.13.16; torch 2.11.0+cu130; transformers 5.16.1.
+  - **Model loading:** bitsandbytes 0.49.0, so Qwen3-VL-4B runs in 4-bit NF4 with fp16 compute and double quantization.
+  - **Other libraries:** sentence-transformers 5.7.0; chromadb 1.5.9; pymupdf 1.28.2; rank-bm25 0.2.2; accelerate 1.14.0; numpy 2.1.3.
+  - **Settings:** seed 266; greedy decoding.
+  - **Execution:** 17 code cells executed in order with no errors. Readiness checks R1–R5 PASS; run verdict PASS.
+  - **Resources:** runtime 2,616 s of the 5,400 s limit; at most 4,580 MB PyTorch peak allocation per model call.
+- **Pipeline:** dense and BM25 top-20 fused by RRF (k = 60); `bge-reranker-v2-m3` on the CPU, 20 → 6; registry expansion ≤ 3; 195 indexed objects.
+- **Submission:** 40 rows; validator `valid: 40 rows`. Statuses: answered 32, conflict 3, session_override 3, not_found 2. 2 rows retried, 0 fallbacks.
+- **Not available:**
+  - the Kaggle score of this submission;
+  - a golden-set evaluation of V14-R1. The golden-set numbers in the report are historical (P1-EXP-001/003, earlier code);
+  - a Git commit inside the run, because it ran outside a checkout;
+  - a hash of the CSV. The CSV is linked to the run by the team's confirmation and by the matching row and status counts.
+- **Reproducibility limits:**
+  - model revisions are not pinned;
+  - Kaggle's preinstalled packages beyond those recorded are not captured;
+  - P1-EXP-004 and earlier Kaggle versions are not in this repository.
+- **Updated files:**
+  - README;
+  - the report: Part 1 sections and the author names;
+  - links.txt;
+  - requirements-p1.txt;
+  - requirements.txt (comment only).
+- **Tag:** `p1-v1.0` points to the commit that adds this notebook and CSV, not to `eb87662`.

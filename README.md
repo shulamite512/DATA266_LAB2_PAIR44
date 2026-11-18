@@ -6,7 +6,7 @@ Repository for DATA 266 (Fall 2026) Lab 2: https://github.com/shulamite512/DATA2
 
 | Part | Topic | Notebook | Status |
 |------|-------|----------|--------|
-| 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | **P1-EXP-003 checkpoint** (`eb87662`, executed): final mode = router + dense + BM25 + RRF + reranker + registry; 40-row submission, validator `valid`; Kaggle **public** score 0.832 (about 48% of the hidden set). Held-out golden set (P1-EXP-001): baseline 14/25 vs final 13/25, Recall@5 0.764 → 0.882. Log: `docs/part1/DECISIONS_P1.md`. **Pending:** Kaggle notebook link, selected final submission, private score |
+| 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | **Final: P1-KAGGLE-V14-R1**, executed on Kaggle (NVIDIA Tesla T4; 2,616 s ≈ 43.6 min of the 5,400 s budget): label router + dense + BM25 + RRF + CPU reranker + registry; Qwen3-VL-4B in 4-bit NF4 (bitsandbytes). 40-row submission `eval/p1_submission.csv`, validator `valid: 40 rows` (answered 32, conflict 3, session_override 3, not_found 2). Its Kaggle score is not recorded here. Historical: held-out golden set P1-EXP-001 (earlier code; baseline 14/25 vs final 13/25, Recall@5 0.764 → 0.882) and checkpoint P1-EXP-003 (`eb87662`). V14-R1 was not evaluated on the golden set (D-120). Log: `docs/part1/DECISIONS_P1.md`, D-120. **Pending:** Kaggle notebook link |
 | 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | **P2-EXP-001 executed** (`FULL_RUN`, 2026-11-16): LoRA A (r4) and B (r64) trained 1,500 steps each; 120/120 images (base/A/B × 20 prompts × 2 seeds); KID, CLIP, LPIPS, memorization and safety computed; final adapter **A** (lower in-domain KID 0.0619 vs 0.0825). **Human evaluation complete** (3 raters × 25 blinded pairs; `eval/p2_human_ratings.csv`, scored by `REPORT_ONLY`, D-118): LoRA A preferred over base in 38.7 % (style) and 41.3 % (prompt) of judgments. **Pending:** the authorized Hugging Face upload |
 | 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) and P3-EXP-002 (v2, 40/40 executed, six `FAILED_MODEL` vision records) archived; **P3-EXP-003 executed** (40/40; the D-113 token-limit repair did not fix S02–S04: confirmed repetition loop, proposed fix D-114 not implemented); human judgements pending |
 
@@ -23,10 +23,10 @@ Course data is **not** stored in this repository.
 ## How to run
 
 ### Part 1
-- `notebooks/p1_rag.ipynb` is the executed P1-EXP-003 checkpoint (submission run: `RUN_SUBMISSION = True`, `RUN_EVAL = False`, `MODE = "final"`).
-- Run it with **Restart & Run All** in a fresh kernel. It reads `QUESTIONS_PATH` (default `<DATA_DIR>/Questions.csv`), writes `submission.csv` and runs the professor's `validate_submission.py`. `DATA_DIR` is detected: `/kaggle/input/...` on Kaggle, or the professor folder `DATA266_Lab2_Part1/` locally.
-- The recorded runs used a Docker `pytorch:latest` container (Python 3.11.13, torch 2.7.1+cu128) on an RTX 5090. Part 1 model revisions are **not pinned**, and the notebook was **never run on Kaggle hardware** (see `docs/part1/P1_EXP003_CHECKPOINT_MANIFEST.md`).
-- Later uncommitted Part 1 work (P1-EXP-004, D-105 – D-111) remains in the original Part 1 folder and is not part of this checkpoint.
+- `notebooks/p1_rag.ipynb` is the **final** Part 1 notebook, **P1-KAGGLE-V14-R1**, executed on Kaggle (one NVIDIA Tesla T4) with its saved outputs. Its generated 40-row submission is `eval/p1_submission.csv` (validator: `valid: 40 rows`; D-120).
+- Run it on Kaggle with the competition data attached, a T4 GPU and Internet on (it installs its libraries at start), then **Run All**. It finds `Questions.csv` under `/kaggle/input/` (or `QUESTIONS_PATH`), writes `/kaggle/working/submission.csv` and `run_report.json`, and runs the professor's `validate_submission.py`. The saved run took 2,616 s of its 5,400 s budget.
+- Environment recorded by the run: Python 3.13.16, torch 2.11.0+cu130, transformers 5.16.1, bitsandbytes 0.49.0 (Qwen3-VL-4B in 4-bit NF4), sentence-transformers 5.7.0, chromadb 1.5.9, pymupdf 1.28.2, rank-bm25 0.2.2, accelerate 1.14.0, numpy 2.1.3 (`requirements-p1.txt`). Model revisions are **not pinned**.
+- History: P1-EXP-001 (the held-out golden-set run, `0adebfa`) and the P1-EXP-003 checkpoint (`eb87662`, local RTX 5090; `docs/part1/P1_EXP003_CHECKPOINT_MANIFEST.md`) are earlier versions kept in Git history. P1-EXP-004 and earlier Kaggle versions are not in this repository. V14-R1 was **not** evaluated on the golden set.
 
 ### GPU environment for Parts 2 and 3 (Docker, D-089)
 
@@ -155,7 +155,8 @@ git log --oneline -4
 
 Machine-generated values copied from the saved records. Sources: `$LAB2_WORK_DIR/p2/results/P2-EXP-001/report_summary.json`, `$LAB2_WORK_DIR/p3/experiments/P3-EXP-00{2,3}/evaluation_summary.json`. Only the Part 2 human ratings exist so far (below); the Part 3 judgements are pending.
 
-**Part 1:**
+**Part 1** (final notebook P1-KAGGLE-V14-R1; the golden-set numbers are historical, from earlier code):
+- Final submission (V14-R1, Kaggle T4): 40 rows, validator `valid: 40 rows`; statuses answered 32, conflict 3, session_override 3, not_found 2; 2 rows retried, 0 fallbacks; runtime 2,616 s. Its Kaggle score is not recorded in this repository. Not evaluated on the golden set.
 - Golden set of 25 questions. P1-EXP-001 is the only held-out run (saved output `0adebfa`):
 
   | | baseline | final |
@@ -166,8 +167,8 @@ Machine-generated values copied from the saved records. Sources: `$LAB2_WORK_DIR
   | figure-reference F1 | 0.627 | 0.793 |
   | median s/question | 1.77 | 2.03 |
 
-- P1-EXP-003 final mode (development measurement, log only): 14/25.
-- Kaggle public leaderboard: 0.636 (P1-EXP-002) and 0.832 (P1-EXP-003). The private score is not known yet.
+- P1-EXP-003 final mode (historical development measurement, log only): 14/25.
+- Kaggle public leaderboard of historical runs: 0.636 (P1-EXP-002) and 0.832 (P1-EXP-003). These scores do not belong to the final V14-R1 submission.
 
 **Part 2 (P2-EXP-001, 20 prompts × 2 seeds per model; KID subset size 20, high variance, see the std):**
 

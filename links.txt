@@ -1,5 +1,5 @@
 DATA 266 Lab 2 - Pair Programming Team 44 - submission links
-Lines marked MISSING or PENDING must be completed before the final Canvas ZIP (publication/build_canvas_zip.py --final refuses otherwise).
+Every line still marked as missing or pending (upper case) must be completed before the final Canvas ZIP; publication/build_canvas_zip.py --final refuses otherwise.
 
 GitHub repository (private, instructor/ISA read access):
   https://github.com/shulamite512/DATA266_LAB2_PAIR44
@@ -7,13 +7,13 @@ GitHub repository (private, instructor/ISA read access):
   Note: the course convention is data266-lab2-team## ; the team chose DATA266_LAB2_PAIR44
 
 Git tags (commit IDs after the tags are created and pushed):
-  p1-v1.0: PENDING - recommended target eb87662 (P1-EXP-003 checkpoint: executed notebook, validator valid, Kaggle public 0.832)
+  p1-v1.0: annotated tag on the commit "Finalize Part 1 Kaggle V14-R1 notebook and submission" (final notebook P1-KAGGLE-V14-R1 + eval/p1_submission.csv)
   p2-v1.0: PENDING - final commit after the Part 2 human ratings are scored (REPORT_ONLY)
   p3-v1.0: PENDING - final commit after the Part 3 judgements are scored (RESCORE_ONLY)
 
 Part 1
-  Final Kaggle notebook: MISSING - Kaggle notebook URL (Part 1 runs were local Docker; confirm the Kaggle notebook used for the selected submission)
-  Selected final Kaggle submission: MISSING - submission/date selected on the leaderboard (team records: public 0.636 P1-EXP-002, 0.832 P1-EXP-003)
+  Final Kaggle notebook: MISSING - Kaggle URL of the P1-KAGGLE-V14-R1 notebook (its executed copy is notebooks/p1_rag.ipynb)
+  Selected final Kaggle submission: P1-KAGGLE-V14-R1 output (eval/p1_submission.csv, 40 rows, validator valid); leaderboard score not recorded
 
 Part 2 (Hugging Face, private)
   Adapter A (selected final, rank 4): PENDING upload - https://huggingface.co/Parthp01/data266-lab2-lora-a
