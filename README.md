@@ -6,7 +6,8 @@ Everything runs on **one 16 GB GPU** (Kaggle T4/P100 or Colab T4). Seed = 266 ev
 ## Models and services used
 | Purpose | Model (version) | Where |
 |---|---|---|
-| Part 1 + Part 3 VLM (figure descriptions, answers, planner, vision, prompts, critic) | `Qwen/Qwen2.5-VL-3B-Instruct` (local, fp16) | Hugging Face Hub |
+| Part 1 VLM (figure descriptions + answers), **final submission** | `Qwen/Qwen2.5-VL-7B-Instruct` (local, 4-bit NF4, `BACKEND = "qwen7b"`) | Hugging Face Hub |
+| Part 3 VLM (planner, vision, prompts, critic) | `Qwen/Qwen2.5-VL-3B-Instruct` (local, fp16) | Hugging Face Hub |
 | Part 1 text embeddings | `BAAI/bge-small-en-v1.5` | local |
 | Part 1 reranker (bonus) | `BAAI/bge-reranker-base` | local |
 | Part 2 base model | `stable-diffusion-v1-5/stable-diffusion-v1-5` | local |
