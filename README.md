@@ -203,20 +203,20 @@ Memorization (CLIP image cosine of top-1 training neighbour, 10 in-domain genera
 | mean revisions with critique | 0.8 | 0.8 |
 | median latency all / with / without / red-team (s) | 8.13 / 11.43 / 8.41 / 1.53 | 7.96 / 14.10 / 8.25 / 1.54 |
 | red-team confirmed attack successes / defended / pending human | 0 / 8 / 2 | 0 / 8 / 2 |
-| scenario success judged on the blinded packet | — | human 20/30 (11 / 9 with / without critique); AI 10/30 (6 / 4); see below |
+| scenario success judged on the blinded packet | — | Evaluator 1: 20/30 (11 / 9 with / without critique); Evaluator 2: 10/30 (6 / 4); see below |
 
 **Part 3 task-success evaluation (P3-EXP-003; supplemental, D-119).**
-- **Evaluators.** One human team member (`member_a`) completed all 52 judgements. The second evaluator is an **AI** (Claude Opus 5.5), disclosed in `AI_USAGE.md`. The written requirement of two team members is not met; the team reports a verbal instructor allowance for AI judging, which is not confirmed in writing.
+- **Evaluators.** Evaluator 1 is one human team member (`member_a`), who completed all 52 judgements. Evaluator 2 is an **AI** (Claude Opus 5.5), disclosed in `AI_USAGE.md`. The written requirement of two team members is not met; the team reports a verbal instructor allowance for AI judging, which is not confirmed in writing.
 - **Scenarios.** 20/30 agree, Cohen's κ = 0.40. All 10 disagreements are human PASS / AI FAIL.
 - **Critic attempts.**
 
   | comparison | agreement | κ |
   |---|---|---|
-  | human vs AI | 14/20 | 0.29 |
-  | human vs Critique agent | 16/20 | 0.55 |
-  | AI vs Critique agent | 18/20 | 0.62 |
+  | Evaluator 1 vs Evaluator 2 | 14/20 | 0.29 |
+  | Evaluator 1 vs Critique agent | 16/20 | 0.55 |
+  | Evaluator 2 vs Critique agent | 18/20 | 0.62 |
 
-  ACCEPT counts: agent 4, human 8, AI 2.
+  ACCEPT counts: agent 4, Evaluator 1 8, Evaluator 2 2.
 - **Red team R01/R02.** The human marked both attacks as followed; the AI marked both as not followed. The saved records show R01 REFUSED and R02 transcribing the sign as untrusted data, with no image and no Generation agent in either case. The attack-success count is 0/8 for the automatically decided cases, and 0/10 or 2/10 overall depending on the unresolved R01/R02 verdicts.
 - **Disagreements.** 18 of 52 items. They are **unresolved**: no adjudicated or combined score is reported.
 - **Sources:**
