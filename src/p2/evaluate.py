@@ -4,18 +4,19 @@ import random
 
 import numpy as np
 import pandas as pd
-import torch
 from PIL import Image, ImageDraw, ImageFont
 
 from . import config as C
 
 
 def _to_tensor(paths, size):
+    import torch  # imported here so the human-evaluation helpers also work on a CPU-only machine
     arr = [np.asarray(Image.open(p).convert("RGB").resize((size, size), Image.BICUBIC)) for p in paths]
     return torch.from_numpy(np.stack(arr)).permute(0, 3, 1, 2)
 
 
 def kid(real_paths, fake_paths, subset_size=None, subsets=100, seed=C.SEED):
+    import torch
     from torchmetrics.image.kid import KernelInceptionDistance
     torch.manual_seed(seed)
     ss = subset_size or min(len(real_paths), len(fake_paths))
@@ -30,6 +31,7 @@ def kid(real_paths, fake_paths, subset_size=None, subsets=100, seed=C.SEED):
 
 def lpips_diversity(meta, model):
     import lpips
+    import torch
     fn = lpips.LPIPS(net="alex", verbose=False).to("cuda")
     sub = meta[meta.model == model]
     d = []
