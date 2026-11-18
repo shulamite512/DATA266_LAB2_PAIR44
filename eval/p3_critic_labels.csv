@@ -1,20 +1,20 @@
 scenario,attempt,image,prompt,critic_decision,clip_cosine,human_decision
-S04,0,outputs/p3/images/S04_crit_a0.png,"A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun, painted in watercolor with soft, blended colors.",revise,0.3537,
-S04,1,outputs/p3/images/S04_crit_a1.png,"A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun, painted in watercolor with soft, blended colors.",revise,0.3861,
-S04,2,outputs/p3/images/S04_crit_a2.png,"A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun, painted in watercolor with soft, blended colors.",revise,0.3844,
-S05,0,outputs/p3/images/S05_crit_a0.png,"Transform the image into a pencil sketch with soft, smudged lines.",revise,0.2294,
-S05,1,outputs/p3/images/S05_crit_a1.png,"Transform the image into a pencil sketch with soft, smudged lines.",revise,0.2258,
-S05,2,outputs/p3/images/S05_crit_a2.png,"Transform the image into a pencil sketch with soft, smudged lines.",revise,0.2267,
-S06,0,outputs/p3/images/S06_crit_a0.png,Render this image as an impressionist oil painting.,revise,0.2399,
-S06,1,outputs/p3/images/S06_crit_a1.png,Render this image as an impressionist oil painting.,revise,0.2703,
-S06,2,outputs/p3/images/S06_crit_a2.png,Render this image as an impressionist oil painting.,revise,0.2594,
-S07,0,outputs/p3/images/S07_crit_a0.png,make the house blue,revise,0.3244,
-S07,1,outputs/p3/images/S07_crit_a1.png,change the entire house to blue,accept,0.3011,
-S08,0,outputs/p3/images/S08_crit_a0.png,add snow on the ground and the roof,revise,0.3654,
-S08,1,outputs/p3/images/S08_crit_a1.png,add snow to the roof,accept,0.3235,
-S09,0,outputs/p3/images/S09_crit_a0.png,change the background to a starry night sky,accept,0.258,
-S10,0,outputs/p3/images/S10_crit_a0.png,"A ninja with spiky blond hair and an orange jacket, in a Naruto style, standing in a dynamic pose with a determined expression.",accept,0.3574,
-S11,0,outputs/p3/images/S11_crit_a0.png,Redraw this scene in Naruto anime style.,blocked,0.2408,
-S12,0,outputs/p3/images/S12_crit_a0.png,"A Naruto-style portrait of a girl with pink hair and a red headband, wearing a black outfit with a white collar and a red scarf, standing in a dynamic pose with her arms outstretched.",revise,0.3193,
-S12,1,outputs/p3/images/S12_crit_a1.png,"A Naruto-style portrait of a girl with pink hair and a red headband, wearing a black outfit with a white collar and a red scarf, standing in a dynamic pose with her arms outstretched.",revise,0.3376,
-S12,2,outputs/p3/images/S12_crit_a2.png,"A Naruto-style portrait of a girl with pink hair and a red headband, wearing a black outfit with a white collar and a red scarf, standing in a dynamic pose with her arms outstretched.",accept,0.3808,
+S04,0,outputs/p3/images/S04_crit_a0.png,"A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun, painted in watercolor with soft, blended colors.",revise,0.3537,revise
+S04,1,outputs/p3/images/S04_crit_a1.png,"A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun, painted in watercolor with soft, blended colors.",revise,0.3861,accept
+S04,2,outputs/p3/images/S04_crit_a2.png,"A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun, painted in watercolor with soft, blended colors.",revise,0.3844,accept
+S05,0,outputs/p3/images/S05_crit_a0.png,"Transform the image into a pencil sketch with soft, smudged lines.",revise,0.2294,revise
+S05,1,outputs/p3/images/S05_crit_a1.png,"Transform the image into a pencil sketch with soft, smudged lines.",revise,0.2258,revise
+S05,2,outputs/p3/images/S05_crit_a2.png,"Transform the image into a pencil sketch with soft, smudged lines.",revise,0.2267,revise
+S06,0,outputs/p3/images/S06_crit_a0.png,Render this image as an impressionist oil painting.,revise,0.2399,revise
+S06,1,outputs/p3/images/S06_crit_a1.png,Render this image as an impressionist oil painting.,revise,0.2703,accept
+S06,2,outputs/p3/images/S06_crit_a2.png,Render this image as an impressionist oil painting.,revise,0.2594,accept
+S07,0,outputs/p3/images/S07_crit_a0.png,make the house blue,revise,0.3244,revise
+S07,1,outputs/p3/images/S07_crit_a1.png,change the entire house to blue,accept,0.3011,accept
+S08,0,outputs/p3/images/S08_crit_a0.png,add snow on the ground and the roof,revise,0.3654,revise
+S08,1,outputs/p3/images/S08_crit_a1.png,add snow to the roof,accept,0.3235,accept
+S09,0,outputs/p3/images/S09_crit_a0.png,change the background to a starry night sky,accept,0.258,accept
+S10,0,outputs/p3/images/S10_crit_a0.png,"A ninja with spiky blond hair and an orange jacket, in a Naruto style, standing in a dynamic pose with a determined expression.",accept,0.3574,accept
+S11,0,outputs/p3/images/S11_crit_a0.png,Redraw this scene in Naruto anime style.,blocked,0.2408,revise
+S12,0,outputs/p3/images/S12_crit_a0.png,"A Naruto-style portrait of a girl with pink hair and a red headband, wearing a black outfit with a white collar and a red scarf, standing in a dynamic pose with her arms outstretched.",revise,0.3193,revise
+S12,1,outputs/p3/images/S12_crit_a1.png,"A Naruto-style portrait of a girl with pink hair and a red headband, wearing a black outfit with a white collar and a red scarf, standing in a dynamic pose with her arms outstretched.",revise,0.3376,revise
+S12,2,outputs/p3/images/S12_crit_a2.png,"A Naruto-style portrait of a girl with pink hair and a red headband, wearing a black outfit with a white collar and a red scarf, standing in a dynamic pose with her arms outstretched.",accept,0.3808,accept

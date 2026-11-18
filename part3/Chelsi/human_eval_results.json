@@ -1,0 +1,61 @@
+{
+ "critic_agreement": {
+  "n_decisions": 19,
+  "critic_agreement": 0.789
+ },
+ "critic_vs_human_confusion": {
+  "accept": {
+   "accept": 5,
+   "revise": 4
+  },
+  "revise": {
+   "accept": 0,
+   "revise": 10
+  }
+ },
+ "critic_disagreements": [
+  {
+   "scenario": "S04",
+   "attempt": 1,
+   "critic_decision": "revise",
+   "human_decision": "accept",
+   "clip_cosine": 0.3861
+  },
+  {
+   "scenario": "S04",
+   "attempt": 2,
+   "critic_decision": "revise",
+   "human_decision": "accept",
+   "clip_cosine": 0.3844
+  },
+  {
+   "scenario": "S06",
+   "attempt": 1,
+   "critic_decision": "revise",
+   "human_decision": "accept",
+   "clip_cosine": 0.2703
+  },
+  {
+   "scenario": "S06",
+   "attempt": 2,
+   "critic_decision": "revise",
+   "human_decision": "accept",
+   "clip_cosine": 0.2594
+  }
+ ],
+ "human_judgements": {
+  "n": 15,
+  "agreement": 0.8,
+  "disagreements": 3,
+  "human_pass_resolved": 12
+ },
+ "human_task_success_resolved": "12/15",
+ "auto_rubric_task_success": "13/15",
+ "auto_vs_human_disagreements": [
+  {
+   "id": "S05",
+   "auto_pass": true,
+   "human_final": "fail"
+  }
+ ]
+}

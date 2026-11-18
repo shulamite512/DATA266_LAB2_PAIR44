@@ -86,7 +86,9 @@ def human_agreement(path="eval/p3_human_judgements.csv"):
         return None
     norm = lambda s: s.strip().lower().startswith("p")
     a, b = h.rater_A.map(norm), h.rater_B.map(norm)
-    res = h.resolved.map(norm) if "resolved" in h else (a & b)
+    # `resolved` is only filled where the raters disagreed; elsewhere both raters' verdict stands
+    res = [norm(r) if str(r).strip() else x for r, x in zip(h.resolved, a)] if "resolved" in h else list(a & b)
+    res = pd.Series(res, index=h.index)
     return {"n": len(h), "agreement": round(float((a == b).mean()), 3), "disagreements": int((a != b).sum()),
             "human_pass_resolved": int(res.sum())}
 
