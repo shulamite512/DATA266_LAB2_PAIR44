@@ -1,0 +1,11 @@
+{
+ "final_model": "run1_lora_r8",
+ "vs": "base",
+ "note": "Parth's ratings pending",
+ "raters": 1,
+ "judgements": 25,
+ "style_choice_final_win_rate": 0.64,
+ "style_choice_majority_win_rate": 0.64,
+ "prompt_choice_final_win_rate": 0.56,
+ "prompt_choice_majority_win_rate": 0.56
+}
