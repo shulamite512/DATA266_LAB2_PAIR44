@@ -1,0 +1,39 @@
+{
+ "n": 25,
+ "mean_A": 3.56,
+ "mean_B": 3.48,
+ "mean_overall": 3.52,
+ "agree_within_1": 0.88,
+ "exact_agreement": 0.64,
+ "mean_by_category": {
+  "conflict": 2.0,
+  "two_sources": 2.0,
+  "false_premise": 2.5,
+  "figure": 3.0,
+  "fact_table": 3.2,
+  "multiturn_user_value": 3.5,
+  "figure_corrected": 4.5,
+  "injection_appendix_c": 4.5,
+  "figure_near_identical": 4.67,
+  "forecast_vs_actual": 5.0,
+  "not_found": 5.0,
+  "revision": 5.0
+ },
+ "disagreements_2plus": [
+  {
+   "gid": "G03",
+   "rater_A": 5,
+   "rater_B": 2
+  },
+  {
+   "gid": "G17",
+   "rater_A": 1,
+   "rater_B": 4
+  },
+  {
+   "gid": "G20",
+   "rater_A": 1,
+   "rater_B": 3
+  }
+ ]
+}
