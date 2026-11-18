@@ -8,7 +8,7 @@ GitHub repository (private, instructor/ISA read access):
 
 Git tags (commit IDs after the tags are created and pushed):
   p1-v1.0: annotated tag on the commit "Finalize Part 1 Kaggle V14-R1 notebook and submission" (final notebook P1-KAGGLE-V14-R1 + eval/p1_submission.csv)
-  p2-v1.0: PENDING - final commit after the Part 2 human ratings are scored (REPORT_ONLY)
+  p2-v1.0: annotated tag on the commit "Finalize Part 2 P2-EXP-001 release" (P2-EXP-001: LoRA A selected; 3-rater human evaluation scored, D-118)
   p3-v1.0: PENDING - final commit after the Part 3 judgements are scored (RESCORE_ONLY)
 
 Part 1

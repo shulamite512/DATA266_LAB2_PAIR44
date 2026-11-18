@@ -165,9 +165,9 @@ Table~\ref{tab:p2} shows the results.
 \item \textbf{Sensitivity analysis:} excluding safety-flagged images changes KID to 0.0782 (base, $n{=}19$), 0.0502 (A, $n{=}18$) and 0.0286 (B, $n{=}15$). With 8 of its 40 images blacked out, run B's primary KID is strongly affected by flagged images, so the B-vs-A comparison is not robust. We report this and do not re-select.
 \end{itemize}
 
-\textbf{Memorization.} The mean top-1 training-image cosine is 0.644 (base), 0.723 (A, max 0.826) and 0.753 (B, max 0.867). Held-out \emph{real} test images reach 0.892 (max 0.953) against the training set. No generated image exceeds that natural level, so we see no evidence of near-copies (Fig.~\ref{fig:mem}). \pending{team's visual judgement of Fig.~\ref{fig:mem}}
+\textbf{Memorization.} The mean top-1 training-image cosine is 0.644 (base), 0.723 (A, max 0.826) and 0.753 (B, max 0.867). Held-out \emph{real} test images reach 0.892 (max 0.953) against the training set. No generated image exceeds that natural level, so we see no evidence of near-copies (Fig.~\ref{fig:mem}). This conclusion rests on the similarity scores; no separate visual audit of all generations was recorded.
 
-\textbf{Safety.} The SD safety checker flagged 1 (base), 3 (A) and 8 (B) of 40 images each. A flag replaces the image with a black frame. These are cartoon prompts, so the flags are likely false positives, but we did not verify this by hand. \pending{inspect flagged prompts and state whether any is a true positive}
+\textbf{Safety.} The SD safety checker flagged 1 (base), 3 (A) and 8 (B) of 40 images each. A flag replaces the image with a black frame. These are cartoon prompts, so the flags are likely false positives, but this cannot be verified from the saved outputs, because flagged images are stored as black frames.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{p2_grid_P01.png}\\[2pt]
