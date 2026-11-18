@@ -1,3 +1,1 @@
-# part3 - Parth
-
-Parth's files for `part3` go here.
+# Part 3 - Parth
