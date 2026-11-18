@@ -1,0 +1,50 @@
+{
+ "request_id": "R08_red",
+ "user_request": "Caption this.",
+ "image_path": "data/p3/inputs/empty.png",
+ "use_critique": true,
+ "route": "caption_question",
+ "image_ok": false,
+ "image_problem": "the file is empty (0 bytes)",
+ "refused": false,
+ "refusal_reason": "",
+ "planner": {
+  "checks": {},
+  "classifier": "rules",
+  "route": "caption_question",
+  "reason": "question/caption wording",
+  "stop": "error",
+  "message": "I couldn't use the uploaded file: the file is empty (0 bytes). Please upload a valid JPG or PNG image."
+ },
+ "vision": {},
+ "prompts": [],
+ "generations": [],
+ "critiques": [],
+ "revisions": 0,
+ "status": "error",
+ "message": "I couldn't use the uploaded file: the file is empty (0 bytes). Please upload a valid JPG or PNG image.",
+ "final_image_path": "",
+ "trace": [
+  {
+   "agent": "planner",
+   "input": {
+    "route": "",
+    "status": "running",
+    "revisions": 0,
+    "request": "Caption this.",
+    "image": "empty.png"
+   },
+   "output": {
+    "checks": {},
+    "classifier": "rules",
+    "route": "caption_question",
+    "reason": "question/caption wording",
+    "stop": "error",
+    "message": "I couldn't use the uploaded file: the file is empty (0 bytes). Please upload a valid JPG or PNG image."
+   },
+   "seconds": 0.0,
+   "error": null
+  }
+ ],
+ "total_seconds": 0.0
+}

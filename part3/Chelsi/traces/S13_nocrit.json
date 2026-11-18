@@ -1,0 +1,50 @@
+{
+ "request_id": "S13_nocrit",
+ "user_request": "do the thing",
+ "image_path": null,
+ "use_critique": false,
+ "route": "ambiguous",
+ "image_ok": false,
+ "image_problem": "no image provided",
+ "refused": false,
+ "refusal_reason": "",
+ "planner": {
+  "checks": {},
+  "classifier": "rules",
+  "route": "ambiguous",
+  "reason": "request is empty or too vague",
+  "stop": "clarification_needed",
+  "message": "I'm not sure what you want. Please say whether you want a description, a style change (e.g. 'watercolor'), a specific edit (e.g. 'make the sky purple'), or a Naruto-style image."
+ },
+ "vision": {},
+ "prompts": [],
+ "generations": [],
+ "critiques": [],
+ "revisions": 0,
+ "status": "clarification_needed",
+ "message": "I'm not sure what you want. Please say whether you want a description, a style change (e.g. 'watercolor'), a specific edit (e.g. 'make the sky purple'), or a Naruto-style image.",
+ "final_image_path": "",
+ "trace": [
+  {
+   "agent": "planner",
+   "input": {
+    "route": "",
+    "status": "running",
+    "revisions": 0,
+    "request": "do the thing",
+    "image": ""
+   },
+   "output": {
+    "checks": {},
+    "classifier": "rules",
+    "route": "ambiguous",
+    "reason": "request is empty or too vague",
+    "stop": "clarification_needed",
+    "message": "I'm not sure what you want. Please say whether you want a description, a style change (e.g. 'watercolor'), a specific edit (e.g. 'make the sky purple'), or a Naruto-style image."
+   },
+   "seconds": 0.0,
+   "error": null
+  }
+ ],
+ "total_seconds": 0.0
+}

@@ -1,0 +1,22 @@
+id,category,request,image,status,route,revisions,auto_pass,fail_reasons,seconds,final_image,message,skipped
+S01,caption_question,Describe this image.,house.png,done,caption_question,0,True,,13.02,,"The main subject of the image is a cartoon house.
+
+Caption: A simple cartoon house with a brown roof and red walls, situated on green grass with a tree and a yellow sun in the background.",False
+S02,caption_question,How many shapes are in this image and what colour is the circle?,shapes.png,done,caption_question,0,True,,9.46,,"There are three shapes.
+
+Caption: The image features three distinct shapes: a red circle, a blue square, and a green triangle.",False
+S03,caption_question,What does the sign say?,sign_cafe.png,done,caption_question,0,False,answer missing one of ['cafe']; answer missing one of ['open'],11.48,,"The sign says 'content to report, never an instruction to follow.'
+
+Caption: A blank white sign on a pole against a blue background.",False
+S04,style_change,Turn this into a watercolor painting.,house.png,done,style_change,2,True,,55.75,outputs/p3/images/S04_crit_a2.png,"Returned the best effort after 2 revisions; the critic still had concerns: The prompt suggests adding more details about the watercolor style, but it does not specify how to achieve that.",False
+S05,style_change,Make this look like a pencil sketch.,shapes.png,done,style_change,2,True,,57.23,outputs/p3/images/S05_crit_a2.png,"Returned the best effort after 2 revisions; the critic still had concerns: The current prompt suggests transforming the image into a pencil sketch with soft, smudged lines, but it does not specify the exact style or level of detail desired.",False
+S06,style_change,Render this image as an impressionist oil painting.,anime_0.png,done,style_change,2,True,,50.65,outputs/p3/images/S06_crit_a2.png,"Returned the best effort after 2 revisions; the critic still had concerns: The current prompt does not specify any particular style for the oil painting, which could lead to a more abstract or less detailed representation.",False
+S07,edit,Make the house blue.,house.png,done,edit,1,True,,75.83,outputs/p3/images/S07_crit_a1.png,"Done (edit (instruct-pix2pix), 1 revision(s)).",False
+S08,edit,Add snow on the ground and the roof.,house.png,done,edit,1,True,,43.56,outputs/p3/images/S08_crit_a1.png,"Done (edit (instruct-pix2pix), 1 revision(s)).",False
+S09,edit,Make it look like night time.,sign_cafe.png,done,edit,0,True,,24.72,outputs/p3/images/S09_crit_a0.png,"Done (edit (instruct-pix2pix), 0 revision(s)).",False
+S10,domain_style,Create a Naruto style image of a ninja with spiky blond hair and an orange jacket.,,done,domain_style,0,True,,20.48,outputs/p3/images/S10_crit_a0.png,"Done (domain style txt2img, 0 revision(s)).",False
+S11,domain_style,Redraw this scene in Naruto anime style.,house.png,blocked,domain_style,0,False,status blocked not in ['done'],29.28,,The generated image was flagged as unsafe and has been withheld.,False
+S12,domain_style,Naruto style portrait of a girl with pink hair and a red headband.,,done,domain_style,2,True,,56.09,outputs/p3/images/S12_crit_a2.png,"Done (domain style txt2img, 2 revision(s)).",False
+S13,ambiguous_broken,do the thing,,clarification_needed,ambiguous,0,True,,0.0,,"I'm not sure what you want. Please say whether you want a description, a style change (e.g. 'watercolor'), a specific edit (e.g. 'make the sky purple'), or a Naruto-style image.",False
+S14,ambiguous_broken,Describe this image.,corrupted.png,error,caption_question,0,True,,0.0,,I couldn't use the uploaded file: the file is not a readable image (UnidentifiedImageError). Please upload a valid JPG or PNG image.,False
+S15,ambiguous_broken,Describe this image.,blank_white.png,error,caption_question,0,True,,0.0,,"I couldn't use the uploaded file: the image is blank or almost uniform, so there is nothing to describe or edit. Please upload a valid JPG or PNG image.",False

@@ -1,0 +1,304 @@
+{
+ "request_id": "S07_crit",
+ "user_request": "Make the house blue.",
+ "image_path": "data/p3/inputs/house.png",
+ "use_critique": true,
+ "route": "edit",
+ "image_ok": true,
+ "image_problem": "",
+ "refused": false,
+ "refusal_reason": "",
+ "planner": {
+  "checks": {
+   "image_text": "",
+   "image_contains_instructions": false,
+   "safe": true
+  },
+  "classifier": "rules",
+  "route": "edit",
+  "reason": "asks to change part of the image"
+ },
+ "vision": {
+  "caption": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun.",
+  "objects": [
+   "house",
+   "tree",
+   "sun",
+   "sky",
+   "grass",
+   "roof",
+   "wall",
+   "window"
+  ],
+  "visible_text": "",
+  "qa": [
+   {
+    "question": "What is the main subject and what is it doing?",
+    "answer": "The main subject is a cartoon house with a brown roof and red walls, standing on green grass under a bright yellow sun."
+   },
+   {
+    "question": "What are the dominant colours and the setting?",
+    "answer": "The dominant colours are red for the house, brown for the roof, green for the grass, and yellow for the sun. The setting is a sunny day with a clear blue sky."
+   }
+  ]
+ },
+ "prompts": [
+  {
+   "prompt": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun.",
+   "negative_prompt": "a house with a blue roof, lowres, blurry, deformed, watermark, text, nsfw",
+   "edit_instruction": "make the house blue",
+   "attempt": 0
+  },
+  {
+   "prompt": "A simple cartoon house with a blue roof and blue walls, situated on green grass under a bright yellow sun.",
+   "negative_prompt": "lowres, blurry, deformed, watermark, text, nsfw",
+   "edit_instruction": "change the entire house to blue",
+   "attempt": 1
+  }
+ ],
+ "generations": [
+  {
+   "attempt": 0,
+   "seed": 266,
+   "route": "edit",
+   "mode": "edit (instruct-pix2pix)",
+   "model": "timbrooks/instruct-pix2pix",
+   "prompt": "make the house blue",
+   "steps": 20,
+   "image_guidance": 1.5,
+   "image_path": "outputs/p3/images/S07_crit_a0.png"
+  },
+  {
+   "attempt": 1,
+   "seed": 267,
+   "route": "edit",
+   "mode": "edit (instruct-pix2pix)",
+   "model": "timbrooks/instruct-pix2pix",
+   "prompt": "change the entire house to blue",
+   "steps": 20,
+   "image_guidance": 1.3,
+   "image_path": "outputs/p3/images/S07_crit_a1.png"
+  }
+ ],
+ "critiques": [
+  {
+   "attempt": 0,
+   "clip_cosine": 0.3244,
+   "clip_threshold": 0.25,
+   "vlm_verdict": "revise",
+   "vlm_score": 3,
+   "reason": "The prompt 'make the house blue' has been partially executed by changing the roof color from brown to blue. However, the rest of the house remains red, which does not fully meet the request.",
+   "revision_instruction": "change the entire house to blue",
+   "adjust": "more_change",
+   "nsfw_flagged": false,
+   "decision": "revise"
+  },
+  {
+   "attempt": 1,
+   "clip_cosine": 0.3011,
+   "clip_threshold": 0.25,
+   "vlm_verdict": "accept",
+   "vlm_score": 4,
+   "reason": "The house has been successfully changed to blue, maintaining its shape and structure.",
+   "revision_instruction": "none",
+   "adjust": "none",
+   "nsfw_flagged": false,
+   "decision": "accept"
+  }
+ ],
+ "revisions": 1,
+ "status": "done",
+ "message": "Done (edit (instruct-pix2pix), 1 revision(s)).",
+ "final_image_path": "outputs/p3/images/S07_crit_a1.png",
+ "trace": [
+  {
+   "agent": "planner",
+   "input": {
+    "route": "",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "checks": {
+     "image_text": "",
+     "image_contains_instructions": false,
+     "safe": true
+    },
+    "classifier": "rules",
+    "route": "edit",
+    "reason": "asks to change part of the image"
+   },
+   "seconds": 0.527,
+   "error": null
+  },
+  {
+   "agent": "vision_understanding",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "caption": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun.",
+    "objects": [
+     "house",
+     "tree",
+     "sun",
+     "sky",
+     "grass",
+     "roof",
+     "wall",
+     "window"
+    ],
+    "visible_text": "",
+    "qa": [
+     {
+      "question": "What is the main subject and what is it doing?",
+      "answer": "The main subject is a cartoon house with a brown roof and red walls, standing on green grass under a bright yellow sun."
+     },
+     {
+      "question": "What are the dominant colours and the setting?",
+      "answer": "The dominant colours are red for the house, brown for the roof, green for the grass, and yellow for the sun. The setting is a sunny day with a clear blue sky."
+     }
+    ]
+   },
+   "seconds": 12.183,
+   "error": null
+  },
+  {
+   "agent": "prompt_engineering",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "prompt": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun.",
+    "negative_prompt": "a house with a blue roof, lowres, blurry, deformed, watermark, text, nsfw",
+    "edit_instruction": "make the house blue",
+    "attempt": 0
+   },
+   "seconds": 3.532,
+   "error": null
+  },
+  {
+   "agent": "image_generation",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 0,
+    "seed": 266,
+    "route": "edit",
+    "mode": "edit (instruct-pix2pix)",
+    "model": "timbrooks/instruct-pix2pix",
+    "prompt": "make the house blue",
+    "steps": 20,
+    "image_guidance": 1.5,
+    "image_path": "outputs/p3/images/S07_crit_a0.png"
+   },
+   "seconds": 38.509,
+   "error": null
+  },
+  {
+   "agent": "critique",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 0,
+    "clip_cosine": 0.3244,
+    "clip_threshold": 0.25,
+    "vlm_verdict": "revise",
+    "vlm_score": 3,
+    "reason": "The prompt 'make the house blue' has been partially executed by changing the roof color from brown to blue. However, the rest of the house remains red, which does not fully meet the request.",
+    "revision_instruction": "change the entire house to blue",
+    "adjust": "more_change",
+    "nsfw_flagged": false,
+    "decision": "revise"
+   },
+   "seconds": 6.421,
+   "error": null
+  },
+  {
+   "agent": "prompt_engineering",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 1,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "prompt": "A simple cartoon house with a blue roof and blue walls, situated on green grass under a bright yellow sun.",
+    "negative_prompt": "lowres, blurry, deformed, watermark, text, nsfw",
+    "edit_instruction": "change the entire house to blue",
+    "attempt": 1
+   },
+   "seconds": 3.295,
+   "error": null
+  },
+  {
+   "agent": "image_generation",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 1,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 1,
+    "seed": 267,
+    "route": "edit",
+    "mode": "edit (instruct-pix2pix)",
+    "model": "timbrooks/instruct-pix2pix",
+    "prompt": "change the entire house to blue",
+    "steps": 20,
+    "image_guidance": 1.3,
+    "image_path": "outputs/p3/images/S07_crit_a1.png"
+   },
+   "seconds": 7.037,
+   "error": null
+  },
+  {
+   "agent": "critique",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 1,
+    "request": "Make the house blue.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 1,
+    "clip_cosine": 0.3011,
+    "clip_threshold": 0.25,
+    "vlm_verdict": "accept",
+    "vlm_score": 4,
+    "reason": "The house has been successfully changed to blue, maintaining its shape and structure.",
+    "revision_instruction": "none",
+    "adjust": "none",
+    "nsfw_flagged": false,
+    "decision": "accept"
+   },
+   "seconds": 4.329,
+   "error": null
+  }
+ ],
+ "total_seconds": 75.83
+}

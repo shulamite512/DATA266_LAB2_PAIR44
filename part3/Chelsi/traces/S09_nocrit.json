@@ -1,0 +1,180 @@
+{
+ "request_id": "S09_nocrit",
+ "user_request": "Make it look like night time.",
+ "image_path": "data/p3/inputs/sign_cafe.png",
+ "use_critique": false,
+ "route": "edit",
+ "image_ok": true,
+ "image_problem": "",
+ "refused": false,
+ "refusal_reason": "",
+ "planner": {
+  "checks": {
+   "image_text": "",
+   "image_contains_instructions": false,
+   "safe": true
+  },
+  "classifier": "rules",
+  "route": "edit",
+  "reason": "asks to change part of the image"
+ },
+ "vision": {
+  "caption": "A blank white sign on a brown pole against a blue background.",
+  "objects": [
+   "white sign",
+   "brown pole",
+   "blue background"
+  ],
+  "visible_text": "",
+  "qa": [
+   {
+    "question": "What is the main subject and what is it doing?",
+    "answer": "The main subject is a blank white sign mounted on a brown pole."
+   },
+   {
+    "question": "What are the dominant colours and the setting?",
+    "answer": "The dominant colours are white for the sign, brown for the pole, and blue for the background."
+   }
+  ]
+ },
+ "prompts": [
+  {
+   "prompt": "A blank white sign on a brown pole against a blue background, now at night with stars visible in the sky.",
+   "negative_prompt": "night time, lowres, blurry, deformed, watermark, text, nsfw",
+   "edit_instruction": "change the background to a starry night sky",
+   "attempt": 0
+  }
+ ],
+ "generations": [
+  {
+   "attempt": 0,
+   "seed": 266,
+   "route": "edit",
+   "mode": "edit (instruct-pix2pix)",
+   "model": "timbrooks/instruct-pix2pix",
+   "prompt": "change the background to a starry night sky",
+   "steps": 20,
+   "image_guidance": 1.5,
+   "image_path": "outputs/p3/images/S09_nocrit_a0.png"
+  }
+ ],
+ "critiques": [],
+ "revisions": 0,
+ "status": "done",
+ "message": "Done (edit (instruct-pix2pix), 0 revision(s)).",
+ "final_image_path": "outputs/p3/images/S09_nocrit_a0.png",
+ "trace": [
+  {
+   "agent": "planner",
+   "input": {
+    "route": "",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make it look like night time.",
+    "image": "sign_cafe.png"
+   },
+   "output": {
+    "checks": {
+     "image_text": "",
+     "image_contains_instructions": false,
+     "safe": true
+    },
+    "classifier": "rules",
+    "route": "edit",
+    "reason": "asks to change part of the image"
+   },
+   "seconds": 0.47,
+   "error": null
+  },
+  {
+   "agent": "vision_understanding",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make it look like night time.",
+    "image": "sign_cafe.png"
+   },
+   "output": {
+    "caption": "A blank white sign on a brown pole against a blue background.",
+    "objects": [
+     "white sign",
+     "brown pole",
+     "blue background"
+    ],
+    "visible_text": "",
+    "qa": [
+     {
+      "question": "What is the main subject and what is it doing?",
+      "answer": "The main subject is a blank white sign mounted on a brown pole."
+     },
+     {
+      "question": "What are the dominant colours and the setting?",
+      "answer": "The dominant colours are white for the sign, brown for the pole, and blue for the background."
+     }
+    ]
+   },
+   "seconds": 8.972,
+   "error": null
+  },
+  {
+   "agent": "prompt_engineering",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make it look like night time.",
+    "image": "sign_cafe.png"
+   },
+   "output": {
+    "prompt": "A blank white sign on a brown pole against a blue background, now at night with stars visible in the sky.",
+    "negative_prompt": "night time, lowres, blurry, deformed, watermark, text, nsfw",
+    "edit_instruction": "change the background to a starry night sky",
+    "attempt": 0
+   },
+   "seconds": 3.677,
+   "error": null
+  },
+  {
+   "agent": "image_generation",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make it look like night time.",
+    "image": "sign_cafe.png"
+   },
+   "output": {
+    "attempt": 0,
+    "seed": 266,
+    "route": "edit",
+    "mode": "edit (instruct-pix2pix)",
+    "model": "timbrooks/instruct-pix2pix",
+    "prompt": "change the background to a starry night sky",
+    "steps": 20,
+    "image_guidance": 1.5,
+    "image_path": "outputs/p3/images/S09_nocrit_a0.png"
+   },
+   "seconds": 6.659,
+   "error": null
+  },
+  {
+   "agent": "output_safety_check",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Make it look like night time.",
+    "image": "sign_cafe.png"
+   },
+   "output": {
+    "nsfw_flagged": false,
+    "decision": "accept",
+    "critic": "off"
+   },
+   "seconds": 0.029,
+   "error": null
+  }
+ ],
+ "total_seconds": 19.81
+}

@@ -1,0 +1,26 @@
+pair_id,file,prompt,prompt_id,seed,left_model,right_model
+0,pair_00.png,a man in a suit looking at the camera,in_07,0,base,run1_lora_r8
+1,pair_01.png,a man in a fire with his hands clasped,in_08,1,base,run1_lora_r8
+2,pair_02.png,a man in a black and white outfit,in_09,1,run1_lora_r8,base
+3,pair_03.png,a girl with pink hair standing to the left of a boy with black hair,comp_01,0,run1_lora_r8,base
+4,pair_04.png,a man in a white shirt and a black shirt,in_06,1,run1_lora_r8,base
+5,pair_05.png,a woman with a gun in her hand,in_03,1,run1_lora_r8,base
+6,pair_06.png,a man with an orange jacket holding a blue umbrella under a yellow moon,comp_03,0,base,run1_lora_r8
+7,pair_07.png,a girl in a red coat sitting on the ground,in_04,1,run1_lora_r8,base
+8,pair_08.png,"three ninjas standing in a row, the middle one wearing a green vest",comp_02,1,base,run1_lora_r8
+9,pair_09.png,"a bowl of ramen on a wooden table, top-down photo",ood_01,0,run1_lora_r8,base
+10,pair_10.png,a group of people sitting on the ground,in_05,1,run1_lora_r8,base
+11,pair_11.png,a red vintage car parked on a cobblestone street at sunset,ood_00,1,base,run1_lora_r8
+12,pair_12.png,an astronaut riding a horse on the moon,ood_03,1,run1_lora_r8,base
+13,pair_13.png,"a bowl of ramen on a wooden table, top-down photo",ood_01,1,run1_lora_r8,base
+14,pair_14.png,a red vintage car parked on a cobblestone street at sunset,ood_00,0,run1_lora_r8,base
+15,pair_15.png,a man in a suit looking at the camera,in_07,1,base,run1_lora_r8
+16,pair_16.png,a small white dog sitting on top of a large black cat,comp_04,0,run1_lora_r8,base
+17,pair_17.png,a woman with long hair and a mask on her face,in_02,1,base,run1_lora_r8
+18,pair_18.png,a girl in a red coat sitting on the ground,in_04,0,run1_lora_r8,base
+19,pair_19.png,a man with long hair and black hair,in_00,1,run1_lora_r8,base
+20,pair_20.png,"two characters, one in red and one in blue",comp_00,0,base,run1_lora_r8
+21,pair_21.png,a golden retriever puppy playing in autumn leaves,ood_04,1,base,run1_lora_r8
+22,pair_22.png,"two characters, one in red and one in blue",comp_00,1,base,run1_lora_r8
+23,pair_23.png,a group of people sitting on the ground,in_05,0,run1_lora_r8,base
+24,pair_24.png,a man in a black and white outfit,in_09,0,base,run1_lora_r8

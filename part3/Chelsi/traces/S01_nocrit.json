@@ -1,0 +1,121 @@
+{
+ "request_id": "S01_nocrit",
+ "user_request": "Describe this image.",
+ "image_path": "data/p3/inputs/house.png",
+ "use_critique": false,
+ "route": "caption_question",
+ "image_ok": true,
+ "image_problem": "",
+ "refused": false,
+ "refusal_reason": "",
+ "planner": {
+  "checks": {
+   "image_text": "",
+   "image_contains_instructions": false,
+   "safe": true
+  },
+  "classifier": "rules",
+  "route": "caption_question",
+  "reason": "question/caption wording"
+ },
+ "vision": {
+  "caption": "A simple cartoon house with a brown roof and red walls, situated on green grass with a tree and a yellow sun in the background.",
+  "objects": [
+   "house",
+   "tree",
+   "sun",
+   "grass",
+   "sky",
+   "roof",
+   "wall",
+   "door"
+  ],
+  "visible_text": "",
+  "qa": [
+   {
+    "question": "What is the main subject of the image?",
+    "answer": "The main subject of the image is a cartoon house."
+   },
+   {
+    "question": "What is the house doing?",
+    "answer": "The house is standing still on the grass."
+   },
+   {
+    "question": "What are the dominant colors in the image?",
+    "answer": "The dominant colors are red for the house, brown for the roof, green for the grass, and yellow for the sun."
+   }
+  ]
+ },
+ "prompts": [],
+ "generations": [],
+ "critiques": [],
+ "revisions": 0,
+ "status": "done",
+ "message": "The main subject of the image is a cartoon house.\n\nCaption: A simple cartoon house with a brown roof and red walls, situated on green grass with a tree and a yellow sun in the background.",
+ "final_image_path": "",
+ "trace": [
+  {
+   "agent": "planner",
+   "input": {
+    "route": "",
+    "status": "running",
+    "revisions": 0,
+    "request": "Describe this image.",
+    "image": "house.png"
+   },
+   "output": {
+    "checks": {
+     "image_text": "",
+     "image_contains_instructions": false,
+     "safe": true
+    },
+    "classifier": "rules",
+    "route": "caption_question",
+    "reason": "question/caption wording"
+   },
+   "seconds": 0.557,
+   "error": null
+  },
+  {
+   "agent": "vision_understanding",
+   "input": {
+    "route": "caption_question",
+    "status": "running",
+    "revisions": 0,
+    "request": "Describe this image.",
+    "image": "house.png"
+   },
+   "output": {
+    "caption": "A simple cartoon house with a brown roof and red walls, situated on green grass with a tree and a yellow sun in the background.",
+    "objects": [
+     "house",
+     "tree",
+     "sun",
+     "grass",
+     "sky",
+     "roof",
+     "wall",
+     "door"
+    ],
+    "visible_text": "",
+    "qa": [
+     {
+      "question": "What is the main subject of the image?",
+      "answer": "The main subject of the image is a cartoon house."
+     },
+     {
+      "question": "What is the house doing?",
+      "answer": "The house is standing still on the grass."
+     },
+     {
+      "question": "What are the dominant colors in the image?",
+      "answer": "The dominant colors are red for the house, brown for the roof, green for the grass, and yellow for the sun."
+     }
+    ]
+   },
+   "seconds": 12.656,
+   "error": null
+  }
+ ],
+ "total_seconds": 13.21
+}

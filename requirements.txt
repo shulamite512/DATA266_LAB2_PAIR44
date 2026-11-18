@@ -1,0 +1,28 @@
+# DATA 266 Lab 2 - pinned dependencies.
+# Target runtime: Kaggle (T4 x1 / P100) or Colab T4, Python 3.11-3.13.
+# Lines marked "# preinstalled" ship with the Kaggle/Colab images; `python -m src.common.install`
+# skips them so the notebook does not downgrade torch/numpy. Cell 1 of every notebook prints
+# the versions actually used.
+torch==2.5.1              # preinstalled
+torchvision==0.20.1       # preinstalled
+numpy==1.26.4             # preinstalled
+pandas==2.2.3             # preinstalled
+pillow==10.4.0            # preinstalled
+matplotlib==3.9.2         # preinstalled
+scipy==1.13.1             # preinstalled
+transformers==4.51.3
+accelerate==1.2.1
+diffusers==0.32.2
+peft==0.14.0
+huggingface_hub==0.30.2
+datasets==3.2.0
+safetensors==0.4.5
+bitsandbytes==0.48.2
+sentence-transformers==3.3.1
+rank-bm25==0.2.2
+chromadb==1.0.12
+pymupdf==1.25.1
+torchmetrics==1.6.0
+torch-fidelity==0.3.0
+lpips==0.1.4
+gradio==5.29.0

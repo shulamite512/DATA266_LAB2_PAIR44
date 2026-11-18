@@ -1,0 +1,31 @@
+{
+  "source": "lambdalabs/naruto-blip-captions",
+  "raw": 1221,
+  "corrupted": 0,
+  "missing_caption": 0,
+  "exact_duplicates": 0,
+  "near_duplicates": 0,
+  "kept": 1221,
+  "removed_total": 0,
+  "n_test": 122,
+  "n_train": 1099,
+  "caption_words_mean": 8.93,
+  "caption_words_min_max": [
+    6,
+    41
+  ],
+  "orig_sizes_top": [
+    [
+      "1080x1080",
+      468
+    ],
+    [
+      "1076x1076",
+      135
+    ],
+    [
+      "1620x1620",
+      33
+    ]
+  ]
+}

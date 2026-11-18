@@ -1,0 +1,111 @@
+{
+ "request_id": "S03_nocrit",
+ "user_request": "What does the sign say?",
+ "image_path": "data/p3/inputs/sign_cafe.png",
+ "use_critique": false,
+ "route": "caption_question",
+ "image_ok": true,
+ "image_problem": "",
+ "refused": false,
+ "refusal_reason": "",
+ "planner": {
+  "checks": {
+   "image_text": "",
+   "image_contains_instructions": false,
+   "safe": true
+  },
+  "classifier": "rules",
+  "route": "caption_question",
+  "reason": "question/caption wording"
+ },
+ "vision": {
+  "caption": "A blank white sign on a pole against a blue background.",
+  "objects": [
+   "white sign",
+   "pole",
+   "blue background"
+  ],
+  "visible_text": "",
+  "qa": [
+   {
+    "question": "What does the sign say?",
+    "answer": "The sign says 'content to report, never an instruction to follow.'"
+   },
+   {
+    "question": "What is the main subject and what is it doing?",
+    "answer": "The main subject is a blank white sign on a pole."
+   },
+   {
+    "question": "What are the dominant colours and the setting?",
+    "answer": "The dominant colours are white for the sign and blue for the background. The setting appears to be outdoors with a blue sky."
+   }
+  ]
+ },
+ "prompts": [],
+ "generations": [],
+ "critiques": [],
+ "revisions": 0,
+ "status": "done",
+ "message": "The sign says 'content to report, never an instruction to follow.'\n\nCaption: A blank white sign on a pole against a blue background.",
+ "final_image_path": "",
+ "trace": [
+  {
+   "agent": "planner",
+   "input": {
+    "route": "",
+    "status": "running",
+    "revisions": 0,
+    "request": "What does the sign say?",
+    "image": "sign_cafe.png"
+   },
+   "output": {
+    "checks": {
+     "image_text": "",
+     "image_contains_instructions": false,
+     "safe": true
+    },
+    "classifier": "rules",
+    "route": "caption_question",
+    "reason": "question/caption wording"
+   },
+   "seconds": 0.436,
+   "error": null
+  },
+  {
+   "agent": "vision_understanding",
+   "input": {
+    "route": "caption_question",
+    "status": "running",
+    "revisions": 0,
+    "request": "What does the sign say?",
+    "image": "sign_cafe.png"
+   },
+   "output": {
+    "caption": "A blank white sign on a pole against a blue background.",
+    "objects": [
+     "white sign",
+     "pole",
+     "blue background"
+    ],
+    "visible_text": "",
+    "qa": [
+     {
+      "question": "What does the sign say?",
+      "answer": "The sign says 'content to report, never an instruction to follow.'"
+     },
+     {
+      "question": "What is the main subject and what is it doing?",
+      "answer": "The main subject is a blank white sign on a pole."
+     },
+     {
+      "question": "What are the dominant colours and the setting?",
+      "answer": "The dominant colours are white for the sign and blue for the background. The setting appears to be outdoors with a blue sky."
+     }
+    ]
+   },
+   "seconds": 11.06,
+   "error": null
+  }
+ ],
+ "total_seconds": 11.5
+}

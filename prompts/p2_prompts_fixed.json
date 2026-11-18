@@ -1,0 +1,16 @@
+{
+  "out_of_domain": [
+    {"id": "ood_00", "category": "out_of_domain", "prompt": "a red vintage car parked on a cobblestone street at sunset"},
+    {"id": "ood_01", "category": "out_of_domain", "prompt": "a bowl of ramen on a wooden table, top-down photo"},
+    {"id": "ood_02", "category": "out_of_domain", "prompt": "a lighthouse on a rocky coast during a storm"},
+    {"id": "ood_03", "category": "out_of_domain", "prompt": "an astronaut riding a horse on the moon"},
+    {"id": "ood_04", "category": "out_of_domain", "prompt": "a golden retriever puppy playing in autumn leaves"}
+  ],
+  "compositional": [
+    {"id": "comp_00", "category": "compositional", "prompt": "two characters, one in red and one in blue"},
+    {"id": "comp_01", "category": "compositional", "prompt": "a girl with pink hair standing to the left of a boy with black hair"},
+    {"id": "comp_02", "category": "compositional", "prompt": "three ninjas standing in a row, the middle one wearing a green vest"},
+    {"id": "comp_03", "category": "compositional", "prompt": "a man with an orange jacket holding a blue umbrella under a yellow moon"},
+    {"id": "comp_04", "category": "compositional", "prompt": "a small white dog sitting on top of a large black cat"}
+  ]
+}

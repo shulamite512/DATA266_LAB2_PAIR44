@@ -1,0 +1,22 @@
+# never commit weights, data, generated images or secrets (C1.6, S.6)
+data/
+outputs/
+*.safetensors
+*.bin
+*.ckpt
+*.pt
+*.png
+*.jpg
+*.jpeg
+!docs/**/*.png
+!part2/*/figures/*.png
+*.zip
+.env
+*.token
+__pycache__/
+.ipynb_checkpoints/
+chroma/
+recordings/*.mp4
+recordings/*.m4a
+recordings/*.mp3
+recordings/*.webm

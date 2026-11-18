@@ -1,0 +1,304 @@
+{
+ "request_id": "S08_crit",
+ "user_request": "Add snow on the ground and the roof.",
+ "image_path": "data/p3/inputs/house.png",
+ "use_critique": true,
+ "route": "edit",
+ "image_ok": true,
+ "image_problem": "",
+ "refused": false,
+ "refusal_reason": "",
+ "planner": {
+  "checks": {
+   "image_text": "",
+   "image_contains_instructions": false,
+   "safe": true
+  },
+  "classifier": "rules",
+  "route": "edit",
+  "reason": "asks to change part of the image"
+ },
+ "vision": {
+  "caption": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun.",
+  "objects": [
+   "house",
+   "tree",
+   "sun",
+   "sky",
+   "grass",
+   "roof",
+   "wall",
+   "window"
+  ],
+  "visible_text": "",
+  "qa": [
+   {
+    "question": "What is the main subject and what is it doing?",
+    "answer": "The main subject is a cartoon house with a brown roof and red walls, standing on green grass under a bright yellow sun."
+   },
+   {
+    "question": "What are the dominant colours and the setting?",
+    "answer": "The dominant colours are red for the house, brown for the roof, green for the grass, and yellow for the sun. The setting is a sunny day with a clear blue sky."
+   }
+  ]
+ },
+ "prompts": [
+  {
+   "prompt": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun. Snow covers the ground and the roof.",
+   "negative_prompt": "snow, lowres, blurry, deformed, watermark, text, nsfw",
+   "edit_instruction": "add snow on the ground and the roof",
+   "attempt": 0
+  },
+  {
+   "prompt": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun. Snow covers the ground and the roof.",
+   "negative_prompt": "lowres, blurry, deformed, watermark, text, nsfw",
+   "edit_instruction": "add snow to the roof",
+   "attempt": 1
+  }
+ ],
+ "generations": [
+  {
+   "attempt": 0,
+   "seed": 266,
+   "route": "edit",
+   "mode": "edit (instruct-pix2pix)",
+   "model": "timbrooks/instruct-pix2pix",
+   "prompt": "add snow on the ground and the roof",
+   "steps": 20,
+   "image_guidance": 1.5,
+   "image_path": "outputs/p3/images/S08_crit_a0.png"
+  },
+  {
+   "attempt": 1,
+   "seed": 267,
+   "route": "edit",
+   "mode": "edit (instruct-pix2pix)",
+   "model": "timbrooks/instruct-pix2pix",
+   "prompt": "add snow to the roof",
+   "steps": 20,
+   "image_guidance": 1.3,
+   "image_path": "outputs/p3/images/S08_crit_a1.png"
+  }
+ ],
+ "critiques": [
+  {
+   "attempt": 0,
+   "clip_cosine": 0.3654,
+   "clip_threshold": 0.25,
+   "vlm_verdict": "revise",
+   "vlm_score": 2,
+   "reason": "The prompt suggests adding snow to both the ground and the roof, but the current image only has snow on the ground.",
+   "revision_instruction": "more_change",
+   "adjust": "more_change",
+   "nsfw_flagged": false,
+   "decision": "revise"
+  },
+  {
+   "attempt": 1,
+   "clip_cosine": 0.3235,
+   "clip_threshold": 0.25,
+   "vlm_verdict": "accept",
+   "vlm_score": 4,
+   "reason": "The generated result adds snow to the roof, which satisfies the user's request.",
+   "revision_instruction": "none",
+   "adjust": "none",
+   "nsfw_flagged": false,
+   "decision": "accept"
+  }
+ ],
+ "revisions": 1,
+ "status": "done",
+ "message": "Done (edit (instruct-pix2pix), 1 revision(s)).",
+ "final_image_path": "outputs/p3/images/S08_crit_a1.png",
+ "trace": [
+  {
+   "agent": "planner",
+   "input": {
+    "route": "",
+    "status": "running",
+    "revisions": 0,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "checks": {
+     "image_text": "",
+     "image_contains_instructions": false,
+     "safe": true
+    },
+    "classifier": "rules",
+    "route": "edit",
+    "reason": "asks to change part of the image"
+   },
+   "seconds": 0.499,
+   "error": null
+  },
+  {
+   "agent": "vision_understanding",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "caption": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun.",
+    "objects": [
+     "house",
+     "tree",
+     "sun",
+     "sky",
+     "grass",
+     "roof",
+     "wall",
+     "window"
+    ],
+    "visible_text": "",
+    "qa": [
+     {
+      "question": "What is the main subject and what is it doing?",
+      "answer": "The main subject is a cartoon house with a brown roof and red walls, standing on green grass under a bright yellow sun."
+     },
+     {
+      "question": "What are the dominant colours and the setting?",
+      "answer": "The dominant colours are red for the house, brown for the roof, green for the grass, and yellow for the sun. The setting is a sunny day with a clear blue sky."
+     }
+    ]
+   },
+   "seconds": 12.048,
+   "error": null
+  },
+  {
+   "agent": "prompt_engineering",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "prompt": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun. Snow covers the ground and the roof.",
+    "negative_prompt": "snow, lowres, blurry, deformed, watermark, text, nsfw",
+    "edit_instruction": "add snow on the ground and the roof",
+    "attempt": 0
+   },
+   "seconds": 3.985,
+   "error": null
+  },
+  {
+   "agent": "image_generation",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 0,
+    "seed": 266,
+    "route": "edit",
+    "mode": "edit (instruct-pix2pix)",
+    "model": "timbrooks/instruct-pix2pix",
+    "prompt": "add snow on the ground and the roof",
+    "steps": 20,
+    "image_guidance": 1.5,
+    "image_path": "outputs/p3/images/S08_crit_a0.png"
+   },
+   "seconds": 6.995,
+   "error": null
+  },
+  {
+   "agent": "critique",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 0,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 0,
+    "clip_cosine": 0.3654,
+    "clip_threshold": 0.25,
+    "vlm_verdict": "revise",
+    "vlm_score": 2,
+    "reason": "The prompt suggests adding snow to both the ground and the roof, but the current image only has snow on the ground.",
+    "revision_instruction": "more_change",
+    "adjust": "more_change",
+    "nsfw_flagged": false,
+    "decision": "revise"
+   },
+   "seconds": 5.084,
+   "error": null
+  },
+  {
+   "agent": "prompt_engineering",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 1,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "prompt": "A simple cartoon house with a brown roof and red walls, situated on green grass under a bright yellow sun. Snow covers the ground and the roof.",
+    "negative_prompt": "lowres, blurry, deformed, watermark, text, nsfw",
+    "edit_instruction": "add snow to the roof",
+    "attempt": 1
+   },
+   "seconds": 3.675,
+   "error": null
+  },
+  {
+   "agent": "image_generation",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 1,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 1,
+    "seed": 267,
+    "route": "edit",
+    "mode": "edit (instruct-pix2pix)",
+    "model": "timbrooks/instruct-pix2pix",
+    "prompt": "add snow to the roof",
+    "steps": 20,
+    "image_guidance": 1.3,
+    "image_path": "outputs/p3/images/S08_crit_a1.png"
+   },
+   "seconds": 6.835,
+   "error": null
+  },
+  {
+   "agent": "critique",
+   "input": {
+    "route": "edit",
+    "status": "running",
+    "revisions": 1,
+    "request": "Add snow on the ground and the roof.",
+    "image": "house.png"
+   },
+   "output": {
+    "attempt": 1,
+    "clip_cosine": 0.3235,
+    "clip_threshold": 0.25,
+    "vlm_verdict": "accept",
+    "vlm_score": 4,
+    "reason": "The generated result adds snow to the roof, which satisfies the user's request.",
+    "revision_instruction": "none",
+    "adjust": "none",
+    "nsfw_flagged": false,
+    "decision": "accept"
+   },
+   "seconds": 4.436,
+   "error": null
+  }
+ ],
+ "total_seconds": 43.56
+}
