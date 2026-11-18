@@ -1,60 +1,62 @@
-# Contributions
+# Contributions — Pair Programming Team 44
 
-Team: `Pair_Programming_Team_[## — TO BE FILLED]`
+Repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
 
 | Member | Name | GitHub handle | SJSU email / ID (if required) |
 |--------|------|---------------|-------------------------------|
 | A | `[TO BE FILLED]` | `[TO BE FILLED]` | `[TO BE FILLED]` |
 | B | `[TO BE FILLED]` | `[TO BE FILLED]` | `[TO BE FILLED]` |
 
-> **How to fill this in.** The task rows below list the work that exists in this repository. Write `A`, `B` or `A+B` in the *Lead* column and the partner's role in the next column. Only the team can fill these in; nothing has been pre-assigned. Implementation assistance by an AI coding assistant is recorded separately in `AI_USAGE.md` and is not a team member's contribution.
+> **How to fill this in.** Each row below is work that exists in this repository. Write `A`, `B` or `A+B` under *Lead* and the partner's role under *Partner*. Nothing has been pre-assigned: only the team knows who did what. AI-assisted work is disclosed separately in `AI_USAGE.md` and is not a member's contribution.
 >
-> Note (from `git log`): every commit so far comes from a single local Git identity. If the course checks commit history per member, make sure the partner's own commits (for example, their human-evaluation files or report sections) are committed from their own account.
+> From `git log`: every commit so far comes from one Git identity (Part 1 history included). If the course reviews per-member commit history, the partner should commit their own work from their own account, for example their rating/judging files or report sections.
 
-## Part 1 — Multimodal RAG
+## Part 1 — Multimodal RAG (P1-EXP-001 … P1-EXP-003; checkpoint `eb87662`)
 
-| Task | Lead | Partner role | Notes |
-|------|------|--------------|-------|
-| Knowledge-base analysis, design and extraction helpers (`p1_rag.ipynb`; DECISIONS D-001 – D-047) | | | |
-| Retrieval / answering / Kaggle submission | | | **Not implemented in this repository** (README: skeleton only) |
+| Task | Lead | Partner | Notes |
+|------|------|---------|-------|
+| Knowledge-base analysis, golden set (25 Qs, frozen `d9bbd68`) | | | |
+| Ingestion: figures, tables, trust, registry | | | |
+| Retrieval: dense + BM25 + RRF + reranker + router (baseline vs final) | | | |
+| Answer generation, validation, conversation memory | | | |
+| Golden-set evaluation and failure analysis | | | |
+| Kaggle submissions and final selection | | | |
+| Part 1 human groundedness rating | | | blocked: full answers not preserved (see `HUMAN_EVALUATION.md`) |
 
 ## Part 2 — Diffusion fine-tuning (P2-EXP-001)
 
-| Task | Lead | Partner baseline run | Notes |
-|------|------|----------------------|-------|
-| Dataset choice, licence review, cleaning and frozen split | | | |
-| Frozen 20-prompt evaluation set | | | |
-| LoRA run A (rank 4) | | | |
-| LoRA run B (rank 64) | | | |
-| Base-model baseline generation (120 images) | | | |
-| Metrics: KID, CLIP, LPIPS, memorization, safety | | | |
-| Final-adapter selection rule | | | |
-| Human evaluation (≥ 3 raters; outside rater recruited by) | | | |
-| Hugging Face model/dataset cards and upload | | | pending authorization |
+| Task | Lead | Partner | Notes |
+|------|------|---------|-------|
+| Dataset choice, licence review, cleaning, frozen split and prompts | | | |
+| LoRA run A (rank 4) / run B (rank 64) | | | |
+| Baseline + 120-image generation, grids | | | |
+| KID, CLIP, LPIPS, memorization, safety analysis | | | |
+| Human evaluation (≥ 3 raters; outside rater recruited by) | | | pending |
+| Model cards / Hugging Face packaging | | | upload pending authorization |
 
 ## Part 3 — Multi-agent system (P3-EXP-001/002/003)
 
-| Task | Lead | Partner baseline run | Notes |
-|------|------|----------------------|-------|
-| Architecture: five agents, shared state, orchestrator | | | |
-| Guardrails and red-team design (10 cases) | | | |
-| Scenario set (15) and pass rubrics | | | |
-| v2 inputs (licensed Commons photos, fixtures) | | | |
-| Evaluation runs P3-EXP-001 / 002 / 003 | | | |
-| Failure analysis (vision repetition loop) | | | |
-| Human judging: member_a / member_b | | | both members judge independently |
+| Task | Lead | Partner | Notes |
+|------|------|---------|-------|
+| Five-agent architecture, shared state, orchestrator, traces | | | |
+| Guardrails, red-team cases, scenarios and rubrics | | | |
+| Evaluation runs and failure analysis (vision repetition loop) | | | |
+| Human judging (`member_a` / `member_b`) | | | both members, independently; pending |
 | Gradio demo | | | |
+| System card | | | |
 
-## Report and submission
+## Testing, documentation and report
 
-| Task | Lead | Partner role | Notes |
-|------|------|--------------|-------|
+| Task | Lead | Partner | Notes |
+|------|------|---------|-------|
+| Testing / self-checks / reproducibility (Docker, freezes, seeds) | | | |
+| README, DECISIONS, AI_USAGE, links.txt | | | |
 | IEEE report (`report/data266_lab2_report.tex`) | | | |
-| README / DECISIONS / links.txt / Canvas ZIP | | | |
+| Canvas ZIP and final submission | | | |
 
 ## Meeting recordings
 
-Recordings of knowledge-transfer and architecture/trade-off discussions. They are stored outside this repository; the links are listed here.
+Recordings of knowledge-transfer and architecture/trade-off discussions, stored outside this repository.
 
 | Date | Topic | Participants | Link |
 |------|-------|--------------|------|

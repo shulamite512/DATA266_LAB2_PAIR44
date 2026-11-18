@@ -1,20 +1,26 @@
-DATA 266 Lab 2 - submission links (Team [## - TO BE FILLED])
-Every line marked MISSING must be filled in before the Canvas ZIP is created. Verify the required set against the official requirements PDF.
+DATA 266 Lab 2 - Pair Programming Team 44 - submission links
+Lines marked MISSING or PENDING must be completed before the final Canvas ZIP (publication/build_canvas_zip.py --final refuses otherwise).
 
-GitHub repository (private; instructor access granted): MISSING - repository not created or pushed yet (no git remote configured)
-Final report (PDF):                                    MISSING - report/data266_lab2_report.tex is a Parts 2-3 draft; Part 1 content and human results are pending
+GitHub repository (private, instructor/ISA read access):
+  https://github.com/shulamite512/DATA266_LAB2_PAIR44
+  PENDING: repository is currently PUBLIC and empty (checked 2026-11-18) - make it private, grant access, then push
+  Note: the course convention is data266-lab2-team## ; the team chose DATA266_LAB2_PAIR44
+
+Git tags (commit IDs after the tags are created and pushed):
+  p1-v1.0: PENDING - recommended target eb87662 (P1-EXP-003 checkpoint: executed notebook, validator valid, Kaggle public 0.832)
+  p2-v1.0: PENDING - final commit after the Part 2 human ratings are scored (REPORT_ONLY)
+  p3-v1.0: PENDING - final commit after the Part 3 judgements are scored (RESCORE_ONLY)
 
 Part 1
-  Kaggle notebook / competition submission:            MISSING - Part 1 not implemented in this repository
+  Final Kaggle notebook: MISSING - Kaggle notebook URL (Part 1 runs were local Docker; confirm the Kaggle notebook used for the selected submission)
+  Selected final Kaggle submission: MISSING - submission/date selected on the leaderboard (team records: public 0.636 P1-EXP-002, 0.832 P1-EXP-003)
 
-Part 2
-  Hugging Face model - selected adapter (run A, r4):   MISSING - staged locally, upload not authorized
-  Hugging Face model - run A (r4):                     MISSING - staged locally (identical to the selected adapter; may share one repo)
-  Hugging Face model - run B (r64):                    MISSING - staged locally, upload not authorized
-  Hugging Face dataset - 120 generated images:         MISSING - staged locally, upload not authorized
+Part 2 (Hugging Face, private)
+  Adapter A (selected final, rank 4): PENDING upload - https://huggingface.co/Parthp01/data266-lab2-lora-a
+  Adapter B (rank 64):                PENDING upload - https://huggingface.co/Parthp01/data266-lab2-lora-b
+  Generated images (120):             PENDING upload - https://huggingface.co/datasets/Parthp01/data266-lab2-generated-images
 
-Part 3
-  Hugging Face dataset - evaluation inputs (v2):       MISSING - staged locally, upload not authorized
-  Gradio demo:                                         local only (127.0.0.1:7860, share=False) - demo video/screenshots MISSING if required
+Part 3 (Hugging Face, private)
+  Evaluation input images (v2):       PENDING upload - https://huggingface.co/datasets/Parthp01/data266-lab2-p3-inputs
 
-Meeting recordings (knowledge transfer, design trade-offs): MISSING - see CONTRIBUTIONS.md
+Meeting recordings (see CONTRIBUTIONS.md): MISSING

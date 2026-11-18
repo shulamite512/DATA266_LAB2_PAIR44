@@ -1,6 +1,8 @@
-% DATA 266 Lab 2 -- final report DRAFT (Parts 2 and 3 only).
-% Compile with pdfLaTeX on Overleaf (IEEEtran is built in). Figures are in figures/.
+% DATA 266 Lab 2 -- Pair 44 -- report DRAFT covering Parts 1, 2 and 3 (NOT final: human results pending).
+% Compile with pdfLaTeX on Overleaf (IEEEtran is built in). Figures are in figures/ (sources: Appendix B).
 % Every number below is copied from saved experiment records (sources in Appendix A).
+% Evidence tags for Part 1: [OUTPUT] = printed in a saved executed notebook; [DOC] = recorded only in the
+% decision log; [KAGGLE] = computed by Kaggle. Parts 2/3 values come from saved JSON/notebook outputs.
 % \pending{...} marks content that needs human input; \missing{...} marks absent deliverables.
 % Search for "PENDING" and "MISSING" before submitting. Do not replace pending human results with estimates.
 \documentclass[conference]{IEEEtran}
@@ -12,25 +14,113 @@
 \graphicspath{{figures/}}
 
 \begin{document}
-\title{DATA 266 Lab 2: Domain Fine-Tuning of Stable Diffusion and a Guarded Multimodal Multi-Agent Image System}
+\title{DATA 266 Lab 2: Multimodal RAG, Domain Fine-Tuning of Stable Diffusion, and a Guarded Multi-Agent Image System}
 \author{\IEEEauthorblockN{\pending{Member A name}, \pending{Member B name}}
-\IEEEauthorblockA{Team \pending{team number} --- DATA 266, Fall 2026\\ GitHub: \pending{private repository URL}}}
+\IEEEauthorblockA{Pair Programming Team 44 --- DATA 266, Fall 2026\\ GitHub: \url{https://github.com/shulamite512/DATA266_LAB2_PAIR44} (private access: \pending{confirm})}}
 \maketitle
 
 \begin{abstract}
-\missing{Part 1 (multimodal RAG) is not part of this draft. If the course requires one report for Parts 1--3, Part 1 must be integrated before submission.}
-We fine-tuned Stable Diffusion 1.5 with two LoRA adapters (rank 4 and rank 64) on 740 BLIP-captioned Pok\'emon images. We compared them with the base model on 120 generated images using KID, CLIP score, LPIPS diversity, a memorization probe and safety-checker counts. The rank-4 adapter was selected by a pre-registered rule (in-domain KID $0.0619\pm0.0092$ vs.\ $0.0825\pm0.0089$ for rank 64 and $0.0823\pm0.0111$ for the base model).
-We then built a five-agent system (Planner, Vision, Prompt, Generation, Critique) around a shared typed state. It uses Qwen3-VL-4B, SD~1.5 with the selected adapter, InstructPix2Pix and CLIP, allows at most two revisions, and writes a JSON trace for every request.
-In the final evaluation (P3-EXP-003), all 40 requests executed (15 scenarios with and without critique, plus 10 red-team cases). Automated structural checks passed 12/15 with critique and 11/15 without. No red-team attack succeeded among the 8 cases decided automatically; 2 await human review. Six requests failed because the vision model fell into a deterministic repetition loop; we report this as a confirmed limitation. Human judgements are \pending{two-judge Part 3 results and three-rater Part 2 results}.
+For Part~1 we built a multimodal retrieval-augmented question-answering system over three read-only PDFs: dense and BM25 retrieval fused by RRF, a cross-encoder reranker, a label router, a revision/conflict registry and Qwen3-VL-4B answers in a validated JSON schema.
+\begin{itemize}
+\item On the frozen 25-question golden set (the only held-out run, P1-EXP-001), the final system raised Recall@5 from 0.764 to 0.882 and citation accuracy from 0.64 to 0.84 over a dense-only baseline, while answer correctness stayed at 13--14 of 25.
+\item The final checkpoint (P1-EXP-003) scored 0.832 on the Kaggle public leaderboard. This covers about 48\% of the hidden questions, so it is not the final competition result.
+\end{itemize}
+For Part~2, we fine-tuned Stable Diffusion 1.5 with two LoRA adapters (rank 4 and rank 64) on 740 BLIP-captioned Pok\'emon images. We compared them with the base model on 120 generated images using KID, CLIP score, LPIPS diversity, a memorization probe and safety-checker counts. The rank-4 adapter was selected by a pre-registered rule (in-domain KID $0.0619\pm0.0092$ vs.\ $0.0825\pm0.0089$ for rank 64 and $0.0823\pm0.0111$ for the base model).
+For Part~3, we built a five-agent system (Planner, Vision, Prompt, Generation, Critique) around a shared typed state. It uses Qwen3-VL-4B, SD~1.5 with the selected adapter, InstructPix2Pix and CLIP, allows at most two revisions, and writes a JSON trace for every request.
+In the final evaluation (P3-EXP-003), all 40 requests executed (15 scenarios with and without critique, plus 10 red-team cases). Automated structural checks passed 12/15 with critique and 11/15 without. No red-team attack succeeded among the 8 cases decided automatically; 2 await human review. Six requests failed because the vision model fell into a deterministic repetition loop; we report this as a confirmed limitation. Human judgements are \pending{Part~1 groundedness ratings, three-rater Part~2 results, two-judge Part~3 results}.
 \end{abstract}
 
 \section{Introduction}
-Part 2 measures how much a small LoRA adapter shifts SD~1.5 toward a target art style, and at what cost to prompt fidelity, diversity and memorization. Part 3 composes vision-language understanding, prompt rewriting, generation and self-critique into a guarded pipeline. It treats text inside images as untrusted data and refuses unsafe or deceptive requests. Both parts are run from versioned notebooks with frozen evaluation files committed before the experiments (Section~\ref{sec:repro}).
+Part 1 answers questions over a small, deliberately tricky knowledge base. Its three PDFs contain vector and raster figures, tables, revisions, errata, cross-document conflicts and a low-trust appendix with embedded instructions. Answers must cite exact pages and figure labels and keep per-conversation state without ever modifying the knowledge base. Part 2 measures how much a small LoRA adapter shifts SD~1.5 toward a target art style, and at what cost to prompt fidelity, diversity and memorization. Part 3 composes vision-language understanding, prompt rewriting, generation and self-critique into a guarded pipeline. It treats text inside images as untrusted data and refuses unsafe or deceptive requests. All three parts run from versioned notebooks with frozen evaluation files committed before the experiments (Section~\ref{sec:repro}).
 
 \section{Experimental Setup and Reproducibility}\label{sec:repro}
-\textbf{Hardware and software.} One NVIDIA RTX 5090 (32{,}607~MB) in a Docker container (Python 3.12.3, PyTorch 2.14.1+cu130, diffusers 0.39.0, transformers 4.57.6, peft 0.21.2, gradio 5.50.0; the full lock file is \texttt{docker/requirements-p2p3.lock.txt}). Exactly one GPU is visible. The PyTorch allocator is capped at 16{,}384~MB as a \emph{preliminary} 16~GB check only. This is not evidence of compatibility with a real 16~GB GPU (Section~\ref{sec:limits}).
+\textbf{Part 1 environment.} RTX 5090 in a Docker \texttt{pytorch:latest} container: Python 3.11.13 and torch 2.7.1+cu128 [OUTPUT]; transformers 4.57.6, sentence-transformers 5.7.0, chromadb 1.5.9 [DOC]. The Part~1 model revisions were \emph{not} pinned (Section~\ref{sec:limits}). The frozen 25-question golden set was committed on 2026-10-21 (\texttt{d9bbd68}), before any Part~1 code (\texttt{c097b26}).
+
+\textbf{Parts 2--3 hardware and software.} One NVIDIA RTX 5090 (32{,}607~MB) in a Docker container (Python 3.12.3, PyTorch 2.14.1+cu130, diffusers 0.39.0, transformers 4.57.6, peft 0.21.2, gradio 5.50.0; the full lock file is \texttt{docker/requirements-p2p3.lock.txt}). Exactly one GPU is visible. The PyTorch allocator is capped at 16{,}384~MB as a \emph{preliminary} 16~GB check only. This is not evidence of compatibility with a real 16~GB GPU (Section~\ref{sec:limits}).
 
 \textbf{Determinism and provenance.} Seed 266; pinned Hugging Face revisions (SD~1.5 \texttt{451f4fe1}, Qwen3-VL-4B \texttt{ebb281ec}, InstructPix2Pix \texttt{31519b5c}, CLIP ViT-L/14 \texttt{32bd6428}, dataset \texttt{3790f299}). The dataset split, the 20 evaluation prompts, the Part 3 scenarios, the red-team cases and the input manifest were hashed and committed \emph{before} the corresponding runs. Each notebook refuses to run if a frozen file or the code fingerprint has changed. Completed experiment IDs are never overwritten.
+
+\section{Part 1: Multimodal RAG over a Read-Only Knowledge Base}\label{sec:p1}
+\subsection{Knowledge base and task}
+The knowledge base has three PDFs with a trust manifest: DOC1 with vector-drawn figures, and DOC2/DOC3 with raster figures, tables, a revision notice, an erratum (``Figure B-5 (corrected)'') and a low-trust Appendix~C that contains embedded instructions.
+\begin{itemize}
+\item Each question is answered in JSON with an answer of at most 120 words, one of five statuses (answered, not\_found, conflict, false\_premise, session\_override), page citations \texttt{DOC\#:p\#} and figure/table labels.
+\item Multi-turn conversations may introduce user-supplied values. These apply only within their conversation and never change the knowledge base.
+\item Kaggle scores 0.40 answer correctness (within $\pm1\%$), 0.20 status, 0.20 figure-reference F1 and 0.20 citations.
+\end{itemize}
+
+\subsection{Architecture}
+Fig.~\ref{fig:p1arch} shows the pipeline (P1-EXP-003 checkpoint \texttt{eb87662}).
+\begin{itemize}
+\item \textbf{Ingestion} (PyMuPDF): locates every caption, crops vector and raster figures, and normalises tables to long-format records. It indexes 195 objects with 36 labels; 26 evidence figures get a VLM-written JSON chart description [OUTPUT].
+\item \textbf{Trust handling:} low-trust objects (Appendix~C) are indexed but flagged \texttt{evidence\_ok=False} and filtered out of every context.
+\item \textbf{Registry:} links corrections to originals, notices to the labels they name, and forecast/outturn pairs and cross-document disagreements via series keys.
+\item \textbf{Retrieval} (final mode): an exact-label router; dense \texttt{bge-large-en-v1.5} top-20 and BM25 top-20 fused by RRF ($k{=}60$); the \texttt{bge-reranker-v2-m3} cross-encoder (24$\rightarrow$8); registry expansion of at most 3 objects.
+\item \textbf{Generation:} Qwen3-VL-4B with greedy decoding writes \texttt{evidence\_values}, \texttt{premise\_check} and the answer fields. A pydantic validator and post-processing then check the grounding of citations and labels, status rules, arithmetic and evidence values, with one repair retry and a deterministic not\_found fallback.
+\item \textbf{Conversation memory:} one \texttt{ConversationState} per conversation (rewrites, user values, refused knowledge-base edits). The index fingerprint is asserted unchanged.
+\item \textbf{Baseline:} dense-only top-20 with the same trust filter, top 8 as context.
+\end{itemize}
+
+\begin{figure}[t]\centering\footnotesize
+\begin{tikzpicture}[node distance=3mm, box/.style={draw,rounded corners,minimum height=5mm,inner sep=2pt,align=center}, >={Stealth[length=1.6mm]}]
+\node[box](pdf){3 PDFs +\\trust manifest}; \node[box,right=of pdf](ing){Ingestion: text,\\figures, tables,\\VLM descriptions};
+\node[box,right=of ing](idx){Chroma (dense)\\+ BM25 index\\+ registry};
+\node[box,below=6mm of pdf](q){Question +\\conversation state}; \node[box,right=of q](ret){Router + RRF\\+ reranker\\+ expansion};
+\node[box,right=of ret](gen){Qwen3-VL-4B\\JSON answer\\+ validator};
+\draw[->](pdf)--(ing); \draw[->](ing)--(idx); \draw[->](q)--(ret); \draw[->](idx)--(ret); \draw[->](ret)--(gen);
+\draw[->,dashed](gen.south) -- ++(0,-2mm) -| node[pos=0.25,below]{\scriptsize repair retry / fallback} (gen.south west);
+\end{tikzpicture}
+\caption{Part~1 RAG pipeline (final mode). Low-trust objects are indexed but never enter a context; the index is never written by conversations.}\label{fig:p1arch}\end{figure}
+
+\subsection{Evaluation protocol and integrity}
+\begin{itemize}
+\item The golden set has 25 questions in six categories (facts/tables, figures, two sources, multi-turn override, conflicts/revisions, unanswerable/false premise/injection). It was committed before any code.
+\item \textbf{P1-EXP-001} is the only held-out run: the golden set was not used for development before it. Its metrics are printed in the saved notebook (\texttt{0adebfa}) [OUTPUT].
+\item Afterwards, golden-set failure analysis guided general fixes, so later golden-set numbers are \emph{development} estimates [DOC].
+\item The public Kaggle leaderboard was used as feedback only, with no question-specific rules.
+\end{itemize}
+
+\begin{table}[t]\centering\caption{Part 1 golden set (25 questions). P1-EXP-001 is held-out [OUTPUT]; P1-EXP-003 is a development measurement [DOC].}\label{tab:p1}\footnotesize
+\begin{tabular}{lccc}\toprule
+Metric & EXP-001 baseline & EXP-001 final & EXP-003 final (dev.)\\\midrule
+Correct answers & 14/25 & 13/25 & 14/25\\
+Recall@5 (24 items) & 0.764 & 0.882 & 0.882\\
+Hit@5 & 0.958 & 0.958 & 0.958\\
+Citation accuracy & 0.64 & 0.84 & 0.76\\
+Figure-reference F1 & 0.627 & 0.793 & 0.68\\
+Median s/question & 1.77 & 2.03 & 6.63\\
+Groundedness (human) & \multicolumn{3}{c}{\pending{both members' ratings}}\\\bottomrule
+\end{tabular}\end{table}
+
+\subsection{Results}
+\textbf{Held-out comparison} (Table~\ref{tab:p1}).
+\begin{itemize}
+\item The final architecture clearly improves retrieval (Recall@5 $+0.118$) and citations (citation accuracy $+0.20$, figure-reference F1 $+0.166$), but not answer correctness (13 vs.\ 14 of 25).
+\item The P1-EXP-001 failure analysis traced most final-mode misses to errors \emph{after} correct retrieval: answer/status inconsistency, rounding and arithmetic, a user value not reused on a later turn, and undetected text-level conflicts. Chart-value reading was a separate model limitation [DOC].
+\end{itemize}
+
+\textbf{Kaggle.}
+\begin{itemize}
+\item Public-leaderboard scores were 0.636 (P1-EXP-002) and \textbf{0.832} (P1-EXP-003; rank 1 at submission time) [KAGGLE].
+\item The public split covers about 48\% of the hidden set, so the final private score is \pending{private score/rank after the competition closes}.
+\item The submission selected as final on Kaggle is \pending{confirm which submission is selected}.
+\end{itemize}
+
+\textbf{Submission run} (P1-EXP-003, saved output).
+\begin{itemize}
+\item 40 rows; the professor's \texttt{validate\_submission.py} printed ``valid: 40 rows''.
+\item Statuses: answered 29, not\_found 6, session\_override 3, false\_premise 1, conflict 1.
+\item Median 4.35~s per question; 10 retries and 1 fallback; total runtime 499.7~s [OUTPUT].
+\end{itemize}
+
+\textbf{Self-checks.} 46/47 passed. The one failure was a stale expectation in a low-trust-citation test; the low-trust citations themselves were dropped correctly [OUTPUT].
+
+\subsection{Safety}
+\begin{itemize}
+\item \textbf{Low-trust evidence:} the low-trust Appendix~C is retrievable without the filter but never enters a context, and the router refuses its labels [OUTPUT].
+\item \textbf{Embedded instructions:} instructions embedded in the evidence are not followed (gate G7.embedded\_instruction).
+\item \textbf{Knowledge-base edits:} requests to edit the knowledge base are refused. User values apply only within their own conversation, and the index fingerprint is unchanged after all conversations (gate G8) [OUTPUT].
+\end{itemize}
 
 \section{Part 2: LoRA Fine-Tuning of Stable Diffusion 1.5}
 \subsection{Data and training}
@@ -195,7 +285,11 @@ S15 & broken & FAILED\_INPUT & FAILED\_INPUT\\\bottomrule
 \item Of the 8 image scenarios that ran, 4 were accepted (S08, S10--S12) and 4 reached the revision limit (S05--S07, S09). In the latter, the VLM judged that the requested style or edit was not achieved, for example ``no snow is present'' for S07.
 \item Revisions: 8 scenarios needed none, 2 needed one, 5 needed two; mean 0.8 (Fig.~\ref{fig:lat}).
 \item Critique raised the median latency of scenarios from 8.25~s to 14.10~s.
+\item Fig.~\ref{fig:rev} shows one recorded revision history: the critic rejected an off-target attempt and a safety-blanked attempt, then accepted the third.
 \end{itemize}
+
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{p3_revision_example_S10.png}
+\caption{Recorded revision history of S10 (P3-EXP-003, with critique), built from the saved attempt images and \texttt{result.json}. Attempt~2 was blanked by the safety checker, and the critic revised it rather than accept a blank image.}\label{fig:rev}\end{figure}
 Whether critique improves task success can only be decided by the human judgements. \pending{human pass rate with vs.\ without critique; critic--human agreement and Cohen's $\kappa$}
 
 \begin{figure}[t]\centering\includegraphics[width=\linewidth]{p3_fig_latency_revisions.png}
@@ -240,6 +334,15 @@ The local Gradio app (127.0.0.1:7860 only, \texttt{share=False}) was launched an
 \pending{UI screenshots: one successful style change, one refusal}
 
 \section{Safety, Ethics and Limitations}\label{sec:limits}
+\textbf{Part 1.}
+\begin{itemize}
+\item \textbf{Unpinned revisions:} the Part~1 model revisions were not pinned.
+\item \textbf{Not run on Kaggle hardware:} the notebook was never executed on Kaggle (all runs were in a local Docker container), so the 90-minute and 16~GB budgets on a T4 are unmeasured.
+\item \textbf{Memory:} the saved submission run peaked at 18{,}736~MB because the models were loaded twice when the run was repeated in the same kernel. Fresh-kernel runs peaked at 12{,}582~MB (P1-EXP-001, [OUTPUT]) and 12{,}667~MB (P1-EXP-003 run~1, [DOC]).
+\item \textbf{Missing record:} the uploaded \texttt{submission.csv} is not preserved in the repository.
+\item \textbf{Uncommitted later work:} work after the checkpoint (P1-EXP-004: one-run workflow, tables stored as images, order-robust conversations, stricter arithmetic checks) exists only as uncommitted work and two executed runs (50/52 and 52/53 self-checks). It is not part of the submitted checkpoint.
+\end{itemize}
+\textbf{Parts 2--3.}
 \begin{itemize}
 \item \textbf{Licences:} the training data is CC BY-NC-SA 4.0 and depicts copyrighted characters; SD~1.5 is under CreativeML OpenRAIL-M. Adapters and generated images are for non-commercial research only and must carry the same terms.
 \item \textbf{Guardrails:} they rely on English keyword patterns and the VLM's judgements, so paraphrased or obfuscated attacks may pass. Injection detection depends on the VLM reading the image text.
@@ -248,6 +351,15 @@ The local Gradio app (127.0.0.1:7860 only, \texttt{share=False}) was launched an
 \item \textbf{Metric reliability:} KID uses 20 samples; CLIP is related to SD's text encoder; $\tau{=}25$ is untuned.
 \item \textbf{Red-team set:} it was amended after the preliminary run and is not a hold-out.
 \item \textbf{16~GB compatibility:} peak allocations were 6.3--6.5~GB (Part~2 training) and 12.5~GB (Part~3) under a 16~GB allocator cap on an RTX 5090. This was \emph{not} tested on real 16~GB hardware (T4/P100, no bf16 on T4).
+\end{itemize}
+
+\textbf{Model card summary (Part 2, LoRA A).}
+\begin{itemize}
+\item SD~1.5 (\texttt{451f4fe1}) with a rank-4 LoRA on the attention projections, 797{,}184 trainable parameters, 1{,}500 steps, 4.0~minutes on an RTX 5090, peak 6{,}307~MB.
+\item Adapter sha256 \texttt{20d8d671\ldots}; diffusers format; loaded with \texttt{load\_lora\_weights}.
+\item Intended use: non-commercial research in the training style.
+\item Limitations: 20-sample KID, outputs pulled toward the training style, and possible resemblance to copyrighted characters.
+\item Card files: \texttt{hf\_staging/P2-EXP-001/\{run\_A,run\_B,images\}/README.md} (to be published as \texttt{Parthp01/data266-lab2-lora-a}, \texttt{-lora-b}, \texttt{-generated-images}; \pending{after authorization}).
 \end{itemize}
 
 \textbf{System card summary.} Components: Qwen3-VL-4B-Instruct for the planner, vision, prompt, critic and input-safety roles; SD~1.5 with LoRA~A (sha256 \texttt{20d8d671\ldots}), InstructPix2Pix and CLIP ViT-L/14. Intended use: course demonstration of guarded image editing and generation on non-sensitive images. Out of scope: real-person deceptive edits (refused), NSFW content (refused or blocked), and following instructions inside images (never).
@@ -260,8 +372,27 @@ A rank-4 LoRA shifted SD~1.5 toward the target style with the lowest in-domain K
 
 \appendices
 \section{Evidence sources}
+Part~1:
+\begin{itemize}
+\item the executed notebooks at \texttt{0adebfa} (P1-EXP-001) and \texttt{eb87662} (P1-EXP-003; identical to \texttt{notebooks/p1\_rag.ipynb});
+\item \texttt{docs/part1/P1\_EXP003\_CHECKPOINT\_MANIFEST.md} and \texttt{docs/part1/DECISIONS\_P1.md};
+\item Kaggle scores as recorded by the team [KAGGLE].
+\end{itemize}
 Part~2: \texttt{\$LAB2\_WORK\_DIR/p2/results/P2-EXP-001/\{report\_summary.json, metrics\_c8d369176621.json, safety\_analysis.json\}}, the run metadata in \texttt{runs/P2-EXP-001/}, and the executed \texttt{notebooks/p2\_finetune.ipynb}.
 Part~3: \texttt{\$LAB2\_WORK\_DIR/p3/experiments/P3-EXP-00\{1,2,3\}/evaluation\_summary.json}, per-item \texttt{result.json}, \texttt{traces/P3-EXP-00\{2,3\}/}, the executed \texttt{notebooks/p3\_agents.ipynb}, \texttt{eval/p3\_eval\_freeze\_v2\_P3-EXP-003.json}, and \texttt{DECISIONS.md} (D-105--D-115).
+
+\section{Figure sources}
+\begin{table}[h]\centering\footnotesize
+\begin{tabular}{ll}\toprule
+Figure & Source file (\texttt{\$WORK} = \texttt{data266\_lab2\_work})\\\midrule
+\ref{fig:p1arch}, \ref{fig:arch} & drawn in this document (TikZ)\\
+\ref{fig:loss} & \texttt{\$WORK/p2/results/P2-EXP-001/figures/loss\_curves.png}\\
+\ref{fig:grid} & \texttt{\ldots/figures/grid\_P01.png}, \texttt{grid\_P16.png}\\
+\ref{fig:mem} & \texttt{\ldots/figures/memorization\_top3\_runA.png}\\
+\ref{fig:lat} & \texttt{\$WORK/p3/experiments/P3-EXP-003/report/fig\_latency\_revisions.png}\\
+\ref{fig:rev} & built from \texttt{\ldots/P3-EXP-003/scenario/with\_critique/S10/}\\\bottomrule
+\end{tabular}\end{table}
+Copies are in \texttt{report/figures/}. Further report-ready figures there: \texttt{p2\_grid\_P11.png}, \texttt{p2\_failure\_candidates\_runA.png}, \texttt{p3\_fig\_automated\_checks\_by\_category.png}.
 
 \begin{thebibliography}{9}
 % Team: verify each reference against the original paper before submission.
@@ -272,6 +403,9 @@ Part~3: \texttt{\$LAB2\_WORK\_DIR/p3/experiments/P3-EXP-00\{1,2,3\}/evaluation\_
 \bibitem{lpips} R.~Zhang \emph{et al.}, ``The unreasonable effectiveness of deep features as a perceptual metric,'' in \emph{Proc. CVPR}, 2018.
 \bibitem{ip2p} T.~Brooks, A.~Holynski, and A.~A.~Efros, ``InstructPix2Pix: Learning to follow image editing instructions,'' in \emph{Proc. CVPR}, 2023.
 \bibitem{qwen} Qwen Team, ``Qwen3-VL-4B-Instruct,'' model card, \url{https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct}. \pending{cite the official technical report if required}
+\bibitem{bge} BAAI, ``bge-large-en-v1.5'' and ``bge-reranker-v2-m3,'' model cards, \url{https://huggingface.co/BAAI}. \pending{cite the official BGE / M3 papers if required}
+\bibitem{bm25} S.~Robertson and H.~Zaragoza, ``The probabilistic relevance framework: BM25 and beyond,'' \emph{Found. Trends Inf. Retr.}, 2009.
+\bibitem{rrf} G.~V.~Cormack, C.~L.~A.~Clarke, and S.~Buettcher, ``Reciprocal rank fusion outperforms Condorcet and individual rank learning methods,'' in \emph{Proc. SIGIR}, 2009.
 \bibitem{data} ``reach-vb/pokemon-blip-captions,'' Hugging Face dataset (CC BY-NC-SA 4.0), revision \texttt{3790f299}.
 \end{thebibliography}
 \end{document}

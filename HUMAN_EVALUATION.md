@@ -9,6 +9,8 @@ There are two independent human evaluations. The notebooks only **score** the fi
 | Result file(s) | `eval/p2_human_ratings.csv` | `eval/p3_human_P3-EXP-003_*.csv` (7 files) |
 | Then run | `p2_finetune.ipynb` with `MODE = "REPORT_ONLY"` | `p3_agents.ipynb` with `MODE = "RESCORE_ONLY"` |
 
+**Part 1 groundedness:** the Part 1 plan (`docs/part1/DECISIONS_P1.md`) has both members rate the groundedness of 25 golden-set answers. This is **blocked**: the executed P1-EXP-001 notebook preserves the per-question answers only as truncated pandas tables (36–37 cut cells), and the P1-EXP-003 run-1 answers were not saved. Regenerating them would require a new Part 1 run. Decide as a team whether to rate the truncated P1-EXP-001 answers (and report that limitation), run a new evaluation, or report groundedness as not rated. Check first whether the official requirements make it mandatory.
+
 `$WORK` below = `C:\Users\parth3\data266_lab2_work` on the host = `/app/data266_lab2_work` in the container. `eval/` = `implementation/eval/` in the repository.
 
 **General rules**

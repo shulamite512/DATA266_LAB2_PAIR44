@@ -1,88 +1,90 @@
-# Submission checklist — DATA 266 Lab 2 (status 2026-11-17)
+# Submission checklist — DATA 266 Lab 2, Pair Programming Team 44 (status 2026-11-18)
 
-**Source of requirements.** The official documents (`DATA266_Lab2_Requirements.pdf`, `DATA266_Fall2026_Lab_2.pdf`, kickoff slides) are **not on this machine**. The items below come from the requirements the team recorded in `DECISIONS.md` (e.g. D-001, D-007, D-011, D-039, D-105). Rows marked *assumption* must be checked against the PDF before submitting.
+**Requirement source.** The 17 requirements below were verified by the team from `DATA266_Lab2_Requirements.pdf` and `DATA266_Fall2026_Lab_2.pdf`. The PDFs themselves are not on this machine. Statuses come from evidence checked locally.
 
-Status legend: **COMPLETE** · **PENDING HUMAN INPUT** · **PENDING PUBLICATION** (needs your authorization) · **BLOCKED** · **NOT VERIFIED**
+**Overall verdict: READY WITH CONDITIONS.** All local preparation is done. Human evaluations, personal/team details, the Part 1 Kaggle details and all publication steps remain.
 
-## 1. Readiness
+Legend: **COMPLETE** · **PENDING HUMAN INPUT** · **PENDING PUBLICATION** (needs your authorization) · **BLOCKED** · **NOT VERIFIED**
 
-| Item | Status | Evidence / what is missing |
+| # | Requirement | Status | Evidence / what is missing |
+|---|---|---|---|
+| 1 | One IEEE PDF covering Parts 1–3, ≤ 12 pages per part + appendices | **PENDING HUMAN INPUT** | `report/data266_lab2_report.tex`: all three parts, about 5,400 words. 21 `\pending{}` fields remain (names, human results, Kaggle private score, screenshots). **No PDF yet:** there is no TeX toolchain here, so compile on Overleaf (§3). |
+| 2 | Architecture diagram, baseline/final results, analysis, safety per part | COMPLETE (draft) | Figs. 1–2 (TikZ), Tables I–VI, safety sections for each part |
+| 3 | Executed notebooks with saved outputs | COMPLETE | `p1_rag.ipynb` (P1-EXP-003, 20 outputs), `p2_finetune.ipynb` (P2-EXP-001 FULL_RUN, 61), `p3_agents.ipynb` (P3-EXP-003 FULL_EVALUATION, 67) |
+| 4 | Reproducible requirements, README, fixed seeds, run metadata | COMPLETE for P2/P3 · **NOT VERIFIED** for P1 | P2/P3: `docker/requirements-p2p3.lock.txt` (207 pins), run manifests, seed 266. P1: `requirements-p1.txt` holds only the *recorded* versions (no full freeze), and model revisions were not pinned. |
+| 5 | Private GitHub repo with instructor/ISA read access | **BLOCKED** | `shulamite512/DATA266_LAB2_PAIR44` is **PUBLIC** and empty (GitHub API, 2026-11-18). Make it private and add the instructor/ISA before pushing. Naming differs from `data266-lab2-team##` (team choice; flag). |
+| 6 | Tags `p1-v1.0`, `p2-v1.0`, `p3-v1.0` | **PENDING HUMAN INPUT** | Not created. Recommended: `p1-v1.0` → `eb87662`; `p2-v1.0` / `p3-v1.0` → the final commit after the human ratings are scored (§4). |
+| 7 | Part 2 adapters + generated-image dataset on Hugging Face | **PENDING PUBLICATION** | Staged and verified; `publication/HF_PUBLICATION_PLAN.md` |
+| 8 | Part 2 model card, Part 3 system card | COMPLETE (local) | Cards in the HF staging folders (real repo ids, D-117); system card `$WORK/p3/experiments/P3-EXP-003/system_card.md` (summary in the report) |
+| 9 | Part 3 reproducible input images on Hugging Face | **PENDING PUBLICATION** | `p3_inputs_v2` staged (20 files, manifest with licences and hashes) |
+| 10 | ≥ 3 genuine Part 2 raters | **PENDING HUMAN INPUT** | Packet and template ready (`HUMAN_EVALUATION.md` § Part 2) |
+| 11 | Independent Part 3 judgments by both members | **PENDING HUMAN INPUT** | Blinded P3-EXP-003 packet ready: 30 scenarios + 20 critic attempts + 2 red-team cases |
+| 12 | CONTRIBUTIONS.md with real contributions + recording links | **PENDING HUMAN INPUT** | Task table prepared; names, handles, owners and recording links are blank |
+| 13 | AI_USAGE.md | COMPLETE | Updated through this preparation. The "Other AI tools" section must be completed by the team if any were used. |
+| 14 | links.txt (repo, tag commits, HF links, final Kaggle notebook) | **PENDING HUMAN INPUT / PUBLICATION** | GitHub URL and planned HF URLs filled in; tag commits, uploads and the Kaggle notebook link are pending |
+| 15 | Canvas ZIP `Pair_Programming_Team_44.zip` | **PENDING** | `publication/build_canvas_zip.py` builds a **PREVIEW** now; `--final` refuses until the PDF and links are complete |
+| 16 | Final Part 1 Kaggle submission selected on the leaderboard | **NOT VERIFIED** | Team records: public 0.636 (P1-EXP-002) and 0.832 (P1-EXP-003). Which submission is *selected* is not recorded, and the notebook never ran on Kaggle. Confirm on Kaggle. |
+| 17 | Workloads runnable on a single 16 GB GPU | **NOT VERIFIED** | Fresh-kernel peaks: P1 12.6–12.7 GB, P2 6.3–6.5 GB, P3 12.5 GB. Measured on an RTX 5090 with a 16 GB *allocator cap*, which is not proof for real 16 GB hardware. The saved P1 submission run peaked at 18.7 GB (double model load). |
+
+**Security and size (verified).**
+- 142 tracked files, 7.8 MB.
+- No weights, archives, `.env`, tokens, local-only raw replies, private keys or judging packets are tracked.
+- Images are only the report figures. The five Wikimedia originals in `traces/` are git-ignored.
+- The Jupyter token appears in no tracked file.
+
+## 1. Experiments (preserved, final evidence)
+
+| Experiment | Status | Final? |
 |---|---|---|
-| **Part 1** RAG notebook + Kaggle submission | **BLOCKED** | `notebooks/p1_rag.ipynb` has design + extraction helpers only; retrieval/answering/`submission.csv` were never implemented. No Part 1 work exists elsewhere on this machine. |
-| P2 models (base, LoRA A r4, LoRA B r64) trained and compared | COMPLETE | P2-EXP-001; `notebooks/p2_finetune.ipynb` (executed, committed `b035d2a`) |
-| P2 120 images, KID/CLIP/LPIPS/memorization/safety | COMPLETE | `$WORK/p2/results/P2-EXP-001/` |
-| P2 frozen prompts/split committed before training | COMPLETE | `eval/p2_*` (commit `4150da8`) |
-| P2 human evaluation (≥ 3 raters, 25 pairs) | **PENDING HUMAN INPUT** | `HUMAN_EVALUATION.md` § Part 2 |
-| P2 adapter + images on Hugging Face | **PENDING PUBLICATION** | § 3 below |
-| P3 five agents, shared state, ≤ 2 revisions, JSON traces | COMPLETE | `notebooks/p3_agents.ipynb`; `traces/P3-EXP-00{1,2,3}/` |
-| P3 15 scenarios × critique on/off + 10 red-team, executed | COMPLETE | P3-EXP-003: 40/40 executed (6 `FAILED_MODEL`: confirmed repetition loop, reported as a limitation) |
-| P3 critique comparison, latency, revisions (automated) | COMPLETE | `$WORK/p3/experiments/P3-EXP-003/evaluation_summary.json`, `report/` |
-| P3 human judgements (2 judges) + red-team R01/R02 review | **PENDING HUMAN INPUT** | `HUMAN_EVALUATION.md` § Part 3 |
-| P3 evaluation inputs on Hugging Face (*"must be available on Hugging Face"*, D-105) | **PENDING PUBLICATION** | § 3 below |
-| P3 Gradio demo | COMPLETE (local) | launched and tested 2026-11-17 (DECISIONS P3-EXP-003 — RESULT); screenshots/video **PENDING HUMAN INPUT** if required |
-| Notebook cell 1 = professor's run-information cell, verbatim | COMPLETE | all three notebooks (D-007) |
-| Required notebook outputs saved | COMPLETE for P2/P3 | executed notebooks committed (`b035d2a`, `13495ce`) |
-| 16 GB GPU compatibility | **NOT VERIFIED** | only an allocator cap on an RTX 5090 (peaks: P2 6.5 GB, P3 12.5 GB); no T4/P100 run |
-| `README.md` | COMPLETE (team name missing) | team number placeholder |
-| `DECISIONS.md` | COMPLETE | through D-116 |
-| `AI_USAGE.md` | COMPLETE | updated through this preparation |
-| `CONTRIBUTIONS.md` | **PENDING HUMAN INPUT** | template only; names, handles, task owners, recordings |
-| `links.txt` | **PENDING HUMAN INPUT / PUBLICATION** | every link currently `MISSING` |
-| IEEE report | **PENDING HUMAN INPUT** | `report/data266_lab2_report.tex` (Parts 2–3 draft; `\pending{}` / `\missing{}` markers) |
-| Private GitHub repo `data266-lab2-team##`, instructor access | **PENDING PUBLICATION** | no remote configured; nothing pushed |
-| Version tags | **NOT VERIFIED** (*assumption*) | DECISIONS D-007 mentions a `p1-v1.0` commit; check the PDF for required tag names |
-| Canvas ZIP | **NOT VERIFIED** (*assumption*) | D-011 (`links.txt` for the Canvas ZIP) and D-039 (ZIP of the repository working files); check the PDF |
+| P1-EXP-001 / 002 / 003 | executed; history merged (`dbd01db`); 003 = checkpoint `eb87662` | P1-EXP-003 |
+| P1-EXP-004 (uncommitted, original Part 1 folder) | 2 executed runs (50/52, 52/53 self-checks), D-110/D-111 code never run | not integrated |
+| P2-EXP-001 | complete; REPORT_ONLY re-staged the upload folders (D-117) | yes |
+| P3-EXP-001 / 002 / 003 | complete; 003 has 6 `FAILED_MODEL` records (confirmed repetition loop) | P3-EXP-003 |
 
-## 2. Report inputs still needed from the team
-Search `report/data266_lab2_report.tex` for `PENDING` and `MISSING`:
-- Author names, team number, GitHub URL.
-- Part 1 content (if one report covers Parts 1–3).
-- Part 2: human win rates, plus the visual judgement of memorization and the safety-flag check.
-- Part 3: human pass rates per condition, Cohen's κ, critic/human agreement, the R01/R02 verdicts and the final attack-success rate out of 10.
-- Gradio screenshots, per-member contributions, conclusions after the human evaluation.
-- Verify every bibliography entry.
+## 2. Report inputs still needed
+Search `report/data266_lab2_report.tex` for `PENDING`:
+- **Front matter:** names; repository access.
+- **Part 1:** groundedness (blocked: full answers not preserved), selected Kaggle submission, private score.
+- **Part 2:** human win rates, memorization and safety-flag judgements.
+- **Part 3:** human pass rates, κ, critic agreement, R01/R02 verdicts and attack-success rate, screenshots.
+- **End matter:** contributions, conclusions, and verification of the references.
 
-## 3. Hugging Face publication (do NOT run without explicit authorization)
+## 3. Build the PDF (Overleaf)
+1. In Overleaf, choose New Project → Upload Project and upload a ZIP of the repository's `report/` folder (`data266_lab2_report.tex` + `figures/`).
+2. Set the compiler to pdfLaTeX and the main document to `data266_lab2_report.tex`, then compile twice so cross-references resolve.
+3. Check:
+   - no `??` in the PDF;
+   - all 6 figures render;
+   - every part stays within 12 pages.
+4. Download the PDF and save it as `report/data266_lab2_report.pdf`.
 
-| Artifact | Staged folder (`$WORK` = `/app/data266_lab2_work`) | Size | Licence / redistribution | Card |
-|---|---|---|---|---|
-| P2 selected adapter (LoRA A, r4) | `p2/hf_staging/P2-EXP-001/final/` | 3.4 MB | OpenRAIL-M + CC BY-NC-SA 4.0; non-commercial, share-alike; copyrighted characters → research only | yes |
-| P2 run A | `p2/hf_staging/P2-EXP-001/run_A/` | 3.4 MB | same | yes (same weights as `final`) |
-| P2 run B (r64) | `p2/hf_staging/P2-EXP-001/run_B/` | 50 MB | same | yes |
-| P2 120 generated images | `p2/hf_staging/P2-EXP-001/images/` | 41 MB | same; images resemble copyrighted characters | yes — **regenerate before upload** (below) |
-| P3 evaluation inputs v2 | `p3/hf_staging/p3_inputs_v2/` | 5.3 MB | Commons CC BY / CC BY-SA 4.0 / public domain; fixtures CC0; the 3 Part 2 test images are **referenced, not re-hosted** (CC BY-NC-SA, copyrighted characters) | yes |
-
-**Not to publish:** red-team outputs (`DO_NOT_PUBLISH.txt`), the human packets and private answer keys, `*_LOCAL_ONLY*` raw replies, `human_packet_KEY_private.csv`, `.env`.
-
-**Before uploading the P2 image dataset:** its staged `metadata.jsonl` was written before D-116 and contains `NaN` (80 of 120 lines), which strict JSON-Lines readers reject. Running `p2_finetune.ipynb` with `MODE = "REPORT_ONLY"` (which you do after the human ratings anyway) re-stages it with the fixed writer. Check afterwards:
-`docker exec data266-lab2 grep -c NaN /app/data266_lab2_work/p2/hf_staging/P2-EXP-001/images/metadata.jsonl` must print `0`.
-
-**Upload procedure, once authorized.** This uses the CLI from the staged folders, so no notebook code changes. Changing the upload settings inside `p3_agents.ipynb` would alter its frozen code fingerprint.
+## 4. GitHub (after making the repository private; do not force-push)
+The target repository is empty, so there is no teammate history to reconcile. Re-check with `git ls-remote <url>` immediately before pushing.
 ```bash
 docker exec -it data266-lab2 bash
-hf auth login                      # paste a WRITE token interactively; never put it in a file in the repo
-U=<your-hf-username>               # decide repo names, e.g.:
-hf upload $U/data266-lab2-p2-lora-r4      /app/data266_lab2_work/p2/hf_staging/P2-EXP-001/final  . --repo-type model   --private
-hf upload $U/data266-lab2-p2-lora-r64     /app/data266_lab2_work/p2/hf_staging/P2-EXP-001/run_B  . --repo-type model   --private
-hf upload $U/data266-lab2-p2-images       /app/data266_lab2_work/p2/hf_staging/P2-EXP-001/images . --repo-type dataset --private
-hf upload $U/data266-lab2-p3-inputs-v2    /app/data266_lab2_work/p3/hf_staging/p3_inputs_v2      . --repo-type dataset --private
-hf auth logout
+cd /app/implementation
+git remote add origin https://github.com/shulamite512/DATA266_LAB2_PAIR44.git
+git ls-remote origin                         # must print nothing (empty) - otherwise STOP and reconcile
+git push -u origin main                      # needs the repo owner's credentials
+# after the human ratings are scored and committed:
+git tag -a p1-v1.0 eb87662 -m "Part 1 final: P1-EXP-003 checkpoint (Kaggle public 0.832)"
+git tag -a p2-v1.0 <final-commit> -m "Part 2 final: P2-EXP-001 with human ratings"
+git tag -a p3-v1.0 <final-commit> -m "Part 3 final: P3-EXP-003 with human judgements"
+git push origin p1-v1.0 p2-v1.0 p3-v1.0
+git rev-parse p1-v1.0^{commit} p2-v1.0^{commit} p3-v1.0^{commit}   # copy into links.txt
 ```
-- Repos are created **private**. If the instructor must access them, either add the instructor as a collaborator or make them public. Making them public is a separate decision, because the Pokémon-derived content is non-commercial and depicts copyrighted characters.
-- Record the repo URLs and commit hashes in `links.txt` and `README.md`.
+- The old Part 1 remote `Parthp28/DATA266_LAB2_Pair44` received only `d9bbd68`. Decide whether it should be archived, or kept as the source of the earlier timestamps; its history is already contained here.
+- The local commit `b035d2a` has the truncated message "Record". It can only be reworded before the first push.
 
-## 4. GitHub and Canvas (do NOT run without explicit authorization)
-1. Create the **private** GitHub repository `data266-lab2-team<##>` (D-001) and give the instructor/TA access.
-2. Push, from `/app/implementation` in the container:
-   ```bash
-   git remote add origin <url>
-   git push -u origin main
-   ```
-3. Optional: fix the message of local commit `b035d2a` with `git rebase -i` **before** the first push, or leave it.
-4. Tags, if the PDF requires them (names *not verified*), e.g.:
-   ```bash
-   git tag -a p2-v1.0 <commit>
-   git tag -a p3-v1.0 <commit>
-   git push --tags
-   ```
-5. Canvas ZIP (*assumption*, D-011, D-039): the repository working files plus `links.txt`, without `.git/`, caches, model weights, `$WORK` data, `.env`, professor PDFs/data. Add the final report PDF.
+## 5. Canvas
+```bash
+docker exec -w /app/implementation data266-lab2 python3 publication/build_canvas_zip.py --final
+```
+Output: `C:\Users\parth3\data266_lab2_work\submission\Pair_Programming_Team_44.zip`, containing:
+- `data266_lab2_report.pdf`
+- `CONTRIBUTIONS.md`
+- `AI_USAGE.md`
+- `links.txt`
+- `SHA256SUMS.txt`
+
+Upload it only after explicit authorization.

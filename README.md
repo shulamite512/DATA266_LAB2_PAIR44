@@ -1,14 +1,16 @@
-# DATA 266 Lab 2 — Team `[TEAM ## — TO BE FILLED]`
+# DATA 266 Lab 2 — Pair Programming Team 44
 
-Repository for DATA 266 (Fall 2026) Lab 2. GitHub name: `data266-lab2-team[##]`.
+Repository for DATA 266 (Fall 2026) Lab 2: https://github.com/shulamite512/DATA266_LAB2_PAIR44 (to be private with instructor/ISA read access; nothing pushed yet).
+
+> **Naming note:** the course convention is `data266-lab2-team##`. The team chose `DATA266_LAB2_PAIR44` (flagged for compliance review). Part 1 was first developed in a separate repository (origin `Parthp28/DATA266_LAB2_Pair44`). Its full history is merged here (`dbd01db`), so its original commit timestamps are preserved, including the golden set frozen in `d9bbd68` on 2026-10-21.
 
 | Part | Topic | Notebook | Status |
 |------|-------|----------|--------|
-| 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | Skeleton only |
+| 1 | Multimodal RAG over a read-only knowledge base (Kaggle) | `notebooks/p1_rag.ipynb` | **P1-EXP-003 checkpoint** (`eb87662`, executed): final mode = router + dense + BM25 + RRF + reranker + registry; 40-row submission, validator `valid`; Kaggle **public** score 0.832 (about 48% of the hidden set). Held-out golden set (P1-EXP-001): baseline 14/25 vs final 13/25, Recall@5 0.764 → 0.882. Log: `docs/part1/DECISIONS_P1.md`. **Pending:** Kaggle notebook link, selected final submission, private score |
 | 2 | Fine-tuning diffusion models | `notebooks/p2_finetune.ipynb` | **P2-EXP-001 executed** (`FULL_RUN`, 2026-11-16): LoRA A (r4) and B (r64) trained 1,500 steps each; 120/120 images (base/A/B × 20 prompts × 2 seeds); KID, CLIP, LPIPS, memorization and safety computed; final adapter **A** (lower in-domain KID 0.0619 vs 0.0825). **Pending:** human ratings (≥ 3 raters, `eval/p2_human_ratings.csv`) and the authorized Hugging Face upload |
 | 3 | Multimodal multi-agent system | `notebooks/p3_agents.ipynb` | P3-EXP-001 (preliminary, 22/40 executed) and P3-EXP-002 (v2, 40/40 executed, six `FAILED_MODEL` vision records) archived; **P3-EXP-003 executed** (40/40; the D-113 token-limit repair did not fix S02–S04: confirmed repetition loop, proposed fix D-114 not implemented); human judgements pending |
 
-Engineering decisions and experiments are logged chronologically in [`DECISIONS.md`](DECISIONS.md) (Parts 2/3 implementation: D-089 onwards).
+Engineering decisions and experiments are logged chronologically in [`DECISIONS.md`](DECISIONS.md) (Parts 2/3 implementation: D-089 onwards). The Part 1 log is [`docs/part1/DECISIONS_P1.md`](docs/part1/DECISIONS_P1.md); its D-numbers after D-088 are a **separate namespace**, because the two logs diverged.
 
 ## Data location
 
@@ -21,7 +23,10 @@ Course data is **not** stored in this repository.
 ## How to run
 
 ### Part 1
-_Pending: implementation not started._ The notebook will be run top to bottom with **Restart & Run All** on a Kaggle GPU. It reads `QUESTIONS_PATH` (default `Questions.csv`) and writes `submission.csv`.
+- `notebooks/p1_rag.ipynb` is the executed P1-EXP-003 checkpoint (submission run: `RUN_SUBMISSION = True`, `RUN_EVAL = False`, `MODE = "final"`).
+- Run it with **Restart & Run All** in a fresh kernel. It reads `QUESTIONS_PATH` (default `<DATA_DIR>/Questions.csv`), writes `submission.csv` and runs the professor's `validate_submission.py`. `DATA_DIR` is detected: `/kaggle/input/...` on Kaggle, or the professor folder `DATA266_Lab2_Part1/` locally.
+- The recorded runs used a Docker `pytorch:latest` container (Python 3.11.13, torch 2.7.1+cu128) on an RTX 5090. Part 1 model revisions are **not pinned**, and the notebook was **never run on Kaggle hardware** (see `docs/part1/P1_EXP003_CHECKPOINT_MANIFEST.md`).
+- Later uncommitted Part 1 work (P1-EXP-004, D-105 – D-111) remains in the original Part 1 folder and is not part of this checkpoint.
 
 ### GPU environment for Parts 2 and 3 (Docker, D-089)
 
@@ -143,11 +148,26 @@ git log --oneline -4
 - **Final evidence:** `SUBMISSION_CHECKLIST.md` lists readiness (COMPLETE / PENDING / BLOCKED / NOT VERIFIED), Hugging Face upload steps, and GitHub/Canvas steps. Final automated evidence is P2-EXP-001 and P3-EXP-003 (D-115).
 - `HUMAN_EVALUATION.md`: instructions for the 3 Part 2 raters and the 2 Part 3 judges, file formats, merging, disagreement resolution, `REPORT_ONLY` / `RESCORE_ONLY`.
 - `report/data266_lab2_report.tex`: IEEE draft for Parts 2–3 (Overleaf, IEEEtran; figures in `report/figures/`). Human results and Part 1 are marked `PENDING` / `MISSING`.
-- `links.txt`: links required for the Canvas ZIP (currently all `MISSING`).
+- `links.txt`: links required for the Canvas ZIP (GitHub URL known; tags, Hugging Face uploads and the Kaggle link are pending).
+- `publication/`: `HF_PUBLICATION_PLAN.md` and `hf_publication_manifest.json` (Hugging Face approval manifest with hashes; nothing uploaded) and `build_canvas_zip.py` (deterministic Canvas ZIP; refuses the final name while items are missing).
 
 ## Results recorded so far (report evidence)
 
 Machine-generated values copied from the saved records. Sources: `$LAB2_WORK_DIR/p2/results/P2-EXP-001/report_summary.json`, `$LAB2_WORK_DIR/p3/experiments/P3-EXP-00{2,3}/evaluation_summary.json`. No human judgement exists yet.
+
+**Part 1:**
+- Golden set of 25 questions. P1-EXP-001 is the only held-out run (saved output `0adebfa`):
+
+  | | baseline | final |
+  |---|---|---|
+  | correct | 14/25 | 13/25 |
+  | Recall@5 | 0.764 | 0.882 |
+  | citation accuracy | 0.64 | 0.84 |
+  | figure-reference F1 | 0.627 | 0.793 |
+  | median s/question | 1.77 | 2.03 |
+
+- P1-EXP-003 final mode (development measurement, log only): 14/25.
+- Kaggle public leaderboard: 0.636 (P1-EXP-002) and 0.832 (P1-EXP-003). The private score is not known yet.
 
 **Part 2 (P2-EXP-001, 20 prompts × 2 seeds per model; KID subset size 20, high variance, see the std):**
 

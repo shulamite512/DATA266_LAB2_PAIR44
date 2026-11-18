@@ -1,0 +1,14 @@
+# Part 1 (p1_rag.ipynb) - versions RECORDED for the P1 runs; not a full lock file.
+# Source: docs/part1/P1_EXP003_CHECKPOINT_MANIFEST.md section 8 and docs/part1/DECISIONS_P1.md (D-099, P1-EXP-001).
+# Environment of record: Docker "pytorch:latest" GPU container, Python 3.11.13, torch 2.7.1+cu128 (printed by cell 1),
+# NVIDIA RTX 5090. A complete `pip freeze` of that container was never captured; numpy, pandas, pillow and
+# their transitive dependencies are therefore NOT pinned here (see requirements.txt for their lower bounds).
+# Model revisions were NOT pinned in Part 1 (Qwen/Qwen3-VL-4B-Instruct, BAAI/bge-large-en-v1.5, BAAI/bge-reranker-v2-m3).
+torch==2.7.1            # +cu128 build; install from the PyTorch CUDA 12.8 index
+transformers==4.57.6
+sentence-transformers==5.7.0
+chromadb==1.5.9
+accelerate==1.15.0
+pydantic==2.12.3
+rank-bm25==0.2.2
+pymupdf==1.28.2
