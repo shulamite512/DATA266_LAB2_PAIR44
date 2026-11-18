@@ -18,7 +18,7 @@ G16,GC15,2,multiturn_user_value,"Using the assumed 3% U.S. growth value, was the
 G17,GC15,3,multiturn_user_value,What was the U.S. unemployment rate in 2012 in the same conversation?,8.1%.,8.1,answered,DOC2:Table A-2
 G18,GC16,1,multiturn_user_value,"Assume that Euro-area output growth was positive 1% in 2012. Compared with that assumption, what did the document report?","The assumption overrides the document for the conversation, but the document's reported 2012 outturn was -0.7%.",-0.7,session_override,DOC2:Table A-2
 G19,GC16,2,multiturn_user_value,"Given the reported -0.7% outturn, was Euro-area growth positive or negative in 2012?",Negative; output contracted by 0.7%.,-0.7,answered,DOC2:Table A-2
-G20,GC17,1,conflict,Did the forecast for world output growth in 2011 match the later outturn? State both values.,"No. DOC1 forecast 3.0%; DOC2 later outturn 2.8%. The values conflict, so both sources must be cited.",3.0;2.8,conflict,DOC1:Table 1-1;DOC2:Table A-1
+G20,GC17,1,conflict,What was China's output growth in 2012?,The sources disagree: DOC2 reports 7.7% and DOC3 reports 7.8%.,7.7;7.8,conflict,DOC2:Table A-2;DOC3:p5
 G21,GC18,1,revision,What was the revised U.S. output growth value for 2010?,2.4%; this revised value supersedes the earlier 3.0% value in Document 1.,2.4,answered,DOC2:Table A-2
 G22,GC19,1,forecast_vs_actual,"In Figure A-1, what were the forecast and outturn for emerging-and-developing-economy growth in 2012?",The forecast was 6.0% and the outturn was 4.9%.,6.0;4.9,answered,DOC2:Figure A-1
 G23,GC20,1,not_found,What was India's inflation rate in 2015?,This information is not present in the documents.,,not_found,
