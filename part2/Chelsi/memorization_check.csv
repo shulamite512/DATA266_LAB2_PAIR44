@@ -1,0 +1,11 @@
+generated,nearest_train,clip_cosine
+outputs/p2/generations/run1_lora_r8/in_07_s0.png,data/p2/train/train_0193.png,0.879275
+outputs/p2/generations/run1_lora_r8/in_06_s0.png,data/p2/train/train_0648.png,0.831833
+outputs/p2/generations/run1_lora_r8/in_01_s0.png,data/p2/train/train_0691.png,0.751789
+outputs/p2/generations/run1_lora_r8/in_09_s0.png,data/p2/train/train_0019.png,0.736533
+outputs/p2/generations/run1_lora_r8/in_08_s0.png,data/p2/train/train_0316.png,0.731172
+outputs/p2/generations/run1_lora_r8/in_00_s0.png,data/p2/train/train_0727.png,0.712990
+outputs/p2/generations/run1_lora_r8/in_03_s0.png,data/p2/train/train_0473.png,0.710931
+outputs/p2/generations/run1_lora_r8/in_04_s0.png,data/p2/train/train_0754.png,0.673603
+outputs/p2/generations/run1_lora_r8/in_02_s0.png,data/p2/train/train_0727.png,0.563063
+outputs/p2/generations/run1_lora_r8/in_05_s0.png,data/p2/train/train_0454.png,0.469046

@@ -1,0 +1,4 @@
+model,KID_in_domain_mean,KID_std,CLIP_score_all40,CLIP_score_in_domain,LPIPS_diversity,nsfw_flagged
+base,0.1030,0.0098,31.50,30.14,0.7187,0
+run1_lora_r8,0.0359,0.0058,30.72,28.66,0.7210,2
+run2_lora_r32,0.0451,0.0069,30.21,27.15,0.6925,4

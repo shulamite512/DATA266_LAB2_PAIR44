@@ -1,0 +1,3 @@
+run,method,rank,trainable_params,learning_rate,steps,effective_batch,batch_size,grad_accum,peak_gpu_mem_gb,train_seconds,gpu_hours,gpu,final_loss_avg50
+run1_lora_r8,LoRA,8,1594368,0.0001,1500,4,2,2,3.68,2396.8,0.666,Tesla T4,0.078539
+run2_lora_r32,LoRA,32,6377472,0.0001,1500,4,2,2,3.73,2399.0,0.666,Tesla T4,0.078415
