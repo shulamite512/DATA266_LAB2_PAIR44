@@ -28,9 +28,5 @@ Each member built a complete, independent implementation of all three parts. Aut
 
 ## Shared work
 - Choosing the final implementation for each part (team decision).
-- Combining both repositories into this one, done by Parth with an AI assistant. It preserves both histories.
+- Combining both repositories into this one.
 
-## Not recorded
-- Per-subtask partner roles beyond the authorship above.
-- The IEEE report authorship split.
-- Meeting recordings: none have been provided.
