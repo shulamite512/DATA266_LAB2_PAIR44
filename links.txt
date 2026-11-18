@@ -8,6 +8,7 @@ p2-v1.0 commit:
 p3-v1.0 commit:
 Kaggle team name:
 Final Kaggle notebook (URL and version):
+Chelsi's Kaggle notebook (alternative Part 1, not the selected submission): https://www.kaggle.com/code/chelsi512/notebookde18a5542e
 Hugging Face Part 2 model, run 1 (final, LoRA rank 8): https://huggingface.co/chels512/data266-lab2-naruto-run1-lora-r8
 Hugging Face Part 2 model, run 2 (LoRA rank 32): https://huggingface.co/chels512/data266-lab2-naruto-run2-lora-r32
 Hugging Face Part 2 generated-image dataset: https://huggingface.co/datasets/chels512/data266-lab2-p2-generations
