@@ -1,0 +1,41 @@
+id,conversation_id,question_id,answer,figure_references,citations,status
+1,C001,Q001,The global economic crisis around 2008 was sparked by a decrease in housing prices and the collapse in stock prices.,NONE,DOC1:p2,answered
+2,C002,Q002,"Unemployment rates going up should be worrying because it indicates a slowdown in the economy, which typically leads to both an increase in unemployment and a decrease in the participation rate.",NONE,DOC1:p24,answered
+3,C003,Q003,Real GDP measures economic growth by eliminating the effect of increasing prices on the measure of GDP.,NONE,DOC1:p35,answered
+4,C004,Q004,-3.7%,NONE,DOC1:p2,answered
+5,C005,Q005,The U.S. unemployment rate increased dramatically to nearly 10%.,Figure 2-3,"DOC1:p7,DOC1:p2,DOC1:Figure 2-3,DOC1:p24",answered
+6,C006,Q006,China's economy grew at roughly 10% a year since 1980.,NONE,DOC1:p10,answered
+7,C007,Q007,"The 2008 crisis tanked stock markets everywhere, including the U.S., Europe, and emerging economies.",Figure 1-1,"DOC1:p2,DOC1:Figure 1-1",answered
+8,C008,Q008,"No, fast economic growth does not always mean fewer people out of work in the U.S.",NONE,DOC3:p5,false_premise
+9,C009,Q009,"No, consumer prices and overall economic prices are not always in sync in the U.S.",NONE,DOC1:p26,answered
+10,C010,Q010,"Unemployment in the Euro area was low in some smaller countries like the Netherlands or Denmark, but it was not uniformly low across Europe. Before the crisis, the unemployment rate was under 4% in these countries. After the crisis, the unemployment rate increased to 10%.",NONE,"DOC1:p7,DOC2:p1",answered
+11,C011,Q011,"China's output growth rate in 2008 was 9.6%, which kept growing strong through the 2008 financial crisis.",Table 1-4,"DOC1:Table 1-4,DOC1:p11",answered
+12,C012,Q012,"Mortgage-backed securities played a significant role in the financial crisis by being complex and difficult to assess, leading to a decline in housing prices and increasing reluctance among banks to lend to each other.",NONE,DOC1:p1,answered
+13,C013,Q013,People sharply cut their consumption.,NONE,DOC1:p2,answered
+14,C014,Q014,A recession is defined as two or more consecutive quarters of negative growth.,NONE,DOC1:p22,answered
+15,C015,Q015,Emerging and developing economies grew faster before the crisis.,NONE,"DOC1:p1,DOC1:p2",answered
+16,C016,Q016,9.0%,Figure A-2,"DOC2:Figure A-2,DOC2:p4",answered
+17,C017,Q017,11.4%,Figure A-3,"DOC2:p4,DOC2:Figure A-3",answered
+18,C018,Q018,0.45,Figure A-4,"DOC2:Figure A-4,DOC2:p5",answered
+19,C019,Q019,1.57,Figure A-5,"DOC2:p5,DOC2:Figure A-5",answered
+20,C020,Q020,"Austria, 4.4%","Figure A-6,Figure A-7","DOC2:Figure A-6,DOC2:Figure A-7,DOC2:p6",answered
+21,C021,Q021,4.1%,Figure B-5 (corrected),"DOC3:Figure B-5 (corrected),DOC3:p6",answered
+22,C022,Q022,-0.4%,Figure B-4,"DOC3:Figure B-4,DOC3:p4",answered
+23,C023,Q023,-1.4,Figure A-1,"DOC2:p2,DOC2:p3,DOC2:Figure A-1",answered
+24,C024,Q024,"The predicted change in unemployment for 2012 based on Okun's law would be a decrease due to the higher output growth compared to the previous year. However, the actual unemployment rate for 2012 was 8.1%, which is higher than the forecasted rate of 9.0%. Therefore, there was a conflict between the predicted and actual outcomes.",NONE,"DOC1:p28,DOC2:p3",conflict
+25,C025,Q025,9.8%,Table B-2,"DOC2:p3,DOC3:Table B-2,DOC3:p5",answered
+26,C026,Q026,9.0%,Table 1-4,"DOC1:Table 1-4,DOC2:p1,DOC1:p11",answered
+27,C027,Q027,2.4%,NONE,DOC2:p3,answered
+28,C028,Q028,not_found,NONE,NONE,not_found
+29,C029,Q029,China's economy did not contract in 2009.,NONE,DOC1:p21,false_premise
+30,C030,Q030,"On September 15, 2008.",NONE,DOC1:p1,answered
+31,C031,Q031,9.3%,"Figure A-7,Figure 1-2","DOC2:Figure A-7,DOC1:Figure 1-2,DOC2:p6,DOC1:p3",answered
+32,C032,Q032,-1.7%,Figure 1-4,"DOC2:p7,DOC1:Figure 1-4,DOC1:p5",answered
+33,C032,Q033,-4.1%,Figure 1-4,"DOC1:Figure 1-4,DOC1:p5",answered
+34,C032,Q034,-1.7%,Figure 1-4,"DOC1:Figure 1-4,DOC1:p5",answered
+35,C033,Q035,-10.2%,NONE,DOC1:p7,session_override
+36,C033,Q036,-4.2%,Table 1-3,"DOC1:Table 1-3,DOC1:p7",session_override
+37,C033,Q037,I can't change the documents permanently: the knowledge base is read-only and unchanged. -6.0%,Table 1-3,"DOC1:Table 1-3,DOC1:p7",session_override
+38,C034,Q038,-4.2%,Table 1-3,"DOC1:Table 1-3,DOC1:p7",answered
+39,C035,Q039,"The 2013 outturn for China's output growth was 7.7%. The 2014 outturn provided in this chat is 7.3%, which is lower than the 2013 outturn.",Table A-2,"DOC2:p3,DOC2:Table A-2",session_override
+40,C035,Q040,"The 2013 outturn for China's output growth was 7.7%. The 2014 figure provided in this chat is 7.3%, which is lower.",Table A-2,"DOC2:p3,DOC2:Table A-2",session_override
