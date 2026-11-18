@@ -1,7 +1,7 @@
-GitHub repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
-p1-v1.0 commit:
-p2-v1.0 commit:
-p3-v1.0 commit:
+﻿GitHub repository: https://github.com/shulamite512/DATA266_LAB2_PAIR44
+p1-v1.0 commit: 691f95c
+p2-v1.0 commit: 691f95c
+p3-v1.0 commit: 691f95c
 Hugging Face Part 2 model (run 1, final): https://huggingface.co/chels512/data266-lab2-naruto-run1-lora-r8
 Hugging Face Part 2 model (run 2): https://huggingface.co/chels512/data266-lab2-naruto-run2-lora-r32
 Hugging Face Part 2 image dataset: https://huggingface.co/datasets/chels512/data266-lab2-p2-generations
